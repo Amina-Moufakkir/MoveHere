@@ -250,6 +250,14 @@ Initially collect only:
 - Available time.
 - Session goal.
 
+The initial session goals are:
+
+- Strength.
+- Conditioning.
+- Mobility.
+
+A combined or "mixed" goal is deliberately excluded from Phase 0. Its semantics are not defined well enough to enter generation, and an underspecified goal would make generated sessions harder to compare under Gates I and J.
+
 Additional inputs should not be added unless they materially affect generation.
 
 ### Step 5 — Conditions check
