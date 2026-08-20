@@ -1,0 +1,6 @@
+{
+  // Negative contract tests: every file here MUST fail to compile.
+  // Run via `npm run test:contracts`, never as part of `npm run typecheck`.
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts", "tests/contracts/negative/**/*.ts"]
+}
