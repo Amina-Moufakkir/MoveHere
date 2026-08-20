@@ -12,6 +12,20 @@ import type { SupportedFeatureId } from './feature';
 
 export type ExerciseId = string & { readonly __brand: 'ExerciseId' };
 
+/**
+ * Stable identity for one compatibility claim.
+ *
+ * Stable across matrix versions: it identifies the claim, not the revision of
+ * it. A generated session cites this id so the decision remains auditable after
+ * the matrix changes (§8).
+ */
+export type CompatibilityEntryId = string & { readonly __brand: 'CompatibilityEntryId' };
+
+/** Stable identity for one environment-independence declaration. */
+export type EnvironmentIndependentDeclarationId = string & {
+  readonly __brand: 'EnvironmentIndependentDeclarationId';
+};
+
 /** Coverage categories used to balance a session. Not a training methodology claim. */
 export type MovementPattern =
   | 'squat'
@@ -51,11 +65,14 @@ export interface Exercise {
  * authoritative. Generation must consider `reviewed` entries only; `draft`
  * entries exist so unreviewed work is visible rather than silently live.
  */
-export interface CompatibilityReview {
-  readonly status: 'draft' | 'reviewed';
-  readonly reviewedAt?: string;
-  readonly note?: string;
-}
+export type CompatibilityReview =
+  | { readonly status: 'draft'; readonly note?: string }
+  | {
+      readonly status: 'reviewed';
+      /** Required on reviewed claims. A review without a date cannot be audited. */
+      readonly reviewedAt: string;
+      readonly note?: string;
+    };
 
 /**
  * One reviewed claim: this exercise can be performed using this feature.
@@ -66,6 +83,7 @@ export interface CompatibilityReview {
  * feature under such an assumption, it does not belong in the matrix.
  */
 export interface ExerciseCompatibility {
+  readonly id: CompatibilityEntryId;
   readonly exerciseId: ExerciseId;
   readonly featureId: SupportedFeatureId;
   /** Names the feature-specific variation, e.g. bench step-up vs. stair step-up. */
@@ -83,6 +101,7 @@ export interface ExerciseCompatibility {
  * compatibility list.
  */
 export interface EnvironmentIndependentMovement {
+  readonly id: EnvironmentIndependentDeclarationId;
   readonly exerciseId: ExerciseId;
   readonly environmentIndependent: true;
   /** What the movement does assume — flat ground to stand on, and nothing else. */

@@ -6,6 +6,12 @@
  * disagree, the plan wins.
  */
 
+export {
+  SESSION_DURATIONS,
+  makeSessionMinutes,
+  makeEstimatedMinutes,
+} from './session';
+
 export type * from './feature';
 export type * from './confirmation';
 export type * from './exercise';
