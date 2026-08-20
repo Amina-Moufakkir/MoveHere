@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+
+    // Typecheck only. No emit, no runtime, no bundler.
+    "noEmit": true,
+
+    // Module settings exist solely to resolve imports between contract files.
+    // Revisit when a runtime is chosen; nothing here is executed.
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "skipLibCheck": false
+  },
+  "include": ["src/**/*.ts"]
+}
