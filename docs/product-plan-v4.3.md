@@ -256,6 +256,15 @@ The initial session goals are:
 - Conditioning.
 - Mobility.
 
+Available time is chosen from a fixed set of durations:
+
+- 10 minutes.
+- 20 minutes.
+- 30 minutes.
+- 45 minutes.
+
+Free-form durations are deliberately excluded for Phase 1. A fixed set keeps generated sessions comparable across venues and goals, which Gates I and J depend on, and avoids committing to arbitrary-length generation before the compatibility matrix is understood. Widening or reopening this set is a product decision.
+
 A combined or "mixed" goal is deliberately excluded from Phase 0. Its semantics are not defined well enough to enter generation, and an underspecified goal would make generated sessions harder to compare under Gates I and J.
 
 Additional inputs should not be added unless they materially affect generation.
@@ -265,6 +274,10 @@ Additional inputs should not be added unless they materially affect generation.
 Known outdoor conditions are checked before a park session is offered.
 
 If the conditions gate fails, MoveHere offers the environment-independent substitute session defined in §11.
+
+Conditions may also be **unavailable** — unknown, unreadable, or not yet retrieved. Unavailable conditions are not treated as acceptable. They follow the same user-facing fallback path as adverse conditions and produce an environment-independent substitute session.
+
+The two cases must remain distinguishable in recorded provenance. "We know conditions are adverse" and "we could not determine conditions" are different facts, and collapsing them would misrepresent why a park session was withheld and corrupt the seasonality signal in §11.
 
 ### Step 6 — Generate and perform
 
@@ -277,9 +290,15 @@ The user follows the workout and records completion locally.
 
 ### Step 7 — Correct venue information
 
-After the session, the user may report that a confirmed feature was unavailable or unusable.
+After the session, the user may report that a confirmed feature was absent or unusable. These are distinct venue states and must not be collapsed.
 
-Feedback may update local venue state but must never silently convert an unsupported object into a supported one.
+**Absent** means the feature is not there. The confirmation is withdrawn.
+
+**Unusable** means the feature exists but could not be used — occupied, flooded, damaged, fenced off, or otherwise unavailable in practice. The confirmation stands. The feature remains venue knowledge and is retained, while becoming ineligible for session generation until the user indicates otherwise.
+
+Retaining unusable features matters because "this park has a pull-up bar that is frequently unusable" is knowledge about the venue (§13). Deleting it would discard that signal and invite the user to re-confirm the same feature indefinitely.
+
+Feedback may update local venue state but must never silently convert an unsupported object into a supported one, and no correction may add a feature.
 
 ---
 
@@ -516,7 +535,8 @@ If months of indoor use remove the product's differentiation, MoveHere may lose 
 ### Phase 1 adverse-condition behavior
 
 ```text
-Conditions gate fails
+Conditions gate fails, conditions unavailable,
+nothing confirmed, or no compatible venue movements
         ↓
 Offer environment-independent substitute session
         ↓
@@ -524,7 +544,13 @@ Label it as a substitute, not a park session
         ↓
 Track locally:
 offered / started / completed / dismissed
+        ↓
+Record which of those causes applied
 ```
+
+A substitute session is offered whenever a venue-aware session cannot be produced but a valid environment-independent session can. That includes the case where a venue has confirmed features but none of them yield compatible movements for the requested goal and time.
+
+Offering no session at all is reserved for cases where no valid session can be constructed by any route. A user who asked for a workout should not receive nothing simply because their venue did not resolve.
 
 This gives the product a defined state without pretending that a generic fallback solves seasonality.
 

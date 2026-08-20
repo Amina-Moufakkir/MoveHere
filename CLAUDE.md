@@ -33,6 +33,8 @@ Vision inference, indoor venues, and venue classes beyond parks are likewise out
 ## Engineering conventions
 
 - Keep deterministic domain logic isolated from UI and testable without React.
+- Never use a type assertion (`as`, `as unknown as`) to create a branded trusted domain value such as `ConfirmedVenueInventory`, `ConfirmedFeatureSet`, `GenerationVenueView`, or `SessionMinutes`. Brands stop object literals, update-by-spread, structural clones, and untrusted persisted state; they cannot stop a deliberate assertion. Trusted values come only from their owning constructor or rehydration boundary. The one place an assertion is legitimate is inside that constructor, after validation.
+- Do not call `JSON.parse` on persisted venue state outside the rehydration boundary. It returns `any`, which assigns to anything and silently defeats the confirmation guarantee across a reload.
 - Generation must be deterministic and reproducible from the same inputs.
 - Accessibility is a design and engineering constraint from Phase 0 and an implementation requirement from Phase 1. Do not make Phase 0 architecture decisions that make accessible implementation harder later. Phase 1 UI must target WCAG 2.1 AA or the applicable current standard defined by the canonical plan (§15).
 - No Prisma.
