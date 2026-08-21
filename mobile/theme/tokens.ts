@@ -1,54 +1,26 @@
 /**
- * Open Air, as far as one screen needs it.
+ * Open Air on the device.
  *
- * Deliberately native-local and deliberately incomplete. The web stylesheet
- * stays the canonical visual reference (§15); this is the second consumer
- * finding out which values actually carry over before anything is abstracted.
- * Only tokens /park uses are here. Resist adding the rest until a screen asks.
+ * Colour comes from shared source — src/design/palette.ts — because the values
+ * carried over between clients unchanged. Everything below is native and stays
+ * native, because the structures around those values did not carry:
  *
- * Two things already differ from the web and are worth recording:
+ *   · `light-dark()` has no React Native equivalent, so pairs resolve through
+ *     useColorScheme() instead of the cascade;
+ *   · CSS layers two shadows; RN takes one plus an Android elevation, so lift
+ *     and raise are approximations rather than translations;
+ *   · the web's rem scale and RN's unitless points are different measurements.
  *
- *   · `light-dark()` has no React Native equivalent, so every colour is a
- *     { light, dark } pair resolved through useColorScheme().
- *   · CSS can layer two shadows; RN takes one, plus an Android elevation. The
- *     lift and raise values below are approximations of the web's pairs, not
- *     translations of them.
+ * Sharing only what actually transferred keeps this a record of a fact rather
+ * than an abstraction invented to make the two look symmetrical.
  *
- * The measured contrast ratios from the web stylesheet carry over unchanged and
- * remain the rule for what may sit behind small text:
- *   · white on blue #456da3 — 5.29:1
- *   · white on green-deep #1a7846 — 5.50:1
- *   · navy-faint 3.9:1 — large text and UI only, never body copy
- *
- * In dark mode the selected-tile pair inverts rather than dims: green-deep
- * becomes a light green and `white` becomes deep navy, so the fill still
- * carries its label at high contrast.
+ * The measured contrast ratios live with the palette and are binding here.
  */
 import { useColorScheme } from 'react-native';
+import { resolvePalette } from '../../src/design/palette.ts';
+import type { OpenAirColor } from '../../src/design/palette.ts';
 
-interface Pair {
-  readonly light: string;
-  readonly dark: string;
-}
-
-const PALETTE = {
-  cloud: { light: '#f4f8fc', dark: '#0d1729' },
-  cloudDeep: { light: '#e8eff8', dark: '#091120' },
-  white: { light: '#ffffff', dark: '#16233c' },
-  pale: { light: '#e3ebf6', dark: '#1d2c44' },
-  navy: { light: '#111f3d', dark: '#eef4fb' },
-  navyMuted: { light: '#4a5a78', dark: '#9fb0cc' },
-  navyFaint: { light: '#6e7d98', dark: '#7d8ea9' },
-  blue: { light: '#456da3', dark: '#7fa3cf' },
-  blueInk: { light: '#2c4e7a', dark: '#bcd0e8' },
-  greenDeep: { light: '#1a7846', dark: '#5fd98d' },
-  greenInk: { light: '#116634', dark: '#8fe6b0' },
-  paleGreen: { light: '#e1f5ea', dark: '#10301f' },
-  line: { light: '#dbe5f2', dark: '#22314f' },
-  lineStrong: { light: '#bccce3', dark: '#33456a' },
-} as const satisfies Record<string, Pair>;
-
-export type ColorName = keyof typeof PALETTE;
+export type ColorName = OpenAirColor;
 
 export const radius = { sm: 8, md: 14, lg: 20, xl: 28, pill: 999 } as const;
 
@@ -83,9 +55,7 @@ export interface Theme {
 
 export const useTheme = (): Theme => {
   const dark = useColorScheme() === 'dark';
-  const color = Object.fromEntries(
-    Object.entries(PALETTE).map(([k, v]) => [k, dark ? v.dark : v.light]),
-  ) as Record<ColorName, string>;
+  const color = resolvePalette(dark);
 
   // Elevation reads differently on a dark ground: the web's navy-tinted shadow
   // disappears against it, so opacity rises rather than the colour changing.
