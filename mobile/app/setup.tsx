@@ -35,6 +35,7 @@ import type { ReportedConditions } from '../../src/programming/conditions.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { radius, space, touch, type, useTheme } from '../theme/tokens';
+import { newSeed } from '../lib/seed.ts';
 
 /** Exhaustive by construction: a new goal without copy fails to compile. */
 const GOAL_COPY: Record<SessionGoal, { label: string; hint: string }> = {
@@ -48,18 +49,6 @@ const CONDITION_COPY: Record<ReportedConditions, { label: string; hint: string }
   adverse: { label: 'Bad out there', hint: 'Rain, ice, heat or dark' },
   unknown: { label: 'Not sure', hint: 'Treated the same as bad conditions' },
 };
-
-/**
- * Provenance, not a control (§6 step 6).
- *
- * Same shape as the web client's, including the fallback: the seed only has to
- * vary between sessions, so a clock-derived value is sufficient where
- * randomUUID is unavailable.
- */
-const newSeed = (): string =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : `s-${Date.now()}`;
 
 export default function SetupScreen() {
   const router = useRouter();
