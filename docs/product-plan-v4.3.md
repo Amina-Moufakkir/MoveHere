@@ -4,7 +4,7 @@
 
 > **Working name:** MoveHere. Availability and trademark clearance have not yet been completed.
 >
-> **Status:** Phase 0 — Product & Engineering Foundation (§19). Formal customer interviews and commercial validation are intentionally deferred. Product hypotheses remain explicitly unvalidated.
+> **Status:** Native Mobile Client (§20) — the current implementation phase. The Phase 0 foundation (§19) is mechanism-complete and released as the web MVP (`web-mvp-v1`); its remaining exit conditions are open and carried forward. Formal customer interviews and commercial validation are intentionally deferred. Product hypotheses remain explicitly unvalidated.
 
 ---
 
@@ -810,17 +810,41 @@ MoveHere intends to target adults initially. Exact minimum age and legal impleme
 
 ## 15. Technology Direction
 
+MoveHere has two clients over one shared domain.
+
+```text
+MoveHere
+   │
+   ├── Web
+   │   Next.js
+   │   web-mvp-v1 released
+   │
+   └── Native Mobile
+       Expo + React Native
+       iOS + Android
+```
+
+The clients are presentation. Neither owns product logic. The supported-feature registry, the candidate → confirmation → confirmed venue inventory contract, the compatibility matrix, goal programming policy, feasibility, and the deterministic generator are shared source, consumed identically by both. A client may not hold its own copy of any of them, and may not reach generation by a route the other does not have (§6, §8).
+
 Current direction:
 
-- Next.js App Router.
 - TypeScript.
-- Tailwind CSS.
-- Deterministic domain logic separated from UI.
+- Deterministic domain logic separated from UI, and shared by both clients.
+- Web client: Next.js App Router, Tailwind CSS.
+- Native mobile client: Expo, React Native, Expo Router.
+- One repository, no workspace tooling. The shared domain has no external dependencies and no platform APIs, so it is shared as source rather than packaged.
+- Local-only state on both clients.
 - Server-side vision inference when vision is introduced.
 - Server-side session generation when server infrastructure is introduced.
 - Supabase + PostgreSQL in Phase 2.
 - RLS in Phase 2.
 - PostGIS only when geographic venue discovery requires it.
+
+### Shared domain, not a shared UI layer
+
+The clients share domain logic, presentation data, and safety-critical copy. They deliberately do not share components. Tailwind and React Native are different rendering models, and a compatibility layer between them would buy partial reuse at the cost of putting a translation layer in the one place the visual identity is defined. The Open Air identity is shared as design tokens — colour, type scale, radii, elevation, motion — and rendered natively by each client.
+
+The tokens are extracted from the web stylesheet; the stylesheet is **not** rewritten to consume them. That leaves two representations of the palette for now, deliberately. The working web CSS stays the canonical visual reference, and rewriting a released client's styling to import a token module would risk visual regression in exchange for single-source purity that cannot yet be evaluated. Mobile is the second consumer of these values, and whether native rendering needs different token semantics is something to learn from it rather than guess in advance. Revisit collapsing the two once the native client visually matches Open Air.
 
 ### Goal programming policy
 
@@ -851,11 +875,15 @@ Prisma remains removed unless a later requirement justifies reconsideration.
 
 ### Accessibility
 
-Accessibility is a Phase 1 quality requirement.
+Accessibility is a quality requirement on both clients. The standard differs between them, because the conformance models differ.
 
-Target WCAG 2.1 AA or the applicable current standard after verification.
+**Web — WCAG 2.1 AA**, or the applicable current standard after verification. Semantic structure, keyboard access, visible focus, readable contrast, accessible form labels, and screen-reader-compatible interactions, built in from the beginning.
 
-Build semantic structure, keyboard access, visible focus, readable contrast, accessible form labels, and screen-reader-compatible interactions from the beginning.
+**Native mobile — the iOS and Android accessibility APIs and platform guidance**, carrying the equivalent principles rather than the web conformance label: sufficient contrast, meaningful labels, sensible focus and reading order, scalable text, reduced motion, adequate touch targets, and screen-reader usability under VoiceOver and TalkBack.
+
+The native client is not described as WCAG 2.1 AA conformant. WCAG is written for the web, and inheriting the label because the other client targets it would be a conformance claim nobody verified — the same failure mode as presenting project content as reviewed programming (§8).
+
+Accessibility constrains architecture from the start on both clients. It is not a later pass.
 
 ---
 
@@ -1034,9 +1062,9 @@ None of these measures indicate product-market fit, demand, retention, or willin
 
 ## 19. Phase 0 — Product & Engineering Foundation
 
-Phase 0 is the current phase.
+Phase 0 is no longer the current phase — see §20. It is retained here as the record of what it established, and of the exit conditions it did not close.
 
-Its purpose is to establish the domain model, the safety authority boundary, and the deterministic generation mechanism in a form that can later be evaluated — and to challenge those decisions cheaply, before customer recruitment.
+Its purpose was to establish the domain model, the safety authority boundary, and the deterministic generation mechanism in a form that can later be evaluated — and to challenge those decisions cheaply, before customer recruitment.
 
 ### Phase 0 is not the MVP
 
@@ -1109,6 +1137,92 @@ Exit additionally requires at least one reviewed goal programming policy, becaus
 
 Separating the two matters because it lets engineering finish without waiting on review, and without the wait creating pressure to sign a policy quickly in order to declare a phase complete.
 
-### Phase 1 and Phase 2
+### What Phase 0 actually closed
 
-Phase 1 and Phase 2 are referenced throughout this document but are not yet formally defined. Defining them is deferred until Phase 0 produces enough evidence to scope them honestly.
+Recorded against the two tests above, so the distinction Phase 0 drew is not lost by declaring the phase over.
+
+**Mechanism complete — yes.** The contracts, loaders, feasibility validation, generator, and verification are finished and passing. The complete flow — environment selection, park features, confirmation, duration and goal, conditions, deterministic generation, workout player, completion and correction — was implemented and released as the web MVP (`web-mvp-v1`).
+
+**Phase 0 exit — not closed.** Park audits have not been carried out, Gate I has not been evaluated, and no goal programming policy has been reviewed by a qualified fitness professional. The shipped content remains project content and is labeled as such (§8).
+
+These conditions carry forward unchanged. Moving implementation to a second client does not resolve them, does not reduce them, and must not be described as having done so. The external input task above remains the single dependency on the critical path, and Gate E and Gate I remain unevaluable until it is satisfied.
+
+### Phase numbering
+
+Phase 0 is the only numbered phase this document defines. "Phase 1" and "Phase 2" appear throughout as labels for *product capability* stages — no authentication in Phase 1 (§14), accessibility as a Phase 1 quality requirement (§15), Supabase and RLS in Phase 2 (§15) — and they are still not formally scoped. Defining them is deferred until there is enough evidence to scope them honestly.
+
+The native mobile client (§20) is an implementation phase, not one of those capability stages, and deliberately does not claim the Phase 1 name. It adds a client; it adds no product capability. Every existing Phase 1 and Phase 2 reference continues to mean what it meant.
+
+---
+
+## 20. Native Mobile Client
+
+The current implementation phase.
+
+Its purpose is to bring MoveHere to iOS and Android as a native client, at feature parity with the released web MVP, over the same shared domain.
+
+### Why this phase exists
+
+The web MVP proved the complete flow end to end: a confirmed park inventory drives deterministic generation, and the whole sequence from environment selection to post-session correction is implementable inside the safety authority boundary (§9).
+
+Native mobile was not part of the original implementation scope. It became the logical next client once the web version proved the flow — MoveHere is used standing in a park, on a phone, outdoors, which is a native context. This is recorded plainly so that a later reader does not mistake it for a commitment made earlier than it was.
+
+### Scope
+
+Feature parity with the web MVP, and nothing beyond it:
+
+```text
+Environment selection
+    ↓
+Park features
+    ↓
+Confirmation
+    ↓
+Duration / goal / conditions
+    ↓
+Deterministic generation
+    ↓
+Workout player
+    ↓
+Completion / correction
+```
+
+- Expo, React Native, TypeScript, Expo Router.
+- Local-only state, through the existing storage port and the existing rehydration boundary (§14).
+- The Open Air identity translated to native rendering from shared design tokens (§15).
+
+### Out of scope
+
+Unchanged from Phase 0, and restated because a native runtime makes several of them newly *possible* rather than newly appropriate:
+
+- Supabase, accounts, authentication, and server-side persistence (§14).
+- Vision inference and camera capture (§6 step 2).
+- Location and GPS (§14).
+- Home-equipment support and indoor venue awareness (§12).
+- Notifications.
+- Apple Health and Health Connect (§10).
+- Payments.
+- Community features.
+
+A device capability being available is not a reason to use it. Each exclusion remains governed by the section that made it.
+
+### Architectural constraints
+
+- **One path into generation.** Both clients reach generation through the same candidate → confirmation → confirmed venue inventory contract (§6). The native client introduces no second route.
+- **No duplicated domain.** Shared logic is shared as source. A client-local copy of the registry, the matrix, the policy, or the generator is a defect.
+- **No duplicated safety copy.** Language governed by §9, by §10's medical scope, and by §11's requirement that a substitute session is labeled a substitute is shared source, not re-authored per client. Two independently written copies of a safety claim can drift, and only one of them would be reviewed. Each client renders the same meaning in its own UI; neither client owns the wording.
+- **The persistence port is unchanged.** Native storage plugs into the existing storage port beneath the rehydration boundary. Confirmed venue state is produced by the same constructor on both platforms, or it is not confirmed venue state.
+
+### Accessibility
+
+Settled in §15. The native client is held to the iOS and Android accessibility APIs and platform guidance, carrying WCAG's principles — contrast, meaningful labels, focus and reading order, scalable text, reduced motion, adequate touch targets, screen-reader usability — without claiming its conformance label.
+
+In practice that means accessibility roles, labels, and state are authored on interactive elements as the screens are built, not retrofitted, and that VoiceOver and TalkBack testing belongs to this phase.
+
+The measured contrast ratios recorded with the Open Air palette are binding on both clients.
+
+### Leaving this phase
+
+Parity is the bar. The flow above works on iOS and Android, the shared domain has one implementation, and the safety and language invariants hold identically on both clients.
+
+Parity is an implementation result and nothing more. It is not validation, not traction, and not evidence that anyone wants the product. The Phase 0 exit conditions in §19 remain open throughout this phase and are not addressed by it.
