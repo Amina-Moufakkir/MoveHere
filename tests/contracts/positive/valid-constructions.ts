@@ -25,7 +25,12 @@ import type {
   GenerationProvenance,
   SelectionBasis,
   ConditionsAssessment,
+  ConditionsDisposition,
+  GenerationContext,
 } from '../../../src/domain/session.ts';
+import type { ValidatedMatrix } from '../../../src/domain/matrix-loader.ts';
+import type { UsableGoalPolicy } from '../../../src/domain/policy-loader.ts';
+import type { GenerationSeed } from '../../../src/domain/prng.ts';
 import type { SupportedFeature, ExcludedObject } from '../../../src/domain/feature.ts';
 import type {
   ContentAuthority,
@@ -91,16 +96,35 @@ export const conditions: readonly ConditionsAssessment[] = [
   { kind: 'unavailable' },
 ];
 
+declare const matrix: ValidatedMatrix;
+declare const policy: UsableGoalPolicy;
+declare const seed: GenerationSeed;
+
+// Both generation contexts.
+export const contexts: readonly GenerationContext[] = [
+  { kind: 'venue-aware', venue: view },
+  { kind: 'environment-independent' },
+];
+
+// Both dispositions, with the two withheld causes kept distinct.
+export const dispositions: readonly ConditionsDisposition[] = [
+  { kind: 'park-permitted' },
+  { kind: 'park-withheld', cause: { kind: 'adverse', signals: ['freezing'] } },
+  { kind: 'park-withheld', cause: { kind: 'unavailable' } },
+];
+
 // A first session with no venue at all.
 export const firstSession: SessionGenerationInput = {
-  venue: null, availableMinutes: minutes, goal: 'mobility',
-  conditions: { kind: 'acceptable' }, seed: 's', matrixVersion: '1',
+  context: { kind: 'environment-independent' },
+  policy, matrix, availableMinutes: minutes,
+  conditions: { kind: 'park-permitted' }, seed,
 };
 
 // A venue-aware session.
 export const parkInput: SessionGenerationInput = {
-  venue: view, availableMinutes: minutes, goal: 'strength',
-  conditions: { kind: 'acceptable' }, seed: 's', matrixVersion: '1',
+  context: { kind: 'venue-aware', venue: view },
+  policy, matrix, availableMinutes: minutes,
+  conditions: { kind: 'park-permitted' }, seed,
 };
 
 // Both selection bases carry their authority.

@@ -12,6 +12,10 @@
 
 import type { SupportedFeatureId } from './feature.ts';
 import type { GenerationVenueView, VenueSnapshotId } from './confirmation.ts';
+import type { ValidatedMatrix } from './matrix-loader.ts';
+import type { UsableGoalPolicy } from './policy-loader.ts';
+import type { GoalPolicyId, PolicyVersion } from './policy.ts';
+import type { GenerationSeed } from './prng.ts';
 import type {
   ExerciseId,
   Prescription,
@@ -19,6 +23,8 @@ import type {
   EnvironmentIndependentDeclarationId,
   PresentableAuthority,
 } from './exercise.ts';
+
+export type { GenerationSeed } from './prng.ts';
 
 /** A list that cannot be empty. Used where an empty value would be a defect. */
 export type NonEmpty<T> = readonly [T, ...T[]];
@@ -111,6 +117,46 @@ export type ConditionsAssessment =
   | { readonly kind: 'unavailable' };
 
 /**
+ * Whether a session is being built with a venue or without one.
+ *
+ * A discriminated union rather than a nullable venue: "no venue" is a distinct
+ * mode, not a missing value, and modelling it as null invites callers to
+ * construct an empty view and wonder what it means.
+ */
+export type GenerationContext =
+  | { readonly kind: 'venue-aware'; readonly venue: GenerationVenueView }
+  | { readonly kind: 'environment-independent' };
+
+/** Why park use was withheld. Adverse and unavailable stay distinct (§11). */
+export type WithheldCause =
+  | { readonly kind: 'adverse'; readonly signals: NonEmpty<ConditionSignal> }
+  | { readonly kind: 'unavailable' };
+
+/**
+ * The gate decision, made before generation.
+ *
+ * Generation obeys a disposition rather than interpreting an assessment, so the
+ * gate can be evaluated and logged independently and generation stays pure.
+ */
+export type ConditionsDisposition =
+  | { readonly kind: 'park-permitted' }
+  | { readonly kind: 'park-withheld'; readonly cause: WithheldCause };
+
+/**
+ * Maps the user-reported assessment to a disposition (§6 step 5).
+ *
+ * `unavailable` is never treated as acceptable: it withholds park use exactly
+ * as adverse conditions do, while staying distinguishable in provenance.
+ */
+export const assessConditions = (assessment: ConditionsAssessment): ConditionsDisposition => {
+  if (assessment.kind === 'acceptable') return { kind: 'park-permitted' };
+  if (assessment.kind === 'adverse') {
+    return { kind: 'park-withheld', cause: { kind: 'adverse', signals: assessment.signals } };
+  }
+  return { kind: 'park-withheld', cause: { kind: 'unavailable' } };
+};
+
+/**
  * Everything generation is allowed to see.
  *
  * There is deliberately no field for pain, injury, medical condition, or
@@ -120,20 +166,15 @@ export type ConditionsAssessment =
  * (CLAUDE.md invariant 5).
  */
 export interface SessionGenerationInput {
-  /**
-   * Usable confirmed features, or null when nothing has been confirmed yet.
-   *
-   * null is the first-session case (§6 step 1) and resolves to
-   * environment-independent movements only. It never means "assume a typical
-   * park": MoveHere must not silently assume a bench, bar, or stairs exists.
-   */
-  readonly venue: GenerationVenueView | null;
+  readonly context: GenerationContext;
+  /** Carries its own goal, so input and policy cannot disagree (§8). */
+  readonly policy: UsableGoalPolicy;
+  /** Sole owner of the matrix version. */
+  readonly matrix: ValidatedMatrix;
   readonly availableMinutes: SessionMinutes;
-  readonly goal: SessionGoal;
-  readonly conditions: ConditionsAssessment;
+  readonly conditions: ConditionsDisposition;
   /** Makes any variation reproducible. Same seed and inputs, same session. */
-  readonly seed: string;
-  readonly matrixVersion: string;
+  readonly seed: GenerationSeed;
 }
 
 /**
@@ -188,7 +229,17 @@ export interface SessionBlock {
 export interface GenerationProvenance {
   readonly generatorVersion: string;
   readonly matrixVersion: string;
-  readonly seed: string;
+  readonly policyId: GoalPolicyId;
+  readonly policyVersion: PolicyVersion;
+  /**
+   * Which authority tier produced this session's programming.
+   *
+   * Drives the persistent, quiet provenance label (§8). A session built from
+   * project content must say so.
+   */
+  readonly authorityTier: PresentableAuthority['status'];
+  /** Provenance and debugging only. Never surfaced as a user-facing control. */
+  readonly seed: GenerationSeed;
   /** Which feature set was used, or null when generated without a venue. */
   readonly venueSnapshotId: VenueSnapshotId | null;
 }
