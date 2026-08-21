@@ -23,8 +23,18 @@ const DECISIONS: readonly { value: ConfirmationDecision; label: string }[] = [
 export function ConfirmClient() {
   const router = useRouter();
   const { candidates, confirm } = useVenue();
+  /**
+   * Starts empty. Absence is meaningful.
+   *
+   * Seeding every candidate to `present` would confirm everything for a user
+   * who taps straight through, which is a soft yes by default. §6.3 is explicit
+   * that `unsure` is a real outcome and not a soft yes — precision over recall,
+   * because a missed feature costs options while an invented one creates
+   * physical risk. An unanswered candidate carries no entry here and reaches
+   * the confirmation contract's own `?? 'unsure'` default.
+   */
   const [decisions, setDecisions] = useState<ReadonlyMap<SupportedFeatureId, ConfirmationDecision>>(
-    () => new Map(candidates.map((c) => [c.featureId, 'present' as ConfirmationDecision])),
+    () => new Map(),
   );
 
   // Same order as /park, so the review reads as a continuation rather than a
@@ -87,7 +97,8 @@ export function ConfirmClient() {
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-3">
           {ordered.map((candidate) => {
             const feature = findSupportedFeature(candidate.featureId);
-            const decision = decisions.get(candidate.featureId) ?? 'unsure';
+            const answered = decisions.get(candidate.featureId);
+            const decision = answered ?? 'unsure';
             const isTrusted = decision === 'present';
             const consequence = consequenceFor(candidate.featureId, isTrusted);
 
@@ -143,7 +154,7 @@ export function ConfirmClient() {
                         type="radio"
                         name={`decision-${candidate.featureId}`}
                         value={option.value}
-                        checked={decision === option.value}
+                        checked={answered === option.value}
                         onChange={() => set(candidate.featureId, option.value)}
                         className="sr-only"
                       />
@@ -151,6 +162,12 @@ export function ConfirmClient() {
                     </label>
                   ))}
                 </div>
+
+                {answered === undefined && (
+                  <p className="mt-2.5 text-sm leading-snug text-navy-faint">
+                    Unanswered — counts as not sure
+                  </p>
+                )}
               </fieldset>
             );
           })}
