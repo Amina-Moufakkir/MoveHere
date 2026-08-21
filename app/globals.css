@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* The native client is not a Tailwind consumer.
+   Tailwind v4 detects sources automatically from the project root, which now
+   includes mobile/. Its React Native style objects are plain JS, but scanning
+   them still emitted utilities into this stylesheet that the web app never
+   uses — 717 bytes of them. Excluding the directory keeps the two clients'
+   builds independent, which is the point of them being separate clients. */
+@source not "../mobile";
+
 /* ---------------------------------------------------------------------------
    MoveHere — Open Air
 

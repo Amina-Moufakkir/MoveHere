@@ -21,7 +21,7 @@ export default function RootLayout() {
     <VenueProvider>
       <Stack>
         <Stack.Screen name="index" options={{ title: 'MoveHere' }} />
-        <Stack.Screen name="park" options={{ title: 'What do you see' }} />
+        <Stack.Screen name="park" options={{ title: 'Look around' }} />
         <Stack.Screen name="confirm" options={{ title: 'Confirm' }} />
         <Stack.Screen name="setup" options={{ title: 'Set up' }} />
         <Stack.Screen name="workout" options={{ title: 'Your session' }} />
