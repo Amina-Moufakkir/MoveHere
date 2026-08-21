@@ -1,0 +1,22 @@
+{
+  // The shared domain, compiled against no platform at all.
+  //
+  // src/ is consumed by both clients (§15), so it must typecheck without the
+  // DOM, without Node, and without React Native. ES2022 and nothing else.
+  //
+  // This is what turns "src/ is platform-independent" from an audit finding
+  // into an enforced property. `localStorage.setItem(...)` inside src/domain
+  // typechecks fine against tsconfig.json, because the web app's config loads
+  // the DOM lib. It fails here. `types: []` does the same for @types/node,
+  // which supplies fetch, crypto, navigator, and other globals that are not
+  // available on every platform this code has to run on.
+  //
+  // Strictness is inherited, not restated: the domain is held to exactly the
+  // settings the rest of the repository uses.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src/**/*.ts"]
+}
