@@ -12,6 +12,7 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "movehere"
+    "scheme": "movehere",
+    "_identity": "slug, scheme, and ios.bundleIdentifier are stable \u2014 see mobile/IDENTITY.md before changing any of them"
   }
 }
