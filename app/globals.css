@@ -81,28 +81,6 @@
   --ease-spring: cubic-bezier(0.2, 0.8, 0.25, 1);
   --duration-quick: 130ms;
   --duration-settle: 260ms;
-
-  /* --- transitional aliases -------------------------------------------------
-     Routes not yet redesigned still reference the previous token names. Mapped
-     here so they keep building and stay on-palette until their own pass.
-     Remove once every route is Open Air. */
-  --color-chalk: var(--color-cloud);
-  --color-chalk-deep: var(--color-cloud-deep);
-  --color-chalk-raised: var(--color-white);
-  --color-spruce: var(--color-navy);
-  --color-spruce-muted: var(--color-navy-muted);
-  --color-spruce-faint: var(--color-navy-faint);
-  --color-persimmon: var(--color-blue);
-  --color-persimmon-deep: var(--color-blue-deep);
-  --color-persimmon-soft: var(--color-pale);
-  --color-ochre: var(--color-yellow);
-  --color-ochre-deep: var(--color-yellow-ink);
-  --color-ochre-soft: var(--color-pale-green);
-  --color-rule: var(--color-line);
-  --color-rule-strong: var(--color-line-strong);
-  --text-blaze: var(--text-hero);
-  --text-display: var(--text-page);
-  --text-title: 1.25rem;
 }
 
 @media (min-width: 40rem) {
