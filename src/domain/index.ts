@@ -27,7 +27,11 @@ export {
   findSupportedFeature,
 } from './feature-registry.ts';
 
+export { AUTHORED_MATRIX, EXERCISES } from './exercise-catalog.ts';
+export { loadMatrix } from './matrix-loader.ts';
+
 export type * from './feature.ts';
 export type * from './confirmation.ts';
 export type * from './exercise.ts';
 export type * from './session.ts';
+export type * from './matrix-loader.ts';

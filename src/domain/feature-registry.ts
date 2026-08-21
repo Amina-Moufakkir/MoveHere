@@ -71,12 +71,6 @@ const SUPPORTED: readonly SupportedFeature[] = [
     label: 'Parallel bars',
     confirmationPrompt: 'Are there purpose-built parallel or dip bars?',
   },
-  {
-    id: 'outdoor-fitness-equipment',
-    featureClass: 'class-b-engineered-load-bearing',
-    label: 'Outdoor fitness equipment',
-    confirmationPrompt: 'Is there designated outdoor fitness equipment?',
-  },
 ];
 
 const EXCLUDED: readonly ExcludedObject[] = [

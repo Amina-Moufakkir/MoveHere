@@ -17,6 +17,7 @@ import type {
   Prescription,
   CompatibilityEntryId,
   EnvironmentIndependentDeclarationId,
+  PresentableAuthority,
 } from './exercise.ts';
 
 /** A list that cannot be empty. Used where an empty value would be a defect. */
@@ -141,7 +142,10 @@ export interface SessionGenerationInput {
  */
 export interface SelectionAuthority {
   readonly matrixVersion: string;
-  readonly reviewedAt: string;
+  /** Which tier authored the claim. Drives the session's provenance label (§8). */
+  readonly tier: PresentableAuthority['status'];
+  /** When that authority was established — authored or reviewed, per tier. */
+  readonly attestedAt: string;
 }
 
 /**

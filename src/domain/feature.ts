@@ -42,8 +42,7 @@ export type SupportedFeatureId =
   // Class B — engineered load-bearing
   | 'park-bench'
   | 'pull-up-bar'
-  | 'parallel-bars'
-  | 'outdoor-fitness-equipment';
+  | 'parallel-bars';
 
 /** Objects deliberately excluded from the registry (§7, Class C). */
 export type ExcludedObjectId =

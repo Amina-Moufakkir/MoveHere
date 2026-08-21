@@ -28,7 +28,7 @@ import type {
 } from '../../../src/domain/session.ts';
 import type { SupportedFeature, ExcludedObject } from '../../../src/domain/feature.ts';
 import type {
-  CompatibilityReview,
+  ContentAuthority,
   CompatibilityEntryId,
   EnvironmentIndependentDeclarationId,
 } from '../../../src/domain/exercise.ts';
@@ -109,12 +109,12 @@ export const bases: readonly SelectionBasis[] = [
     kind: 'confirmed-feature',
     featureId: 'park-bench',
     compatibilityId: 'cmp-bench-step-up' as CompatibilityEntryId,
-    authority: { matrixVersion: '1', reviewedAt: 't' },
+    authority: { matrixVersion: '1', tier: 'project-content', attestedAt: 't' },
   },
   {
     kind: 'environment-independent',
     declarationId: 'ei-squat' as EnvironmentIndependentDeclarationId,
-    authority: { matrixVersion: '1', reviewedAt: 't' },
+    authority: { matrixVersion: '1', tier: 'reviewed', attestedAt: 't' },
   },
 ];
 
@@ -140,8 +140,16 @@ export const bleachers: ExcludedObject = {
   reconsiderWhen: 'Park audits establish prevalence and reliable distinguishability.',
 };
 
-// Draft and reviewed claims are both expressible; only reviewed needs a date.
-export const reviews: readonly CompatibilityReview[] = [
+// All three authority tiers are expressible, with their differing obligations.
+export const authorities: readonly ContentAuthority[] = [
   { status: 'draft' },
-  { status: 'reviewed', reviewedAt: 't' },
+  { status: 'project-content', authoredAt: 't', basisRefs: ['general-fitness conventions'] },
+  {
+    status: 'reviewed',
+    reviewedAt: 't',
+    reviewerRef: 'r',
+    credentialRef: 'c',
+    sourceRefs: ['s'],
+    scope: 'general-fitness',
+  },
 ];
