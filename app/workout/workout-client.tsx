@@ -7,7 +7,6 @@ import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
 import { exerciseCues, exerciseName } from '@/src/programming/session-builder.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
-import type { SessionItem } from '@/src/domain/session.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
 import { doseParts, doseText, isSingleEffort } from '@/src/presentation/prescription-copy.ts';
 
