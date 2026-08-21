@@ -6,32 +6,13 @@ import { Action, ActionLink } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { useVenue } from '@/components/venue/venue-provider';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
-import { loadMatrix } from '@/src/domain/matrix-loader.ts';
-import { AUTHORED_MATRIX } from '@/src/domain/exercise-catalog.ts';
 import type { ConfirmationDecision } from '@/src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
 import { byPresentation } from '@/src/presentation/feature-copy.ts';
-
-/**
- * What each feature actually unlocks.
- *
- * This is why confirming is not a repeat of selecting: choosing on /park says
- * what is there, and this screen shows what trusting it will change. Read
- * straight from the validated matrix, so the answer is the real one.
- */
-const matrix = (() => {
-  const result = loadMatrix(AUTHORED_MATRIX);
-  return result.ok ? result.matrix : null;
-})();
-
-const unlockedBy = (featureId: SupportedFeatureId): readonly string[] => {
-  if (matrix === null) return [];
-  const names = matrix.compatibilities
-    .filter((c) => c.featureId === featureId)
-    .map((c) => matrix.exercises.find((e) => e.id === c.exerciseId)?.name)
-    .filter((n): n is string => n !== undefined);
-  return [...new Set(names)].sort();
-};
+import {
+  consequenceFor,
+  movementCountFor,
+} from '@/src/presentation/feature-consequence.ts';
 
 const DECISIONS: readonly { value: ConfirmationDecision; label: string }[] = [
   { value: 'present', label: 'Yes' },
@@ -59,7 +40,7 @@ export function ConfirmClient() {
   );
 
   const movementCount = useMemo(
-    () => new Set(trusted.flatMap((c) => unlockedBy(c.featureId))).size,
+    () => movementCountFor(trusted.map((c) => c.featureId)),
     [trusted],
   );
 
@@ -107,8 +88,8 @@ export function ConfirmClient() {
           {ordered.map((candidate) => {
             const feature = findSupportedFeature(candidate.featureId);
             const decision = decisions.get(candidate.featureId) ?? 'unsure';
-            const unlocks = unlockedBy(candidate.featureId);
             const isTrusted = decision === 'present';
+            const consequence = consequenceFor(candidate.featureId, isTrusted);
 
             return (
               <fieldset
@@ -140,13 +121,13 @@ export function ConfirmClient() {
                     </p>
 
                     {/* The consequence of trusting it — the thing /park cannot show. */}
-                    {unlocks.length > 0 && (
+                    {consequence !== null && (
                       <p
                         className={`mt-2 text-sm leading-snug transition-colors duration-(--duration-quick) ${
                           isTrusted ? 'text-green-ink' : 'text-navy-faint'
                         }`}
                       >
-                        {isTrusted ? 'Adds' : 'Would add'} {unlocks.join(', ')}
+                        {consequence}
                       </p>
                     )}
                   </div>
