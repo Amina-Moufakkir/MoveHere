@@ -250,7 +250,7 @@ Vision identifies **candidate features**.
 Possible features detected:
 
 ✓ Bench
-✓ Open ground
+✓ Path
 □ Horizontal bar
 ? Stairs
 ```
@@ -387,19 +387,45 @@ it cannot responsibly make.
 
 ### Class A — Initial candidates
 
-- Open ground.
 - Walking/running path.
 - Stairs.
 - Hills.
 - Running track.
 - Hard court.
 
+### Open ground is baseline space, not a registry feature
+
+Ordinary usable standing, floor, or ground space is deliberately **not** in the
+registry. It is the baseline condition every environment-independent movement
+already assumes, which is exactly why it fails admission condition 3: a feature
+that changes no eligible movement does not materially change generation.
+
+Confirming it would ask the user to assert something that adds nothing, and
+would make an inventory containing only open ground look venue-aware when the
+session it produces is environment-independent. Environment-independent
+movements carry their own declaration (§8) and depend on no confirmation.
+
 ### Class B — Initial candidates
 
 - Conventional park bench.
 - Purpose-built pull-up/horizontal bar.
 - Purpose-built parallel/dip bars.
-- Designated outdoor fitness equipment.
+
+### Outdoor fitness equipment enters as specific types, not as a category
+
+"Designated outdoor fitness equipment" is not a registry entry. It names a
+category rather than an object, and the category spans equipment with
+materially different load paths — a captive-weight machine, a balance beam, a
+suspension frame and a sign-posted stretching station are not one thing.
+
+Admitting a category would let an unreviewed object inherit support from the
+label attached to it, which is the failure mode Class C exists to prevent.
+
+Future equipment therefore enters **one specific feature type at a time**, each
+satisfying the five conditions on its own evidence, each with its own
+confirmation prompt, and each with explicit reviewed compatibility claims
+naming the movements it supports. No object becomes supported by resembling
+something already in the registry.
 
 ### Bleachers — excluded pending evidence
 
@@ -449,7 +475,7 @@ SUPPORTED MOVEMENTS
 Illustrative structure:
 
 ```text
-OPEN GROUND
+ENVIRONMENT-INDEPENDENT
 ├── squat
 ├── reverse lunge
 ├── push-up
@@ -465,6 +491,10 @@ PURPOSE-BUILT BAR
 ├── supported hang variation
 └── supported pulling movement
 ```
+
+The first group is not a venue feature. Environment-independent movements are
+declared as needing nothing, which is why they remain available when no venue
+is confirmed (§7, §11). Every other group hangs off a confirmed feature.
 
 The exact exercise set must be reviewed before being treated as authoritative.
 
@@ -550,8 +580,6 @@ The following are recorded so they are not quietly resolved by an implementation
 A conservative registry may cause many parks to resolve to:
 
 ```text
-open ground
-+
 path
 +
 bench
@@ -870,6 +898,17 @@ Do users actually perform the sessions?
 ### Gate G — Seasonality
 
 During adverse outdoor periods, is there a continuity mechanism that retains enough value?
+
+### Gate H
+
+**There is no Gate H.** The sequence runs A–G, then I and J.
+
+Recorded because the omission looks like a lost gate and invites someone to
+invent one. It is absent in every revision of this plan under version control,
+so if a Gate H ever existed it predates the repository. Gate I is referenced
+throughout this document, in the domain source, and in the test suite;
+renumbering to close the gap would rewrite every one of those references to fix
+nothing. The letter stays skipped.
 
 ### Gate I — Venue Differentiation
 
