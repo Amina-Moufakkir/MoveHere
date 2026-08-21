@@ -227,9 +227,9 @@ const conditioning30 = program(
       slot({ id: 'c30-hinge', patterns: ['hinge'], prescription: reps(3, 12), venueAware: 'optional', substitute: 'required', estimatedSeconds: 150 }),
     ]),
     block('Finish', [
-      slot({ id: 'c30-loco-2', patterns: ['locomotion'], prescription: hold(1, 180), venueAware: 'optional', substitute: 'required', estimatedSeconds: 190 }),
-      slot({ id: 'c30-squat-2', patterns: ['squat'], prescription: perSide(3, 10), venueAware: 'optional', substitute: 'optional', estimatedSeconds: 150 }),
-      slot({ id: 'c30-core-2', patterns: ['core'], prescription: reps(3, 10), venueAware: 'optional', substitute: 'optional', estimatedSeconds: 120 }),
+      slot({ id: 'c30-loco-2', patterns: ['locomotion'], prescription: hold(1, 180), venueAware: 'optional', substitute: 'optional', estimatedSeconds: 190 }),
+      slot({ id: 'c30-squat-2', patterns: ['squat'], prescription: perSide(3, 10), venueAware: 'optional', substitute: 'required', estimatedSeconds: 150 }),
+      slot({ id: 'c30-core-2', patterns: ['core'], prescription: reps(3, 10), venueAware: 'optional', substitute: 'required', estimatedSeconds: 120 }),
     ]),
   ],
   COND_REST_ITEM,
@@ -248,9 +248,9 @@ const conditioning45 = program(
       slot({ id: 'c45-hinge', patterns: ['hinge'], prescription: reps(4, 12), venueAware: 'optional', substitute: 'required', estimatedSeconds: 180 }),
     ]),
     block('Intervals', [
-      slot({ id: 'c45-loco-2', patterns: ['locomotion'], prescription: hold(1, 240), venueAware: 'optional', substitute: 'required', estimatedSeconds: 250 }),
-      slot({ id: 'c45-squat-2', patterns: ['squat'], prescription: perSide(3, 12), venueAware: 'optional', substitute: 'optional', estimatedSeconds: 180 }),
-      slot({ id: 'c45-push-2', patterns: ['push'], prescription: reps(3, 10), venueAware: 'optional', substitute: 'optional', estimatedSeconds: 180 }),
+      slot({ id: 'c45-loco-2', patterns: ['locomotion'], prescription: hold(1, 240), venueAware: 'optional', substitute: 'optional', estimatedSeconds: 250 }),
+      slot({ id: 'c45-squat-2', patterns: ['squat'], prescription: perSide(3, 12), venueAware: 'optional', substitute: 'required', estimatedSeconds: 180 }),
+      slot({ id: 'c45-push-2', patterns: ['push'], prescription: reps(3, 10), venueAware: 'optional', substitute: 'required', estimatedSeconds: 180 }),
     ]),
     block('Finish', [
       slot({ id: 'c45-core-2', patterns: ['core'], prescription: hold(3, 30), venueAware: 'required', substitute: 'required', estimatedSeconds: 150 }),

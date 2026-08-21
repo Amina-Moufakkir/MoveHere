@@ -144,6 +144,42 @@ test('demoting a substitute-required slot is caught by the fill floor', () => {
   }
 });
 
+test('required slots competing for one movement are caught', () => {
+  // Two required no-repeat locomotion slots, one environment-independent
+  // locomotion movement. Per-slot satisfiability passes; joint capacity does
+  // not, which is the failure this check exists for.
+  const [build, circuit, finish] = STRENGTH_POLICY.programs[30].blocks;
+  const locoSlot = {
+    ...build.slots[0],
+    id: 'x-loco-a' as typeof build.slots[0]['id'],
+    eligiblePatterns: ['locomotion'] as const,
+    prescription: { kind: 'time', sets: 1, seconds: 60, counting: 'total' } as const,
+    obligation: { 'venue-aware': 'required', substitute: 'required' } as const,
+    allowRepeatExercise: false,
+  };
+  const clashing: AuthoredGoalPolicy = {
+    ...STRENGTH_POLICY,
+    programs: {
+      ...STRENGTH_POLICY.programs,
+      30: {
+        ...STRENGTH_POLICY.programs[30],
+        blocks: [
+          { ...build, slots: [locoSlot, { ...locoSlot, id: 'x-loco-b' as typeof locoSlot['id'] }] },
+          circuit,
+          ...(finish === undefined ? [] : [finish]),
+        ] as typeof STRENGTH_POLICY.programs[30]['blocks'],
+      },
+    },
+  };
+  const loaded = loadGoalPolicies([clashing, AUTHORED_POLICIES[1]!]);
+  assert.ok(loaded.ok);
+  const result = checkFeasibility(matrix, loaded.policies);
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.ok(result.errors.some((e) => e.kind === 'required-slots-exceed-distinct-movements'));
+  }
+});
+
 test('no program exceeds the time the user asked for', () => {
   const result = checkFeasibility(matrix, policies);
   assert.ok(result.ok);

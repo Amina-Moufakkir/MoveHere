@@ -36,6 +36,20 @@ export type FeasibilityError =
   | { readonly kind: 'program-exceeds-duration'; readonly goal: SessionGoal; readonly duration: SessionDuration; readonly estimatedSeconds: number }
   | {
       /**
+       * More required slots than distinct movements to fill them.
+       *
+       * Per-slot satisfiability is not enough: slots that forbid repeats
+       * compete for the same pool, so N required slots drawing on the same
+       * patterns need N distinct movements between them.
+       */
+      readonly kind: 'required-slots-exceed-distinct-movements';
+      readonly goal: SessionGoal;
+      readonly duration: SessionDuration;
+      readonly context: GenerationContextKind;
+      readonly unmatchedSlotIds: readonly string[];
+    }
+  | {
+      /**
        * The worst-case session — required slots only, every optional
        * venue-dependent slot skipped — is too short for the time the user
        * asked for. This is what a substitute session looks like at a venue
@@ -122,6 +136,38 @@ const programSeconds = (
   return work + program.restBetweenBlocksSeconds * (blocks.length - 1);
 };
 
+/**
+ * Kuhn's algorithm. Returns the slots left unmatched when every slot is
+ * assigned a distinct movement it can actually use.
+ */
+const unmatchedSlots = (
+  slots: readonly SlotTemplate[],
+  exercises: readonly Exercise[],
+): readonly string[] => {
+  const assignment = new Map<string, string>(); // exerciseId -> slotId
+  const unmatched: string[] = [];
+
+  const tryAssign = (slot: SlotTemplate, visited: Set<string>): boolean => {
+    for (const exercise of exercises) {
+      if (!canFill(exercise, slot) || visited.has(exercise.id)) continue;
+      visited.add(exercise.id);
+      const holder = assignment.get(exercise.id);
+      const holderSlot = holder === undefined ? undefined : slots.find((s) => s.id === holder);
+      if (holder === undefined || (holderSlot !== undefined && tryAssign(holderSlot, visited))) {
+        assignment.set(exercise.id, slot.id);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Sorted so the report is stable regardless of authoring order.
+  for (const slot of [...slots].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))) {
+    if (!tryAssign(slot, new Set())) unmatched.push(slot.id);
+  }
+  return unmatched;
+};
+
 const asProgramming = (value: Omit<FeasibleProgramming, typeof feasibleWitness>): FeasibleProgramming =>
   value as FeasibleProgramming;
 
@@ -175,6 +221,24 @@ export const checkFeasibility: CheckFeasibility = (matrix, policies) => {
           ) {
             advisories.push({ kind: 'optional-slot-never-satisfiable', at });
           }
+        }
+      }
+
+      // Maximum bipartite matching between no-repeat required slots and the
+      // distinct environment-independent movements able to fill them.
+      for (const context of GENERATION_CONTEXTS) {
+        const competing = slots.filter(
+          (s) => s.obligation[context] === 'required' && !s.allowRepeatExercise,
+        );
+        const unmatched = unmatchedSlots(competing, eiExercises);
+        if (unmatched.length > 0) {
+          errors.push({
+            kind: 'required-slots-exceed-distinct-movements',
+            goal,
+            duration,
+            context,
+            unmatchedSlotIds: unmatched,
+          });
         }
       }
 
