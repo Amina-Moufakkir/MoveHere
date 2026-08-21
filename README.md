@@ -4,7 +4,22 @@ Build a workout from the place you're in, what's actually there, and the time yo
 
 Most fitness products start with a workout and leave you to work out whether you can do it here. MoveHere starts from the other end: you tell it what a nearby park has, you confirm it, and it generates a session that uses only those features — or a no-equipment session when the park isn't an option.
 
+**[Try it →](https://amina-moufakkir.github.io/MoveHere/)** · no signup, nothing leaves your device
+
 *MoveHere is a working name. Availability and trademark clearance are not complete.*
+
+## What it looks like
+
+|  |  |
+|---|---|
+| ![Landing page](docs/screenshots/01-landing.jpg) | ![Selecting park features](docs/screenshots/02-park.jpg) |
+| **The pitch.** Environment first, park named as the one thing built. | **Step 1 — look around.** Tap what you can actually see. Nothing is trusted yet. |
+| ![Confirming features](docs/screenshots/03-confirm.jpg) | ![A park session](docs/screenshots/04-workout.jpg) |
+| **Step 2 — confirm.** Only what you confirm reaches the generator, and each feature shows what it unlocks. | **A park session.** Every movement cites the confirmed feature it came from. |
+
+![A substitute session](docs/screenshots/05-substitute.jpg)
+
+**A substitute session.** When the park is unavailable, you still get a workout — labelled a substitute, with the reason it withheld the park, and never presented as a park session.
 
 ## Status
 
@@ -66,6 +81,13 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
+To look at the production build the way it actually ships:
+
+```bash
+npm run build        # static export to out/
+npm run preview
+```
+
 ## Verification
 
 ```bash
@@ -80,6 +102,12 @@ npm run verify       # everything below, in order
 | `npm run check:feasibility` | every goal × duration is satisfiable from the shipped matrix |
 
 The contract suite is inverted: each file declares the TypeScript error it expects, and the suite passes only when every file *fails* to compile with that error. A negative test that starts compiling is a regression — an invariant stopped being enforced.
+
+## Deployment
+
+Static export to GitHub Pages, built and published by [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) on every push to `main`. The workflow verifies before it builds, so a deploy cannot ship content the contract suite rejects.
+
+There is no server, and that is not a limitation being worked around: every route prerenders, all state is local, generation is a pure function, and nothing reads a request. The deployed page also makes no third-party requests — the font is self-hosted at build time.
 
 ## Engineering highlights
 
@@ -107,16 +135,18 @@ Honest list, not a roadmap:
 ## Repository layout
 
 ```text
-app/                    Next.js App Router — landing + 5 flow routes
-components/             UI primitives, shell, brand marks, provenance labels
-lib/                    browser-side glue: local stores, content loading, presentation
-src/domain/             deterministic domain logic — no React, no I/O
-src/storage/            storage port used by the stores
-tests/contracts/        negative type-level tests (30 invariants)
-tests/runtime/          behavioral tests (91)
-scripts/                contract + feasibility harnesses
+app/                        Next.js App Router — landing + 5 flow routes
+components/                 UI primitives, shell, brand marks, provenance labels
+lib/                        browser-side glue: local stores, content loading, presentation
+src/domain/                 deterministic domain logic — no React, no I/O
+src/storage/                storage port used by the stores
+tests/contracts/            negative type-level tests (30 invariants)
+tests/runtime/              behavioral tests (91)
+scripts/                    contract + feasibility harnesses
+.github/workflows/          build, verify, publish to Pages
 docs/product-plan-v4.3.md   canonical product plan
-CLAUDE.md               working rules for agents and contributors
+docs/screenshots/           images used by this README
+CLAUDE.md                   working rules for agents and contributors
 ```
 
 `src/domain` has no React import and no I/O. That is deliberate: the interesting logic is testable without a renderer, and the UI cannot reach around a boundary it doesn't own.
