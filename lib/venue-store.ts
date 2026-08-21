@@ -21,7 +21,8 @@ import type {
   RehydrationFailure,
 } from '../src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '../src/domain/feature.ts';
-import { createInventoryStore, createMemoryStorage } from '../src/storage/inventory-store.ts';
+import { createInventoryStore } from '../src/storage/inventory-store.ts';
+import { createMemoryStorage } from '../src/storage/port.ts';
 
 const HOME_PARK = makeVenueId('home-park');
 

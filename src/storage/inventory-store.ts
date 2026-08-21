@@ -12,13 +12,7 @@ import type {
   ReadPersistedInventory,
   WritePersistedInventory,
 } from '../domain/confirmation.ts';
-
-/** The slice of the Web Storage API this needs. Lets tests supply a fake. */
-export interface StorageLike {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-}
+import type { StorageLike } from './port.ts';
 
 const keyFor = (venueId: VenueId): string => `movehere:inventory:${venueId}`;
 
@@ -56,13 +50,3 @@ export const createInventoryStore = (storage: StorageLike): InventoryStore => ({
     }
   },
 });
-
-/** In-memory implementation for tests and server-side rendering. */
-export const createMemoryStorage = (): StorageLike => {
-  const map = new Map<string, string>();
-  return {
-    getItem: (key) => map.get(key) ?? null,
-    setItem: (key, value) => void map.set(key, value),
-    removeItem: (key) => void map.delete(key),
-  };
-};

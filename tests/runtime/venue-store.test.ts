@@ -16,7 +16,8 @@ import {
   loadInventory,
   saveInventory,
 } from '../../lib/venue-store.ts';
-import { createInventoryStore, createMemoryStorage } from '../../src/storage/inventory-store.ts';
+import { createInventoryStore } from '../../src/storage/inventory-store.ts';
+import { createMemoryStorage } from '../../src/storage/port.ts';
 import type { ConfirmationDecision } from '../../src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '../../src/domain/feature.ts';
 

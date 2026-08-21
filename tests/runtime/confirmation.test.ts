@@ -26,8 +26,8 @@ import type {
 import type { SupportedFeatureId } from '../../src/domain/feature.ts';
 import {
   createInventoryStore,
-  createMemoryStorage,
 } from '../../src/storage/inventory-store.ts';
+import { createMemoryStorage } from '../../src/storage/port.ts';
 
 const venue = 'venue-1' as VenueId;
 
