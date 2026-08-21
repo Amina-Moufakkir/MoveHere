@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { SiteHeader } from '@/components/shell/site-header';
 import { VenueProvider } from '@/components/venue/venue-provider';
 import { PageContainer } from '@/components/shell/page-container';
+import { NOT_MEDICAL_ADVICE, NO_SAFETY_ASSESSMENT } from '@/src/presentation/safety-copy.ts';
 import './globals.css';
 
 /**
@@ -53,8 +54,8 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
 
         <footer className="border-t border-line py-8 text-sm text-navy-faint">
           <PageContainer className="flex flex-col gap-2">
-            <p>MoveHere — exploratory project. Not medical or rehabilitation advice.</p>
-            <p>Confirm what is actually there. Nothing here assesses whether it is safe to use.</p>
+            <p>{NOT_MEDICAL_ADVICE}</p>
+            <p>{NO_SAFETY_ASSESSMENT}</p>
           </PageContainer>
         </footer>
         </VenueProvider>

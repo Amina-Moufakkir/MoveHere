@@ -7,7 +7,8 @@ import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
 import { exerciseCues, exerciseName } from '@/src/programming/session-builder.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
-import type { SessionItem, SubstituteReason } from '@/src/domain/session.ts';
+import type { SessionItem } from '@/src/domain/session.ts';
+import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
 
 const dose = (item: SessionItem): string => {
   const p = item.prescription;
@@ -32,24 +33,6 @@ const parts = (item: SessionItem): readonly [string, string] => {
     return [String(p.sets), `${p.seconds}s`];
   }
   return [String(p.meters), 'm'];
-};
-
-/**
- * Why this is a substitute rather than a park session (§11).
- *
- * Keyed by SubstituteReason['kind'] rather than by string, so adding a reason
- * to the domain is a compile error here instead of a substitute session that
- * announces itself with no explanation underneath.
- *
- * Written with real characters. An HTML entity inside a JS string is not JSX
- * text, so React escapes it and the user reads the entity.
- */
-const REASON: Record<SubstituteReason['kind'], string> = {
-  'conditions-adverse': 'You said it’s bad outside, so this is a no-equipment session.',
-  'conditions-unavailable': 'Conditions weren’t known, so this is a no-equipment session.',
-  'no-confirmed-inventory': 'No park is confirmed yet, so this is a no-equipment session.',
-  'no-compatible-venue-movements':
-    'Your park couldn’t fill this session, so this is a no-equipment one.',
 };
 
 export function WorkoutClient() {
@@ -156,10 +139,10 @@ export function WorkoutClient() {
           {isSubstitute && (
             <div className="mt-4 rounded-xl border-l-4 border-yellow bg-white px-4 py-3 shadow-(--shadow-lift)">
               <p className="text-sm font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-yellow-ink">
-                Substitute session
+                {SUBSTITUTE_LABEL}
               </p>
               <p className="mt-1 text-sm leading-snug text-navy-muted">
-                {REASON[workout.reason.kind]}
+                {SUBSTITUTE_REASON[workout.reason.kind]}
               </p>
             </div>
           )}

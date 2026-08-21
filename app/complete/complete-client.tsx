@@ -9,6 +9,7 @@ import { useVenue } from '@/components/venue/venue-provider';
 import { byPresentation } from '@/src/presentation/feature-copy.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
+import { SUBSTITUTE_LABEL } from '@/src/presentation/session-copy.ts';
 
 export function CompleteClient() {
   const router = useRouter();
@@ -70,7 +71,7 @@ export function CompleteClient() {
             </span>
             {isSubstitute ? (
               <span className="rounded-full border-l-4 border-yellow bg-white px-3 py-1.5 text-sm font-bold text-yellow-ink shadow-(--shadow-lift)">
-                Substitute session
+                {SUBSTITUTE_LABEL}
               </span>
             ) : (
               featuresUsed.map((id) => (

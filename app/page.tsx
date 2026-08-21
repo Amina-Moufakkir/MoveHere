@@ -3,6 +3,7 @@ import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { FEATURE_REGISTRY } from '@/src/domain/feature-registry.ts';
 import { SHORT_LABEL, byPresentation } from '@/src/presentation/feature-copy.ts';
+import { BOUNDARY_HEADING, BOUNDARY_STATEMENTS } from '@/src/presentation/safety-copy.ts';
 
 /**
  * The landing page.
@@ -161,26 +162,18 @@ export default function LandingPage() {
       <section className="border-t border-line px-5 py-10 sm:px-8 sm:py-14">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
           <h2 className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-muted">
-            What MoveHere doesn’t decide
+            {BOUNDARY_HEADING}
           </h2>
 
           <div className="flex flex-col gap-4">
-            <div>
-              <h3 className="font-extrabold text-navy">Whether anything is safe to use</h3>
-              <p className="mt-1 text-base leading-snug text-navy-muted text-pretty">
-                MoveHere can tell that a bench is a bench. It has no idea whether that particular
-                bench is sound, or whether it will take your weight. It has never seen it. You look
-                at it, and you decide.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-extrabold text-navy">Anything medical</h3>
-              <p className="mt-1 text-base leading-snug text-navy-muted text-pretty">
-                No injury programming, no rehabilitation, no working around a condition. That isn’t
-                a feature waiting to be added — it’s a line MoveHere doesn’t cross.
-              </p>
-            </div>
+            {BOUNDARY_STATEMENTS.map((statement) => (
+              <div key={statement.heading}>
+                <h3 className="font-extrabold text-navy">{statement.heading}</h3>
+                <p className="mt-1 text-base leading-snug text-navy-muted text-pretty">
+                  {statement.body}
+                </p>
+              </div>
+            ))}
           </div>
 
           <ProjectContentNote />

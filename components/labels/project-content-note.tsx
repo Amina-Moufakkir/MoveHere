@@ -1,11 +1,13 @@
 /**
  * Project-content provenance label (§8).
  *
- * Persistent but quiet: it stays on screen for the whole session, because a
- * user should never be mid-workout and unaware of what authored the
- * programming. It is set in the same register as a caption — honest, not
- * alarming. It is not a warning, and it must not be styled as one.
+ * The wording is shared with the native client and lives in
+ * src/presentation/safety-copy.ts. This component owns only how it looks: the
+ * same register as a caption — honest, not alarming. It is not a warning, and
+ * it must not be styled as one.
  */
+import { PROJECT_CONTENT_NOTE } from '@/src/presentation/safety-copy.ts';
+
 export function ProjectContentNote({ className }: { readonly className?: string }) {
   return (
     <p
@@ -14,10 +16,7 @@ export function ProjectContentNote({ className }: { readonly className?: string 
         .join(' ')}
     >
       <span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-full bg-current opacity-50" />
-      <span>
-        Sessions are built from project-authored training content, not programming reviewed by a
-        qualified fitness professional.
-      </span>
+      <span>{PROJECT_CONTENT_NOTE}</span>
     </p>
   );
 }
