@@ -243,6 +243,8 @@ Precision should be favored over recall:
 - Missing a feature reduces workout options.
 - Inventing a feature can create physical risk.
 
+**Confirmation remains a separate step in the MVP**, even though the MVP's only candidate source is manual selection and selecting a feature already implies asserting it. The review step is retained because it is where the product's central invariant becomes visible to the user, and because it is the seam vision plugs into later without restructuring the flow.
+
 ### Step 4 — Session inputs
 
 Initially collect only:
@@ -255,7 +257,7 @@ The initial supported session goals are:
 - Strength.
 - Conditioning.
 
-**Mobility is a candidate goal, not an initial supported goal.** It is demoted pending reviewed domain input on two questions: whether mobility is a goal MoveHere should program at all, and whether it can be expressed in the same programming model as strength and conditioning (§8). Initial goal-policy work covers strength and conditioning only. Mobility is promoted or removed on evidence, not on the fact that it was listed first.
+**Mobility is deferred.** It is not a supported goal in the MVP. It remains a candidate pending reviewed domain input on two questions: whether mobility is a goal MoveHere should program at all, and whether it can be expressed in the same programming model as strength and conditioning (§8). Initial goal-policy work covers strength and conditioning only. Mobility is promoted or removed on evidence, not on the fact that it was listed first.
 
 Available time is chosen from a fixed set of durations:
 
@@ -280,6 +282,8 @@ Conditions may also be **unavailable** — unknown, unreadable, or not yet retri
 
 The two cases must remain distinguishable in recorded provenance. "We know conditions are adverse" and "we could not determine conditions" are different facts, and collapsing them would misrepresent why a park session was withheld and corrupt the seasonality signal in §11.
 
+**MVP conditions input is user-reported**: acceptable, adverse, or unknown. No weather service is integrated. The disposition the user reports drives the same gate a retrieved forecast eventually would, so the substitute path is exercised for real rather than stubbed. Unknown behaves as unavailable.
+
 ### Step 6 — Generate and perform
 
 The deterministic generator may use only:
@@ -288,6 +292,8 @@ The deterministic generator may use only:
 2. explicitly environment-independent movements.
 
 The user follows the workout and records completion locally.
+
+The user may ask for a different session for the same venue, goal, and duration. This generates with a new seed and is recorded with the session, so any session remains reproducible. **The raw seed is not exposed in normal UI** — it is provenance, not a user-facing control.
 
 ### Step 7 — Correct venue information
 
@@ -456,6 +462,26 @@ Four rules govern how policy reaches production generation. All four are standin
 **Feasibility validation is a mandatory boundary.** Policy is validated against the compatibility matrix before it can enter production generation, so a policy the matrix cannot satisfy is caught as a defect rather than surfacing as a user receiving no session. This is enforced in CI and build verification, and again at loading or startup where applicable.
 
 **Reviewed goal policy is general-fitness authority only.** It can never represent medical, rehabilitation, diagnostic, or injury-specific authority — see §10.
+
+### Project-content authority
+
+MoveHere's current objective is a school and portfolio engineering project: a complete, polished, working venue-aware fitness experience. Commercial-production readiness is not the bar for that objective, and the absence of professional review, customer validation, or commercial hardening does not block it.
+
+That requires a third authority tier, distinct from both production review and test fixtures:
+
+```text
+REVIEWED          professional sign-off, production authority
+PROJECT-CONTENT   researched conventions, portfolio authority
+TEST-FIXTURE      test scaffolding, never presentable
+```
+
+**Project content is authorized for development workout content** — the exercise catalog, the compatibility matrix, and the strength and conditioning programming policies — authored from researched general-fitness conventions with its sources recorded.
+
+Project content is presentable, unlike a test fixture. It is not reviewed, and it never becomes reviewed by being used. It does not satisfy Gate E, does not constitute professional authority, and changes none of the boundaries in §10: medical, rehabilitation, diagnostic, and injury-specific programming remain excluded regardless of authority tier.
+
+**Sessions generated from project content must carry a persistent but quiet label saying so.** Persistent, because a user should never be mid-session and unaware of what authored the programming. Quiet, because an honest provenance note is part of the design rather than a disclaimer bolted onto it.
+
+Promotion from project content to reviewed is a deliberate act requiring the review in §8, not an upgrade that happens by default.
 
 ### Policy review requirement
 
@@ -939,7 +965,9 @@ This deferral is a sequencing decision, not a finding. The absence of this resea
 
 The blocked values are the eligible movement patterns per goal and their priority order; block count, roles, and role vocabulary; slot counts and which slots are required; set counts, rep ranges, hold durations, and distance ranges; rest durations at every level; work/rest structure and its vocabulary; volume caps per duration; prescription resolution rules; laterality values; whether an exercise may repeat within a session; the minimum viable program per goal and duration; and the unresolved domain questions in §8.
 
-Building the policy contract is not blocked. Populating it is. An implementation agent may design the schema, the loader, and the feasibility check, and may not author the values or infer them from general knowledge.
+Building the policy contract is not blocked. Populating it **with reviewed production values** is.
+
+This blocker scopes to production authority only. Authoring **project-content** policy and catalog values for the school/portfolio MVP is authorized under §8, provided the content is labeled as project content, cites its basis, and is never represented as reviewed. An implementation agent may design the schema, the loader, and the feasibility check, and may author project-content values; it may not author reviewed values or present project content as professional authority.
 
 ### External input task
 
