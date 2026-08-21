@@ -42,6 +42,8 @@ const PALETTE = {
   blue: { light: '#456da3', dark: '#7fa3cf' },
   blueInk: { light: '#2c4e7a', dark: '#bcd0e8' },
   greenDeep: { light: '#1a7846', dark: '#5fd98d' },
+  greenInk: { light: '#116634', dark: '#8fe6b0' },
+  paleGreen: { light: '#e1f5ea', dark: '#10301f' },
   line: { light: '#dbe5f2', dark: '#22314f' },
   lineStrong: { light: '#bccce3', dark: '#33456a' },
 } as const satisfies Record<string, Pair>;
