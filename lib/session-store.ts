@@ -13,19 +13,15 @@
 import { createMemoryStorage } from '../src/storage/inventory-store.ts';
 import { SESSION_DURATIONS, SESSION_GOALS } from '../src/domain/session.ts';
 import type { SessionGoal, SessionDuration } from '../src/domain/session.ts';
+import { REPORTED_CONDITIONS } from '../src/programming/conditions.ts';
+import type { ReportedConditions } from '../src/programming/conditions.ts';
 
 export const SESSION_SCHEMA_VERSION = 1;
 const KEY = 'movehere:session';
 
-/**
- * What the user reports about conditions (§6 step 5).
- *
- * An app-level input rather than a domain type: the domain takes a
- * ConditionsAssessment, and lib/programming maps one to the other.
- */
-export const REPORTED_CONDITIONS = ['acceptable', 'adverse', 'unknown'] as const;
-
-export type ReportedConditions = (typeof REPORTED_CONDITIONS)[number];
+/** Re-exported so existing call sites keep one import. Owned by src/programming. */
+export { REPORTED_CONDITIONS } from '../src/programming/conditions.ts';
+export type { ReportedConditions } from '../src/programming/conditions.ts';
 
 /**
  * What a finished session was, captured at the moment it finished.

@@ -1,32 +1,37 @@
 /**
  * The one place content is loaded and checked.
  *
+ * Shared by both clients (§15). Loading, feasibility checking, and assembling
+ * generation input are the same decisions on every platform, and duplicating
+ * them per client would mean a second place for the matrix and policy to be
+ * accepted — or silently rejected — on different terms.
+ *
  * Loading is fallible and happens once, at module scope, against data that
  * ships with the app. Generation never loads — it receives a policy that can
  * only be obtained from proven-feasible programming.
  */
 
-import { loadMatrix } from '../src/domain/matrix-loader.ts';
-import { AUTHORED_MATRIX } from '../src/domain/exercise-catalog.ts';
-import { loadGoalPolicies } from '../src/domain/policy-loader.ts';
-import { AUTHORED_POLICIES } from '../src/domain/policy-catalog.ts';
-import { checkFeasibility, selectPolicy } from '../src/domain/feasibility.ts';
-import { generateSession } from '../src/domain/generator.ts';
-import { makeSessionMinutes, assessConditions } from '../src/domain/session.ts';
-import { projectGenerationView } from '../src/domain/confirmation.ts';
-import { seedFrom } from '../src/domain/prng.ts';
-import type { ValidatedMatrix } from '../src/domain/matrix-loader.ts';
-import type { FeasibleProgramming } from '../src/domain/feasibility.ts';
-import type { ConfirmedVenueInventory } from '../src/domain/confirmation.ts';
+import { loadMatrix } from '../domain/matrix-loader.ts';
+import { AUTHORED_MATRIX } from '../domain/exercise-catalog.ts';
+import { loadGoalPolicies } from '../domain/policy-loader.ts';
+import { AUTHORED_POLICIES } from '../domain/policy-catalog.ts';
+import { checkFeasibility, selectPolicy } from '../domain/feasibility.ts';
+import { generateSession } from '../domain/generator.ts';
+import { makeSessionMinutes, assessConditions } from '../domain/session.ts';
+import { projectGenerationView } from '../domain/confirmation.ts';
+import { seedFrom } from '../domain/prng.ts';
+import type { ValidatedMatrix } from '../domain/matrix-loader.ts';
+import type { FeasibleProgramming } from '../domain/feasibility.ts';
+import type { ConfirmedVenueInventory } from '../domain/confirmation.ts';
 import type {
   SessionGenerationInput,
   SessionGenerationOutput,
   SessionGoal,
   SessionDuration,
-  ConditionsAssessment,
-} from '../src/domain/session.ts';
-import type { ReportedConditions } from './session-store.ts';
-import type { ExerciseId } from '../src/domain/exercise.ts';
+} from '../domain/session.ts';
+import { assessmentFor } from './conditions.ts';
+import type { ReportedConditions } from './conditions.ts';
+import type { ExerciseId } from '../domain/exercise.ts';
 
 const loaded = (() => {
   const m = loadMatrix(AUTHORED_MATRIX);
@@ -53,19 +58,6 @@ export interface BuildArgs {
   readonly conditions: ReportedConditions;
   readonly seed: string;
 }
-
-/**
- * What the user reported, and nothing more.
- *
- * "Bad out there" records no cause because the UI never asks for one. "Not
- * sure" is unavailable, which withholds the park for a distinguishable reason.
- */
-export const assessmentFor = (reported: ReportedConditions): ConditionsAssessment =>
-  reported === 'acceptable'
-    ? { kind: 'acceptable' }
-    : reported === 'adverse'
-      ? { kind: 'adverse', cause: { kind: 'user-reported' } }
-      : { kind: 'unavailable' };
 
 /**
  * Assembles generation input from confirmed state and the user's choices.

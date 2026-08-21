@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { Action, ActionLink } from '@/components/ui/action';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
-import { exerciseCues, exerciseName } from '@/lib/programming';
+import { exerciseCues, exerciseName } from '@/src/programming/session-builder.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { SessionItem, SubstituteReason } from '@/src/domain/session.ts';
 

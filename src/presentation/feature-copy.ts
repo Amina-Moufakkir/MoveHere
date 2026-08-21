@@ -12,7 +12,7 @@
  * and the domain's ordering can stay meaningful.
  */
 
-import type { SupportedFeatureId } from '../src/domain/feature.ts';
+import type { SupportedFeatureId } from '../domain/feature.ts';
 
 export const PRESENTATION_ORDER: readonly SupportedFeatureId[] = [
   'park-bench',

@@ -7,7 +7,8 @@
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildInput, generateFor, MATRIX, PROGRAMMING, assessmentFor } from '../../lib/programming.ts';
+import { buildInput, generateFor, MATRIX, PROGRAMMING } from '../../src/programming/session-builder.ts';
+import { assessmentFor } from '../../src/programming/conditions.ts';
 import { readSession, writeSession, clearSession } from '../../lib/session-store.ts';
 import type { SessionRecord } from '../../lib/session-store.ts';
 import {

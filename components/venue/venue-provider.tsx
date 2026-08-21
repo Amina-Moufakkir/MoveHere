@@ -24,7 +24,7 @@ import { applyCorrection } from '@/src/domain/confirmation.ts';
 import { saveInventory as persistInventory } from '@/lib/venue-store';
 import { clearSession, readSession, writeSession } from '@/lib/session-store';
 import type { SessionRecord, SessionSummary } from '@/lib/session-store';
-import { generateFor } from '@/lib/programming';
+import { generateFor } from '@/src/programming/session-builder.ts';
 
 /** What the user reports about conditions. `unknown` maps to unavailable (§6.5). */
 export type ReportedConditions = 'acceptable' | 'adverse' | 'unknown';

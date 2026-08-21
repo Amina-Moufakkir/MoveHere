@@ -6,7 +6,7 @@ import { Action, ActionLink } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
-import { byPresentation } from '@/lib/feature-presentation';
+import { byPresentation } from '@/src/presentation/feature-copy.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
 

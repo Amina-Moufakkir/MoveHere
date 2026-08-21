@@ -10,7 +10,7 @@ import { loadMatrix } from '@/src/domain/matrix-loader.ts';
 import { AUTHORED_MATRIX } from '@/src/domain/exercise-catalog.ts';
 import type { ConfirmationDecision } from '@/src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
-import { byPresentation } from '@/lib/feature-presentation';
+import { byPresentation } from '@/src/presentation/feature-copy.ts';
 
 /**
  * What each feature actually unlocks.

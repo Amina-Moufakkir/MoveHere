@@ -2,7 +2,7 @@ import { ActionLink } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { FEATURE_REGISTRY } from '@/src/domain/feature-registry.ts';
-import { SHORT_LABEL, byPresentation } from '@/lib/feature-presentation';
+import { SHORT_LABEL, byPresentation } from '@/src/presentation/feature-copy.ts';
 
 /**
  * The landing page.

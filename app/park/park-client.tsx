@@ -7,7 +7,7 @@ import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { useVenue } from '@/components/venue/venue-provider';
 import { FEATURE_REGISTRY } from '@/src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
-import { SHORT_HINT, SHORT_LABEL, byPresentation } from '@/lib/feature-presentation';
+import { SHORT_HINT, SHORT_LABEL, byPresentation } from '@/src/presentation/feature-copy.ts';
 
 export function ParkClient() {
   const router = useRouter();
