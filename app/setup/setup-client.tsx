@@ -1,6 +1,7 @@
 'use client';
 
-import { ActionLink } from '@/components/ui/action';
+import { useRouter } from 'next/navigation';
+import { Action } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { useVenue } from '@/components/venue/venue-provider';
 import type { ReportedConditions } from '@/components/venue/venue-provider';
@@ -19,8 +20,14 @@ const CONDITIONS: readonly { value: ReportedConditions; label: string; hint: str
   { value: 'unknown', label: 'Not sure', hint: 'Treated the same as bad conditions' },
 ];
 
+const newSeed = (): string =>
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `s-${Date.now()}`;
+
 export function SetupClient() {
-  const { inventory, loadOutcome, request, setRequest } = useVenue();
+  const router = useRouter();
+  const { inventory, loadOutcome, request, setRequest, startSession } = useVenue();
 
   const usable = (inventory?.features ?? []).filter((f) => f.usability.kind === 'usable');
   const venueBlind = request.conditions !== 'acceptable' || usable.length === 0;
@@ -159,7 +166,15 @@ export function SetupClient() {
               ? 'This will be a no-equipment session, not a park session'
               : `A park session using ${usable.length} confirmed ${usable.length === 1 ? 'feature' : 'features'}`}
           </p>
-          <ActionLink href="/workout">Build the session</ActionLink>
+          <Action
+            onClick={() => {
+              // A seed is minted here, once, and persisted with the session.
+              startSession(newSeed());
+              router.push('/workout');
+            }}
+          >
+            Build the session
+          </Action>
         </div>
       </section>
     </div>

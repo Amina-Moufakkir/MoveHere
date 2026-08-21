@@ -18,7 +18,13 @@ import type {
 } from '@/src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
 import type { SessionGoal, SessionDuration } from '@/src/domain/session.ts';
-import type { ConditionsAssessment } from '@/src/domain/session.ts';
+import type { SessionGenerationOutput } from '@/src/domain/session.ts';
+import type { VenueCorrection } from '@/src/domain/confirmation.ts';
+import { applyCorrection } from '@/src/domain/confirmation.ts';
+import { saveInventory as persistInventory } from '@/lib/venue-store';
+import { clearSession, readSession, writeSession } from '@/lib/session-store';
+import type { SessionRecord, SessionSummary } from '@/lib/session-store';
+import { generateFor } from '@/lib/programming';
 
 /** What the user reports about conditions. `unknown` maps to unavailable (§6.5). */
 export type ReportedConditions = 'acceptable' | 'adverse' | 'unknown';
@@ -30,6 +36,15 @@ export interface SessionRequest {
 }
 
 interface VenueState {
+  readonly session: SessionRecord | null;
+  readonly workout: SessionGenerationOutput | null;
+  /** Starts a session with a fresh seed. Regeneration is always deliberate. */
+  readonly startSession: (seed: string) => void;
+  readonly setDone: (done: number) => void;
+  readonly completeSession: (at: string, summary: SessionSummary) => void;
+  readonly endSession: () => void;
+  /** Corrections go through applyCorrection. Nothing here mutates inventory. */
+  readonly correct: (correction: VenueCorrection) => void;
   /** Candidates are ephemeral by design — only confirmation produces durable state. */
   readonly candidates: readonly CandidateFeature[];
   readonly inventory: ConfirmedVenueInventory | null;
@@ -56,12 +71,91 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
   const [inventory, setInventory] = useState<ConfirmedVenueInventory | null>(null);
   const [loadOutcome, setLoadOutcome] = useState<LoadOutcome | null>(null);
   const [request, setRequestState] = useState<SessionRequest>(DEFAULT_REQUEST);
+  const [session, setSession] = useState<SessionRecord | null>(null);
 
   // Rehydrate once on mount. Anything untrusted resolves to no venue.
   useEffect(() => {
     const outcome = loadInventory();
     setLoadOutcome(outcome);
     if (outcome.kind === 'loaded') setInventory(outcome.inventory);
+
+    const stored = readSession();
+    if (stored !== null) {
+      setSession(stored);
+      setRequestState({
+        minutes: stored.minutes,
+        goal: stored.goal,
+        conditions: stored.conditions,
+      });
+    }
+  }, []);
+
+  /**
+   * The workout is derived, never stored.
+   *
+   * Same seed and same confirmed inventory regenerate the same session, so a
+   * reload cannot silently hand back a different workout — and a correction
+   * changes the next one, because the inventory it derives from changed.
+   */
+  const workout = useMemo<SessionGenerationOutput | null>(() => {
+    if (session === null) return null;
+    return generateFor({
+      inventory,
+      minutes: session.minutes,
+      goal: session.goal,
+      conditions: session.conditions,
+      seed: session.seed,
+    });
+  }, [session, inventory]);
+
+  const startSession = useCallback(
+    (seed: string) => {
+      const record: SessionRecord = {
+        seed,
+        minutes: request.minutes,
+        goal: request.goal,
+        conditions: request.conditions,
+        done: 0,
+        completedAt: null,
+        summary: null,
+      };
+      writeSession(record);
+      setSession(record);
+    },
+    [request],
+  );
+
+  const setDone = useCallback((done: number) => {
+    setSession((prev) => {
+      if (prev === null) return prev;
+      const next = { ...prev, done };
+      writeSession(next);
+      return next;
+    });
+  }, []);
+
+  const completeSession = useCallback((at: string, summary: SessionSummary) => {
+    setSession((prev) => {
+      if (prev === null) return prev;
+      // Snapshot what the session was, so a later correction cannot rewrite it.
+      const next = { ...prev, completedAt: at, summary };
+      writeSession(next);
+      return next;
+    });
+  }, []);
+
+  const endSession = useCallback(() => {
+    clearSession();
+    setSession(null);
+  }, []);
+
+  const correct = useCallback((correction: VenueCorrection) => {
+    setInventory((prev) => {
+      if (prev === null) return prev;
+      const next = applyCorrection(prev, correction);
+      persistInventory(next);
+      return next;
+    });
   }, []);
 
   const proposeCandidates = useCallback((ids: readonly SupportedFeatureId[]) => {
@@ -95,8 +189,16 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
   }, []);
 
   const value = useMemo<VenueState>(
-    () => ({ candidates, inventory, loadOutcome, request, proposeCandidates, confirm, setRequest, forget }),
-    [candidates, inventory, loadOutcome, request, proposeCandidates, confirm, setRequest, forget],
+    () => ({
+      candidates, inventory, loadOutcome, request, session, workout,
+      proposeCandidates, confirm, setRequest, forget,
+      startSession, setDone, completeSession, endSession, correct,
+    }),
+    [
+      candidates, inventory, loadOutcome, request, session, workout,
+      proposeCandidates, confirm, setRequest, forget,
+      startSession, setDone, completeSession, endSession, correct,
+    ],
   );
 
   return <VenueContext.Provider value={value}>{children}</VenueContext.Provider>;
@@ -108,17 +210,3 @@ export function useVenue(): VenueState {
   return ctx;
 }
 
-/**
- * The user's report becomes the assessment the gate consumes (§6 step 5).
- *
- * "Bad out there" records exactly what was said and no more — the UI never asks
- * why, so it must not claim rain, ice, heat or darkness. "Not sure" is
- * unavailable, which withholds the park for a different, distinguishable
- * reason.
- */
-export const assessmentFor = (reported: ReportedConditions): ConditionsAssessment =>
-  reported === 'acceptable'
-    ? { kind: 'acceptable' }
-    : reported === 'adverse'
-      ? { kind: 'adverse', cause: { kind: 'user-reported' } }
-      : { kind: 'unavailable' };
