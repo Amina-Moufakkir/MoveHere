@@ -2,6 +2,7 @@ import { Manrope } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { SiteHeader } from '@/components/shell/site-header';
+import { VenueProvider } from '@/components/venue/venue-provider';
 import { PageContainer } from '@/components/shell/page-container';
 import './globals.css';
 
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
   return (
     <html lang="en" className={manrope.variable}>
       <body className="flex min-h-dvh flex-col">
+        <VenueProvider>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-spruce focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:uppercase focus:tracking-(--text-marker--letter-spacing) focus:text-chalk"
@@ -55,6 +57,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
             <p>Confirm what is actually there. Nothing here assesses whether it is safe to use.</p>
           </PageContainer>
         </footer>
+        </VenueProvider>
       </body>
     </html>
   );

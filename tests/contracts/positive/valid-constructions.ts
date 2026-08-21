@@ -92,7 +92,7 @@ export const rehydrated: readonly RehydrationResult[] = [
 // All three conditions states.
 export const conditions: readonly ConditionsAssessment[] = [
   { kind: 'acceptable' },
-  { kind: 'adverse', signals: ['precipitation'] },
+  { kind: 'adverse', cause: { kind: 'measured', signals: ['precipitation'] } },
   { kind: 'unavailable' },
 ];
 
@@ -109,7 +109,7 @@ export const contexts: readonly GenerationContext[] = [
 // Both dispositions, with the two withheld causes kept distinct.
 export const dispositions: readonly ConditionsDisposition[] = [
   { kind: 'park-permitted' },
-  { kind: 'park-withheld', cause: { kind: 'adverse', signals: ['freezing'] } },
+  { kind: 'park-withheld', cause: { kind: 'adverse', cause: { kind: 'user-reported' } } },
   { kind: 'park-withheld', cause: { kind: 'unavailable' } },
 ];
 
@@ -145,7 +145,7 @@ export const bases: readonly SelectionBasis[] = [
 // Every output kind, including all four substitute reasons.
 export const outputs: readonly SessionGenerationOutput[] = [
   { kind: 'park-session', blocks: [block], estimatedMinutes: estimate, featuresUsed: ['park-bench'], provenance },
-  { kind: 'substitute-session', reason: { kind: 'conditions-adverse', signals: ['freezing'] }, blocks: [block], estimatedMinutes: estimate, provenance },
+  { kind: 'substitute-session', reason: { kind: 'conditions-adverse', cause: { kind: 'user-reported' } }, blocks: [block], estimatedMinutes: estimate, provenance },
   { kind: 'substitute-session', reason: { kind: 'conditions-unavailable' }, blocks: [block], estimatedMinutes: estimate, provenance },
   { kind: 'substitute-session', reason: { kind: 'no-confirmed-inventory' }, blocks: [block], estimatedMinutes: estimate, provenance },
   { kind: 'substitute-session', reason: { kind: 'no-compatible-venue-movements' }, blocks: [block], estimatedMinutes: estimate, provenance },

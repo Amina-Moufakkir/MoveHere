@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "ES2022"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     // Typecheck only. No emit, no runtime, no bundler.
     "noEmit": true,
     // Module settings exist solely to resolve imports between contract files.
@@ -42,6 +40,8 @@
     "app/**/*.tsx",
     "app/**/*.ts",
     "components/**/*.tsx",
+    "components/**/*.ts",
+    "lib/**/*.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"

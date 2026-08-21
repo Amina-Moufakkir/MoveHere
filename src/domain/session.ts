@@ -111,9 +111,21 @@ export type ConditionSignal =
  * Assessed before generation, not inside it, so generation stays pure and the
  * gate can be evaluated and logged independently.
  */
+/**
+ * Why conditions are adverse.
+ *
+ * `user-reported` carries no signal because none was collected: the person said
+ * it was unsuitable outside and was not asked why. Recording a cause here would
+ * be asserting something they never said. `measured` exists for a future
+ * forecast integration, which does know why.
+ */
+export type AdverseConditions =
+  | { readonly kind: 'user-reported' }
+  | { readonly kind: 'measured'; readonly signals: NonEmpty<ConditionSignal> };
+
 export type ConditionsAssessment =
   | { readonly kind: 'acceptable' }
-  | { readonly kind: 'adverse'; readonly signals: NonEmpty<ConditionSignal> }
+  | { readonly kind: 'adverse'; readonly cause: AdverseConditions }
   | { readonly kind: 'unavailable' };
 
 /**
@@ -129,7 +141,7 @@ export type GenerationContext =
 
 /** Why park use was withheld. Adverse and unavailable stay distinct (§11). */
 export type WithheldCause =
-  | { readonly kind: 'adverse'; readonly signals: NonEmpty<ConditionSignal> }
+  | { readonly kind: 'adverse'; readonly cause: AdverseConditions }
   | { readonly kind: 'unavailable' };
 
 /**
@@ -151,7 +163,7 @@ export type ConditionsDisposition =
 export const assessConditions = (assessment: ConditionsAssessment): ConditionsDisposition => {
   if (assessment.kind === 'acceptable') return { kind: 'park-permitted' };
   if (assessment.kind === 'adverse') {
-    return { kind: 'park-withheld', cause: { kind: 'adverse', signals: assessment.signals } };
+    return { kind: 'park-withheld', cause: { kind: 'adverse', cause: assessment.cause } };
   }
   return { kind: 'park-withheld', cause: { kind: 'unavailable' } };
 };
@@ -251,7 +263,7 @@ export interface GenerationProvenance {
  * distinguish them.
  */
 export type SubstituteReason =
-  | { readonly kind: 'conditions-adverse'; readonly signals: NonEmpty<ConditionSignal> }
+  | { readonly kind: 'conditions-adverse'; readonly cause: AdverseConditions }
   | { readonly kind: 'conditions-unavailable' }
   | { readonly kind: 'no-confirmed-inventory' }
   | { readonly kind: 'no-compatible-venue-movements' };

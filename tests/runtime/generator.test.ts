@@ -247,7 +247,7 @@ test('fallback precedence table', () => {
   const bench = viewOf(['park-bench']);
   const adverse: ConditionsDisposition = {
     kind: 'park-withheld',
-    cause: { kind: 'adverse', signals: ['precipitation'] },
+    cause: { kind: 'adverse', cause: { kind: 'user-reported' } },
   };
   const unavailable: ConditionsDisposition = {
     kind: 'park-withheld',
@@ -306,7 +306,7 @@ test('broad sweep: every combination produces a valid session', () => {
   ];
   const dispositions: readonly ConditionsDisposition[] = [
     { kind: 'park-permitted' },
-    { kind: 'park-withheld', cause: { kind: 'adverse', signals: ['extreme-heat'] } },
+    { kind: 'park-withheld', cause: { kind: 'adverse', cause: { kind: 'measured', signals: ['extreme-heat'] } } },
     { kind: 'park-withheld', cause: { kind: 'unavailable' } },
   ];
 
@@ -359,7 +359,14 @@ test('estimated time never exceeds the time requested', () => {
 test('user-reported conditions map to dispositions correctly', () => {
   assert.deepEqual(assessConditions({ kind: 'acceptable' }), { kind: 'park-permitted' });
   assert.equal(assessConditions({ kind: 'unavailable' }).kind, 'park-withheld');
-  assert.equal(assessConditions({ kind: 'adverse', signals: ['freezing'] }).kind, 'park-withheld');
+
+  // A user saying "bad out there" is recorded as exactly that, with no cause
+  // invented on their behalf.
+  const reported = assessConditions({ kind: 'adverse', cause: { kind: 'user-reported' } });
+  assert.equal(reported.kind, 'park-withheld');
+  if (reported.kind !== 'park-withheld' || reported.cause.kind !== 'adverse') return;
+  assert.deepEqual(reported.cause.cause, { kind: 'user-reported' });
+  assert.equal(assessConditions({ kind: 'adverse', cause: { kind: 'user-reported' } }).kind, 'park-withheld');
 });
 
 /* ----------------------------------------------------------------- purity */

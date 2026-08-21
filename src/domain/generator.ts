@@ -289,7 +289,7 @@ export const generateSession = (input: SessionGenerationInput): SessionGeneratio
   if (input.conditions.kind === 'park-withheld') {
     return substitute(
       input.conditions.cause.kind === 'adverse'
-        ? { kind: 'conditions-adverse', signals: input.conditions.cause.signals }
+        ? { kind: 'conditions-adverse', cause: input.conditions.cause.cause }
         : { kind: 'conditions-unavailable' },
     );
   }
