@@ -11,12 +11,21 @@
  */
 
 import { createMemoryStorage } from '../src/storage/inventory-store.ts';
+import { SESSION_DURATIONS, SESSION_GOALS } from '../src/domain/session.ts';
 import type { SessionGoal, SessionDuration } from '../src/domain/session.ts';
 
 export const SESSION_SCHEMA_VERSION = 1;
 const KEY = 'movehere:session';
 
-export type ReportedConditions = 'acceptable' | 'adverse' | 'unknown';
+/**
+ * What the user reports about conditions (§6 step 5).
+ *
+ * An app-level input rather than a domain type: the domain takes a
+ * ConditionsAssessment, and lib/programming maps one to the other.
+ */
+export const REPORTED_CONDITIONS = ['acceptable', 'adverse', 'unknown'] as const;
+
+export type ReportedConditions = (typeof REPORTED_CONDITIONS)[number];
 
 /**
  * What a finished session was, captured at the moment it finished.
@@ -48,9 +57,17 @@ const storage = () => (typeof window === 'undefined' ? fallback : window.localSt
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
-const DURATIONS: readonly number[] = [10, 20, 30, 45];
-const GOALS: readonly string[] = ['strength', 'conditioning'];
-const CONDITIONS: readonly string[] = ['acceptable', 'adverse', 'unknown'];
+/**
+ * Validation reads the canonical sets rather than restating them.
+ *
+ * Restating the durations put the fixed set in two places, and the plan makes
+ * changing that set a product decision (§6 step 4) — the kind of change that
+ * must not half-apply because a rehydration guard was missed. Narrowing a goal
+ * or a duration now automatically narrows what persisted state can carry.
+ */
+const DURATIONS: readonly number[] = SESSION_DURATIONS;
+const GOALS: readonly string[] = SESSION_GOALS;
+const CONDITIONS: readonly string[] = REPORTED_CONDITIONS;
 
 /** JSON.parse lives here and nowhere else for session state. */
 export const readSession = (): SessionRecord | null => {

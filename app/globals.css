@@ -37,8 +37,8 @@
   --color-navy-muted: light-dark(#4a5a78, #9fb0cc);
   --color-navy-faint: light-dark(#6e7d98, #7d8ea9);
 
-  /* Sampled from the iOS weather widget: a greyed dusk-sky denim, not a
-     saturated signal blue. See design_references (local only). */
+  /* A greyed dusk-sky denim rather than a saturated signal blue, so the
+     primary can carry a label without shouting. */
   --color-blue: light-dark(#456da3, #7fa3cf);
   --color-blue-deep: light-dark(#345b8c, #9dbadd);
   --color-blue-ink: light-dark(#2c4e7a, #bcd0e8);

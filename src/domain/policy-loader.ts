@@ -13,12 +13,9 @@ import type {
 } from './policy.ts';
 import type { ContentAuthority, PresentableAuthority } from './exercise.ts';
 import type { SessionGoal } from './session.ts';
-import { SESSION_DURATIONS } from './session.ts';
+import { SESSION_DURATIONS, SESSION_GOALS } from './session.ts';
 
 type NonEmpty<T> = readonly [T, ...T[]];
-
-/** Every supported goal. Narrowing SessionGoal automatically narrows this. */
-const SUPPORTED_GOALS: readonly SessionGoal[] = ['strength', 'conditioning'];
 
 export const GENERATION_CONTEXTS: readonly GenerationContextKind[] = ['venue-aware', 'substitute'];
 
@@ -127,7 +124,7 @@ export const loadGoalPolicies: LoadGoalPolicies = (authored) => {
     byGoal.set(policy.goal, policy as UsableGoalPolicy);
   }
 
-  for (const goal of SUPPORTED_GOALS) {
+  for (const goal of SESSION_GOALS) {
     if (!byGoal.has(goal)) failures.push({ kind: 'missing-goal', goal });
   }
 

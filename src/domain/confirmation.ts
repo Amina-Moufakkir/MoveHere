@@ -31,6 +31,21 @@ import type { SupportedFeatureId } from './feature.ts';
 /** Opaque venue handle. Phase 0 state is local; no coordinates live here (§14). */
 export type VenueId = string & { readonly __brand: 'VenueId' };
 
+export type MakeVenueId = (value: string) => VenueId | null;
+
+/**
+ * The only way to obtain a VenueId.
+ *
+ * The invariant is small — a venue handle must identify something — but it is
+ * the module's to enforce, not each caller's. Before this existed the app layer
+ * minted one by assertion, which is the habit the brands exist to prevent: once
+ * `x as VenueId` is acceptable for the easy case, it is available for the hard
+ * one. The assertion below is legitimate because it is inside the owning
+ * constructor and runs after validation.
+ */
+export const makeVenueId: MakeVenueId = (value) =>
+  value.length > 0 ? (value as VenueId) : null;
+
 /**
  * Where a candidate came from.
  *
@@ -449,7 +464,8 @@ export const rehydrateInventory: RehydrateInventory = (raw) => {
   const updatedAt = raw['updatedAt'];
   const rawFeatures = raw['features'];
 
-  if (typeof venueId !== 'string' || venueId.length === 0) {
+  const parsedVenueId = typeof venueId === 'string' ? makeVenueId(venueId) : null;
+  if (parsedVenueId === null) {
     return fail({ kind: 'malformed', detail: 'venueId' });
   }
   if (typeof revision !== 'number' || !Number.isInteger(revision) || revision < 1) {
@@ -507,7 +523,7 @@ export const rehydrateInventory: RehydrateInventory = (raw) => {
     ok: true,
     inventory: asInventory({
       schemaVersion: INVENTORY_SCHEMA_VERSION,
-      venueId: venueId as VenueId,
+      venueId: parsedVenueId,
       revision,
       features: asFeatureSet(features.sort(byFeatureId)),
       updatedAt,

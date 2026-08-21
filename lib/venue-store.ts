@@ -9,6 +9,7 @@
 
 import {
   confirmInventory,
+  makeVenueId,
   rehydrateInventoryFromJson,
   toPersistable,
 } from '../src/domain/confirmation.ts';
@@ -18,13 +19,22 @@ import type {
   ConfirmationDecision,
   FeatureConfirmation,
   RehydrationFailure,
-  VenueId,
 } from '../src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '../src/domain/feature.ts';
 import { createInventoryStore, createMemoryStorage } from '../src/storage/inventory-store.ts';
 
-/** The MVP tracks one venue. Multi-venue is out of scope. */
-export const VENUE_ID = 'home-park' as VenueId;
+const HOME_PARK = makeVenueId('home-park');
+
+/**
+ * The MVP tracks one venue. Multi-venue is out of scope.
+ *
+ * Built through the domain constructor rather than asserted here. The null
+ * branch cannot be reached by a non-empty literal, but leaving it unhandled
+ * would mean asserting again under a different name.
+ */
+if (HOME_PARK === null) throw new Error('home-park is not a usable venue id');
+
+export const VENUE_ID = HOME_PARK;
 
 /**
  * One fallback store, not one per call.

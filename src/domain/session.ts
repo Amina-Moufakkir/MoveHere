@@ -44,7 +44,9 @@ export type NonEmpty<T> = readonly [T, ...T[]];
  * *pattern* still exists in the exercise catalog; a pattern a session may
  * include is not a goal a user may request.
  */
-export type SessionGoal = 'strength' | 'conditioning';
+export const SESSION_GOALS = ['strength', 'conditioning'] as const;
+
+export type SessionGoal = (typeof SESSION_GOALS)[number];
 
 declare const minutesWitness: unique symbol;
 declare const estimateWitness: unique symbol;
