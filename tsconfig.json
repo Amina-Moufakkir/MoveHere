@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022"],
-
+    "lib": [
+      "ES2022"
+    ],
     // Typecheck only. No emit, no runtime, no bundler.
     "noEmit": true,
-
     // Module settings exist solely to resolve imports between contract files.
     // Revisit when a runtime is chosen; nothing here is executed.
     "module": "preserve",
@@ -14,15 +14,39 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
-
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "forceConsistentCasingInFileNames": true,
-
-    "skipLibCheck": false
+    // Next.js requirements. The domain settings above are unchanged.
+    "jsx": "react-jsx",
+    "incremental": true,
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "allowJs": true
   },
-  "include": ["src/**/*.ts", "tests/contracts/positive/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "tests/contracts/positive/**/*.ts",
+    "app/**/*.tsx",
+    "app/**/*.ts",
+    "components/**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
