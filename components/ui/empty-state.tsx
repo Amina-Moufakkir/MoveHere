@@ -16,7 +16,7 @@ export function EmptyState({
   readonly action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 rounded-[--radius-lg] border border-dashed border-rule-strong bg-chalk-deep px-6 py-12 text-center">
+    <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-rule-strong bg-chalk-deep px-6 py-12 text-center">
       <div className="flex flex-col gap-2">
         <p className="text-title font-semibold text-balance">{title}</p>
         <p className="mx-auto max-w-sm text-spruce-muted text-pretty">{body}</p>

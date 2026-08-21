@@ -105,7 +105,7 @@ export function CompleteClient() {
                 return (
                   <li
                     key={feature.featureId}
-                    className={`flex items-center gap-3 rounded-[--radius-xl] px-4 py-3 transition-colors duration-(--duration-quick) ${
+                    className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors duration-(--duration-quick) ${
                       unusable ? 'bg-cloud-deep' : 'bg-white shadow-(--shadow-lift)'
                     }`}
                   >

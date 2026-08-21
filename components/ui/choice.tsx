@@ -25,7 +25,7 @@ export function Choice({
   readonly icon?: ReactNode;
 }) {
   return (
-    <label className="group relative flex cursor-pointer items-start gap-3 rounded-[--radius-md] border border-rule bg-chalk-raised p-4 transition-colors duration-(--duration-quick) ease-(--ease-out-soft) hover:border-rule-strong has-checked:border-persimmon has-checked:bg-persimmon-soft has-focus-visible:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus">
+    <label className="group relative flex cursor-pointer items-start gap-3 rounded-md border border-rule bg-chalk-raised p-4 transition-colors duration-(--duration-quick) ease-(--ease-out-soft) hover:border-rule-strong has-checked:border-persimmon has-checked:bg-persimmon-soft has-focus-visible:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus">
       <input
         type={type}
         name={name}

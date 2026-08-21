@@ -5,7 +5,7 @@ type Variant = 'primary' | 'secondary' | 'quiet';
 type Size = 'md' | 'lg';
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-[--radius-md] font-medium ' +
+  'inline-flex items-center justify-center gap-2 rounded-md font-medium ' +
   'transition-[background-color,border-color,color,transform] duration-(--duration-quick) ease-(--ease-out-soft) ' +
   'active:translate-y-px disabled:pointer-events-none disabled:opacity-45';
 

@@ -143,7 +143,7 @@ export function WorkoutClient() {
 
           {/* A substitute is never dressed up as a park session (§11). */}
           {isSubstitute && (
-            <div className="mt-4 rounded-[--radius-xl] border-l-4 border-yellow bg-white px-4 py-3 shadow-(--shadow-lift)">
+            <div className="mt-4 rounded-xl border-l-4 border-yellow bg-white px-4 py-3 shadow-(--shadow-lift)">
               <p className="text-sm font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-yellow-ink">
                 Substitute session
               </p>
@@ -195,7 +195,7 @@ export function WorkoutClient() {
                 </p>
               </div>
 
-              <ul className="flex flex-col gap-2 rounded-[--radius-xl] bg-white p-4 shadow-(--shadow-lift) sm:p-5">
+              <ul className="flex flex-col gap-2 rounded-xl bg-white p-4 shadow-(--shadow-lift) sm:p-5">
                 {exerciseCues(current.item.exerciseId).map((cue) => (
                   <li key={cue} className="flex items-start gap-2.5 text-base leading-snug sm:text-lg">
                     <span aria-hidden className="mt-2 size-1.5 shrink-0 rounded-full bg-blue" />

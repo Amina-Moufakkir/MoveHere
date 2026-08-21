@@ -19,11 +19,11 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: 'MoveHere — workouts built from the park you already walk past',
+    default: 'MoveHere — train with what is actually around you',
     template: '%s · MoveHere',
   },
   description:
-    'MoveHere builds a workout from the equipment a nearby park actually has, using only features you have confirmed yourself.',
+    'MoveHere builds a workout from the place you are in, what is actually there, and the time you have. The park is the one environment it understands today, and it uses only the features you confirmed yourself.',
 };
 
 export const viewport: Viewport = {
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
         <VenueProvider>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-spruce focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:uppercase focus:tracking-(--text-marker--letter-spacing) focus:text-chalk"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-navy focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:uppercase focus:tracking-(--text-marker--letter-spacing) focus:text-cloud"
         >
           Skip to content
         </a>
@@ -51,7 +51,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
           {children}
         </main>
 
-        <footer className="border-t border-rule py-8 text-sm text-spruce-faint">
+        <footer className="border-t border-line py-8 text-sm text-navy-faint">
           <PageContainer className="flex flex-col gap-2">
             <p>MoveHere — exploratory project. Not medical or rehabilitation advice.</p>
             <p>Confirm what is actually there. Nothing here assesses whether it is safe to use.</p>

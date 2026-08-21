@@ -28,7 +28,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-cloud/85 backdrop-blur-sm">
       <PageContainer className="flex h-16 max-w-2xl items-center justify-between gap-4">
-        <Link href="/" aria-label="MoveHere home" className="text-spruce">
+        <Link href="/" aria-label="MoveHere home" className="text-navy">
           <Wordmark />
         </Link>
 
@@ -43,7 +43,7 @@ export function SiteHeader() {
                     <Link
                       href={step.href}
                       aria-current={isCurrent ? 'step' : undefined}
-                      className="group flex items-center gap-1.5 rounded-[--radius-sm] px-1 py-1"
+                      className="group flex items-center gap-1.5 rounded-sm px-1 py-1"
                     >
                       <span className="sr-only">
                         {step.label}
@@ -52,12 +52,12 @@ export function SiteHeader() {
                       <span
                         aria-hidden
                         className={[
-                          'block h-1.5 rounded-full transition-all duration-(--duration-settle) ease-(--ease-out-soft)',
+                          'block h-1.5 rounded-full transition-all duration-(--duration-settle) ease-(--ease-spring)',
                           isCurrent
-                            ? 'w-7 bg-persimmon-deep'
+                            ? 'w-7 bg-blue-deep'
                             : isDone
-                              ? 'w-3 bg-persimmon-deep-line'
-                              : 'w-3 bg-rule-strong group-hover:bg-spruce-faint',
+                              ? 'w-3 bg-blue'
+                              : 'w-3 bg-line-strong group-hover:bg-navy-faint',
                         ].join(' ')}
                       />
                     </Link>

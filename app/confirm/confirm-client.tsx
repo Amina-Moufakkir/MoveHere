@@ -113,7 +113,7 @@ export function ConfirmClient() {
             return (
               <fieldset
                 key={candidate.featureId}
-                className={`rounded-[--radius-xl] border p-4 transition-colors duration-(--duration-quick) sm:p-5 ${
+                className={`rounded-xl border p-4 transition-colors duration-(--duration-quick) sm:p-5 ${
                   isTrusted ? 'border-green/40 bg-white' : 'border-line bg-white/50'
                 }`}
               >
@@ -121,7 +121,7 @@ export function ConfirmClient() {
 
                 <div className="flex items-start gap-3.5">
                   <span
-                    className={`grid size-11 shrink-0 place-items-center rounded-[--radius-lg] transition-colors duration-(--duration-quick) ${
+                    className={`grid size-11 shrink-0 place-items-center rounded-lg transition-colors duration-(--duration-quick) ${
                       isTrusted ? 'bg-pale-green' : 'bg-cloud-deep'
                     }`}
                   >

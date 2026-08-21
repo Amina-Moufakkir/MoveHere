@@ -56,7 +56,7 @@ export function ParkClient() {
               return (
                 <label
                   key={feature.id}
-                  className="group relative flex h-full cursor-pointer select-none flex-col gap-3 rounded-[--radius-xl] bg-white p-4 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 hover:shadow-(--shadow-raise) active:translate-y-0 active:scale-[0.985] has-checked:-translate-y-0.5 has-checked:bg-green-deep has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus sm:p-5"
+                  className="group relative flex h-full cursor-pointer select-none flex-col gap-3 rounded-xl bg-white p-4 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 hover:shadow-(--shadow-raise) active:translate-y-0 active:scale-[0.985] has-checked:-translate-y-0.5 has-checked:bg-green-deep has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus sm:p-5"
                 >
                   <input
                     type="checkbox"
@@ -67,7 +67,7 @@ export function ParkClient() {
                     className="sr-only"
                   />
                   <span className="flex items-start justify-between gap-2">
-                    <span className="grid size-14 place-items-center rounded-[--radius-lg] bg-pale transition-colors duration-(--duration-quick) group-has-checked:bg-white/20 sm:size-16">
+                    <span className="grid size-14 place-items-center rounded-lg bg-pale transition-colors duration-(--duration-quick) group-has-checked:bg-white/20 sm:size-16">
                       <FeatureGlyph
                         id={feature.id}
                         className="size-8 text-blue-ink transition-colors duration-(--duration-quick) group-has-checked:text-white sm:size-9"

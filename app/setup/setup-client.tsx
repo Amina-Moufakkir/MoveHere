@@ -77,7 +77,7 @@ export function SetupClient() {
               {SESSION_DURATIONS.map((minutes: SessionDuration) => (
                 <label
                   key={minutes}
-                  className="relative flex cursor-pointer flex-col items-center gap-0.5 rounded-[--radius-xl] bg-white py-5 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 active:scale-[0.98] has-checked:bg-blue has-checked:text-white has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
+                  className="relative flex cursor-pointer flex-col items-center gap-0.5 rounded-xl bg-white py-5 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 active:scale-[0.98] has-checked:bg-blue has-checked:text-white has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
                 >
                   <input
                     type="radio"
@@ -108,7 +108,7 @@ export function SetupClient() {
               {GOALS.map((goal) => (
                 <label
                   key={goal.value}
-                  className="relative flex cursor-pointer flex-col gap-1 rounded-[--radius-xl] bg-white p-4 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 active:scale-[0.985] has-checked:bg-blue has-checked:text-white has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
+                  className="relative flex cursor-pointer flex-col gap-1 rounded-xl bg-white p-4 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 active:scale-[0.985] has-checked:bg-blue has-checked:text-white has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
                 >
                   <input
                     type="radio"
@@ -137,7 +137,7 @@ export function SetupClient() {
               {CONDITIONS.map((option) => (
                 <label
                   key={option.value}
-                  className="relative flex cursor-pointer items-center justify-between gap-3 rounded-[--radius-xl] bg-white px-4 py-3.5 shadow-(--shadow-lift) transition-colors duration-(--duration-quick) has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
+                  className="relative flex cursor-pointer items-center justify-between gap-3 rounded-xl bg-white px-4 py-3.5 shadow-(--shadow-lift) transition-colors duration-(--duration-quick) has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
                 >
                   <input
                     type="radio"

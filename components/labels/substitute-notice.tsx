@@ -16,7 +16,7 @@ export function SubstituteNotice({
   readonly reason: string;
 }) {
   return (
-    <div className="rounded-[--radius-md] border border-ochre border-l-4 bg-ochre-soft px-4 py-3.5">
+    <div className="rounded-md border border-ochre border-l-4 bg-ochre-soft px-4 py-3.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Badge tone="clay">Substitute session</Badge>
         <p className="text-sm font-medium text-spruce">Not a park session</p>
