@@ -9,31 +9,7 @@ import { exerciseCues, exerciseName } from '@/src/programming/session-builder.ts
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { SessionItem } from '@/src/domain/session.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
-
-const dose = (item: SessionItem): string => {
-  const p = item.prescription;
-  const side = 'counting' in p && p.counting === 'per-side' ? ' per side' : '';
-  if (p.kind === 'reps') return `${p.sets} × ${p.reps}${side}`;
-  if (p.kind === 'time') return `${p.sets} × ${p.seconds}s${side}`;
-  return `${p.meters} m`;
-};
-
-/**
- * The two oversized numerals.
- *
- * A single long effort reads as minutes rather than "1 × 240s" — three-digit
- * seconds overflow the display size, and nobody counts a four-minute walk in
- * seconds anyway. Multi-set work keeps sets × duration.
- */
-const parts = (item: SessionItem): readonly [string, string] => {
-  const p = item.prescription;
-  if (p.kind === 'reps') return [String(p.sets), String(p.reps)];
-  if (p.kind === 'time') {
-    if (p.sets === 1 && p.seconds >= 120) return [String(Math.round(p.seconds / 60)), 'min'];
-    return [String(p.sets), `${p.seconds}s`];
-  }
-  return [String(p.meters), 'm'];
-};
+import { doseParts, doseText, isSingleEffort } from '@/src/presentation/prescription-copy.ts';
 
 export function WorkoutClient() {
   const router = useRouter();
@@ -97,7 +73,7 @@ export function WorkoutClient() {
     setDone(done + 1);
   };
 
-  const [big, small] = current === undefined ? ['', ''] : parts(current.item);
+  const [big, small] = current === undefined ? ['', ''] : doseParts(current.item.prescription);
   const basis = current?.item.basis;
   const featureLabel =
     basis?.kind === 'confirmed-feature'
@@ -168,7 +144,7 @@ export function WorkoutClient() {
                 <p className="flex items-baseline gap-2.5 leading-none text-blue-ink">
                   <span className="text-count font-extrabold tabular-nums">{big}</span>
                   {/* A single continuous effort is "4 min", not "4 × min". */}
-                  {small !== 'min' && small !== 'm' && (
+                  {!isSingleEffort([big, small]) && (
                     <span className="text-3xl font-extrabold text-navy-faint sm:text-4xl">&times;</span>
                   )}
                   {/* Anything longer than two characters steps down a size so a
@@ -182,7 +158,7 @@ export function WorkoutClient() {
                   </span>
                 </p>
                 <p className="pb-2 text-marker font-extrabold uppercase leading-snug tracking-(--text-marker--letter-spacing) text-navy-muted">
-                  {dose(current.item)}
+                  {doseText(current.item.prescription)}
                   <br />
                   {current.block}
                 </p>
