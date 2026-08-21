@@ -33,7 +33,6 @@ export type SupportedFeatureClass = Exclude<FeatureClass, 'class-c-excluded'>;
  */
 export type SupportedFeatureId =
   // Class A — ground-type
-  | 'open-ground'
   | 'walking-running-path'
   | 'stairs'
   | 'hill'

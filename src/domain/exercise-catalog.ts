@@ -288,13 +288,6 @@ const compat = (
  * of a specific structure (§9).
  */
 export const COMPATIBILITIES: readonly ExerciseCompatibility[] = [
-  // Open ground hosts the floor-based work.
-  compat('open-ground', 'bodyweight-squat'),
-  compat('open-ground', 'reverse-lunge'),
-  compat('open-ground', 'push-up'),
-  compat('open-ground', 'plank'),
-  compat('open-ground', 'dead-bug'),
-
   // Bench — step height and an elevated surface for the hands.
   compat('park-bench', 'step-up', 'Bench step-up'),
   compat('park-bench', 'incline-push-up', 'Hands on the bench'),

@@ -7,6 +7,11 @@
  * Confirmation prompts ask about existence and usability only. None of them
  * asks whether something is safe, because MoveHere has no authority to make
  * that assessment (§9).
+ *
+ * Ordinary usable standing, floor, or ground space is NOT a registry feature.
+ * It is the baseline assumption behind environment-independent movements. A
+ * feature that changes no eligible movement fails §7's material-contribution
+ * test, and open ground changed none.
  */
 
 import type {
@@ -17,12 +22,6 @@ import type {
 } from './feature.ts';
 
 const SUPPORTED: readonly SupportedFeature[] = [
-  {
-    id: 'open-ground',
-    featureClass: 'class-a-ground',
-    label: 'Open ground',
-    confirmationPrompt: 'Is there open, level ground you can move on?',
-  },
   {
     id: 'walking-running-path',
     featureClass: 'class-a-ground',

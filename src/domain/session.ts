@@ -44,6 +44,9 @@ declare const estimateWitness: unique symbol;
  */
 export const SESSION_DURATIONS = [10, 20, 30, 45] as const;
 
+/** The permitted durations as plain literals, for keying exhaustive records. */
+export type SessionDuration = (typeof SESSION_DURATIONS)[number];
+
 /** A duration the user may request. */
 export type SessionMinutes = (typeof SESSION_DURATIONS)[number] & {
   readonly [minutesWitness]: true;
