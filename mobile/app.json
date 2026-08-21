@@ -1,16 +1,17 @@
 {
   "expo": {
-    "name": "MoveHere Spike",
-    "slug": "movehere-spike",
+    "name": "MoveHere",
+    "slug": "movehere",
     "version": "0.0.0",
     "platforms": [
       "ios"
     ],
     "ios": {
-      "bundleIdentifier": "dev.movehere.spike"
+      "bundleIdentifier": "dev.movehere.app"
     },
     "plugins": [
-      "expo-sqlite"
-    ]
+      "expo-router"
+    ],
+    "scheme": "movehere"
   }
 }
