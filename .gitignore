@@ -11,3 +11,13 @@ design_references/
 
 # Static export output
 out/
+
+# Expo / React Native. mobile/node_modules is already covered by node_modules/
+# above. Native project directories are generated, not authored — the managed
+# workflow regenerates them, so committing them would create a second source of
+# truth for configuration app.json already holds.
+.expo/
+mobile/dist/
+mobile/spike-dist/
+mobile/ios/
+mobile/android/

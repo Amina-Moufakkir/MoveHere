@@ -1,0 +1,13 @@
+{
+  "name": "movehere-mobile-spike",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "description": "Throwaway spike. Answers one question: can Metro bundle the shared src/ source unchanged?",
+  "dependencies": {
+    "expo": "^57.0.15",
+    "expo-sqlite": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.2"
+  }
+}
