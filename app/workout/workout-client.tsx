@@ -7,7 +7,7 @@ import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
 import { exerciseCues, exerciseName } from '@/lib/programming';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
-import type { SessionItem } from '@/src/domain/session.ts';
+import type { SessionItem, SubstituteReason } from '@/src/domain/session.ts';
 
 const dose = (item: SessionItem): string => {
   const p = item.prescription;
@@ -34,11 +34,22 @@ const parts = (item: SessionItem): readonly [string, string] => {
   return [String(p.meters), 'm'];
 };
 
-const REASON: Record<string, string> = {
-  'conditions-adverse': 'You said it&rsquo;s bad outside, so this is a no-equipment session.',
-  'conditions-unavailable': 'Conditions weren&rsquo;t known, so this is a no-equipment session.',
+/**
+ * Why this is a substitute rather than a park session (§11).
+ *
+ * Keyed by SubstituteReason['kind'] rather than by string, so adding a reason
+ * to the domain is a compile error here instead of a substitute session that
+ * announces itself with no explanation underneath.
+ *
+ * Written with real characters. An HTML entity inside a JS string is not JSX
+ * text, so React escapes it and the user reads the entity.
+ */
+const REASON: Record<SubstituteReason['kind'], string> = {
+  'conditions-adverse': 'You said it’s bad outside, so this is a no-equipment session.',
+  'conditions-unavailable': 'Conditions weren’t known, so this is a no-equipment session.',
   'no-confirmed-inventory': 'No park is confirmed yet, so this is a no-equipment session.',
-  'no-compatible-venue-movements': 'Your park couldn&rsquo;t fill this session, so this is a no-equipment one.',
+  'no-compatible-venue-movements':
+    'Your park couldn’t fill this session, so this is a no-equipment one.',
 };
 
 export function WorkoutClient() {
@@ -74,7 +85,7 @@ export function WorkoutClient() {
           <h1 className="text-page font-extrabold">Couldn&rsquo;t build a session</h1>
           <p className="max-w-md text-base leading-snug text-navy-muted">
             {workout.reason === 'insufficient-time'
-              ? 'There isn&rsquo;t enough time for a full session at this length.'
+              ? 'There isn’t enough time for a full session at this length.'
               : 'No movements are available. This is a content problem, not something you did.'}
           </p>
           <ActionLink href="/setup" full={false}>Change the session</ActionLink>
@@ -147,10 +158,9 @@ export function WorkoutClient() {
               <p className="text-sm font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-yellow-ink">
                 Substitute session
               </p>
-              <p
-                className="mt-1 text-sm leading-snug text-navy-muted"
-                dangerouslySetInnerHTML={{ __html: REASON[workout.reason.kind] ?? '' }}
-              />
+              <p className="mt-1 text-sm leading-snug text-navy-muted">
+                {REASON[workout.reason.kind]}
+              </p>
             </div>
           )}
 

@@ -35,8 +35,16 @@ export type NonEmpty<T> = readonly [T, ...T[]];
  * A combined or "mixed" goal is deliberately absent: its semantics are not
  * defined well enough to enter generation, and an underspecified goal would
  * make sessions harder to compare under Gates I and J.
+ *
+ * **Mobility is deferred and is not a goal here.** It remains a candidate
+ * pending reviewed domain input on whether MoveHere should program it at all
+ * and whether it fits this programming model (§6 step 4, §8). Listing it as a
+ * goal while no policy exists for it would make every exhaustive-by-goal type
+ * in the system claim coverage the content does not have. The mobility
+ * *pattern* still exists in the exercise catalog; a pattern a session may
+ * include is not a goal a user may request.
  */
-export type SessionGoal = 'strength' | 'conditioning' | 'mobility';
+export type SessionGoal = 'strength' | 'conditioning';
 
 declare const minutesWitness: unique symbol;
 declare const estimateWitness: unique symbol;
