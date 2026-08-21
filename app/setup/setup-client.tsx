@@ -8,6 +8,7 @@ import type { ReportedConditions } from '@/src/programming/conditions.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SESSION_DURATIONS } from '@/src/domain/session.ts';
 import type { SessionGoal, SessionDuration } from '@/src/domain/session.ts';
+import { makeSeed } from '@/src/programming/seed.ts';
 
 const GOALS: readonly { value: SessionGoal; label: string; hint: string }[] = [
   { value: 'strength', label: 'Strength', hint: 'Fewer movements, more work each' },
@@ -19,11 +20,6 @@ const CONDITIONS: readonly { value: ReportedConditions; label: string; hint: str
   { value: 'adverse', label: 'Bad out there', hint: 'Rain, ice, heat or dark' },
   { value: 'unknown', label: 'Not sure', hint: 'Treated the same as bad conditions' },
 ];
-
-const newSeed = (): string =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : `s-${Date.now()}`;
 
 export function SetupClient() {
   const router = useRouter();
@@ -169,7 +165,7 @@ export function SetupClient() {
           <Action
             onClick={() => {
               // A seed is minted here, once, and persisted with the session.
-              startSession(newSeed());
+              startSession(makeSeed(Date.now()));
               router.push('/workout');
             }}
           >

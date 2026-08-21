@@ -40,7 +40,7 @@ import {
 } from '../../src/presentation/prescription-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { ProjectContentNote } from '../components/project-content-note';
-import { newSeed } from '../lib/seed.ts';
+import { makeSeed } from '../../src/programming/seed.ts';
 import { radius, space, touch, type, useTheme } from '../theme/tokens';
 
 export default function WorkoutScreen() {
@@ -409,7 +409,7 @@ export default function WorkoutScreen() {
           <ProjectContentNote style={{ flex: 1 }} />
           {!finished && (
             <Pressable
-              onPress={() => startSession(newSeed())}
+              onPress={() => startSession(makeSeed(Date.now()))}
               accessibilityRole="button"
               accessibilityLabel="Generate another session"
               style={{

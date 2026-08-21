@@ -35,7 +35,7 @@ import type { ReportedConditions } from '../../src/programming/conditions.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { radius, space, touch, type, useTheme } from '../theme/tokens';
-import { newSeed } from '../lib/seed.ts';
+import { makeSeed } from '../../src/programming/seed.ts';
 
 /** Exhaustive by construction: a new goal without copy fails to compile. */
 const GOAL_COPY: Record<SessionGoal, { label: string; hint: string }> = {
@@ -376,7 +376,7 @@ export default function SetupScreen() {
         <Pressable
           onPress={() => {
             // A seed is minted here, once, and persisted with the session.
-            startSession(newSeed());
+            startSession(makeSeed(Date.now()));
             router.push('/workout');
           }}
           accessibilityRole="button"

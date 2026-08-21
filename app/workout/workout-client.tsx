@@ -9,6 +9,7 @@ import { exerciseCues, exerciseName } from '@/src/programming/session-builder.ts
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
 import { doseParts, doseText, isSingleEffort } from '@/src/presentation/prescription-copy.ts';
+import { makeSeed } from '@/src/programming/seed.ts';
 
 export function WorkoutClient() {
   const router = useRouter();
@@ -194,7 +195,7 @@ export function WorkoutClient() {
             {!finished && (
               <button
                 type="button"
-                onClick={() => startSession(crypto.randomUUID())}
+                onClick={() => startSession(makeSeed(Date.now()))}
                 className="shrink-0 rounded-full border border-line px-3 py-1.5 text-sm font-bold text-navy-muted transition-colors duration-(--duration-quick) hover:border-line-strong hover:text-navy"
               >
                 Generate another
