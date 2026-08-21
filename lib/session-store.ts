@@ -14,8 +14,6 @@ import { createSessionStore } from '../src/storage/session-record.ts';
 
 export { SESSION_SCHEMA_VERSION } from '../src/storage/session-record.ts';
 export type { SessionRecord, SessionSummary } from '../src/storage/session-record.ts';
-export { REPORTED_CONDITIONS } from '../src/programming/conditions.ts';
-export type { ReportedConditions } from '../src/programming/conditions.ts';
 
 import type { SessionRecord } from '../src/storage/session-record.ts';
 

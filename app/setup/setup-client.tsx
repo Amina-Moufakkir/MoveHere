@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Action } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { useVenue } from '@/components/venue/venue-provider';
-import type { ReportedConditions } from '@/components/venue/venue-provider';
+import type { ReportedConditions } from '@/src/programming/conditions.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SESSION_DURATIONS } from '@/src/domain/session.ts';
 import type { SessionGoal, SessionDuration } from '@/src/domain/session.ts';

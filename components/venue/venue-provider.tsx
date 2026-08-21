@@ -18,16 +18,13 @@ import type {
 } from '@/src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
 import type { SessionGoal, SessionDuration } from '@/src/domain/session.ts';
+import type { ReportedConditions } from '@/src/programming/conditions.ts';
 import type { SessionGenerationOutput } from '@/src/domain/session.ts';
 import type { VenueCorrection } from '@/src/domain/confirmation.ts';
 import { applyCorrection } from '@/src/domain/confirmation.ts';
-import { saveInventory as persistInventory } from '@/lib/venue-store';
 import { clearSession, readSession, writeSession } from '@/lib/session-store';
 import type { SessionRecord, SessionSummary } from '@/lib/session-store';
 import { generateFor } from '@/src/programming/session-builder.ts';
-
-/** What the user reports about conditions. `unknown` maps to unavailable (§6.5). */
-export type ReportedConditions = 'acceptable' | 'adverse' | 'unknown';
 
 export interface SessionRequest {
   readonly minutes: SessionDuration;
@@ -153,7 +150,7 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
     setInventory((prev) => {
       if (prev === null) return prev;
       const next = applyCorrection(prev, correction);
-      persistInventory(next);
+      saveInventory(next);
       return next;
     });
   }, []);

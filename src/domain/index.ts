@@ -1,5 +1,5 @@
 /**
- * Phase 0 domain surface.
+ * The domain surface, shared by both clients (§15).
  *
  * The canonical plan (docs/product-plan-v4.3.md) governs; where these types and
  * the plan disagree, the plan wins.
