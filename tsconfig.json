@@ -10,6 +10,8 @@
     // Revisit when a runtime is chosen; nothing here is executed.
     "module": "preserve",
     "moduleResolution": "bundler",
+    // Imports carry .ts extensions so Node can execute the same files tsc checks.
+    "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 

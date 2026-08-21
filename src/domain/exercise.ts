@@ -8,7 +8,7 @@
  * EnvironmentIndependentMovement, so there is a single answer to that question.
  */
 
-import type { SupportedFeatureId } from './feature';
+import type { SupportedFeatureId } from './feature.ts';
 
 export type ExerciseId = string & { readonly __brand: 'ExerciseId' };
 

@@ -3,7 +3,7 @@ import type {
   SessionGenerationOutput,
   EstimatedMinutes,
   GenerationProvenance,
-} from '../../../src/domain/session';
+} from '../../../src/domain/session.ts';
 declare const estimate: EstimatedMinutes;
 declare const provenance: GenerationProvenance;
 export const empty: SessionGenerationOutput = {

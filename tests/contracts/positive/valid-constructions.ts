@@ -15,7 +15,7 @@ import type {
   RehydrationResult,
   CandidateFeature,
   FeatureConfirmation,
-} from '../../../src/domain/confirmation';
+} from '../../../src/domain/confirmation.ts';
 import type {
   SessionGenerationInput,
   SessionGenerationOutput,
@@ -25,13 +25,13 @@ import type {
   GenerationProvenance,
   SelectionBasis,
   ConditionsAssessment,
-} from '../../../src/domain/session';
-import type { SupportedFeature, ExcludedObject } from '../../../src/domain/feature';
+} from '../../../src/domain/session.ts';
+import type { SupportedFeature, ExcludedObject } from '../../../src/domain/feature.ts';
 import type {
   CompatibilityReview,
   CompatibilityEntryId,
   EnvironmentIndependentDeclarationId,
-} from '../../../src/domain/exercise';
+} from '../../../src/domain/exercise.ts';
 
 declare const minutes: SessionMinutes;
 declare const estimate: EstimatedMinutes;
@@ -73,9 +73,9 @@ export const usable: ConfirmedFeature = {
 
 // Every correction direction the plan allows.
 export const corrections: readonly VenueCorrection[] = [
-  { kind: 'feature-absent', featureId: 'stairs' },
-  { kind: 'feature-unusable', featureId: 'pull-up-bar', note: 'occupied' },
-  { kind: 'feature-usable-again', featureId: 'pull-up-bar' },
+  { kind: 'feature-absent', featureId: 'stairs', occurredAt: 't' },
+  { kind: 'feature-unusable', featureId: 'pull-up-bar', occurredAt: 't', note: 'occupied' },
+  { kind: 'feature-usable-again', featureId: 'pull-up-bar', occurredAt: 't' },
 ];
 
 // Rehydration succeeds or fails; both are expressible.

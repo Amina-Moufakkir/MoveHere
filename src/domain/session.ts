@@ -10,14 +10,14 @@
  * types: a conforming implementation could still read a clock or throw.
  */
 
-import type { SupportedFeatureId } from './feature';
-import type { GenerationVenueView, VenueSnapshotId } from './confirmation';
+import type { SupportedFeatureId } from './feature.ts';
+import type { GenerationVenueView, VenueSnapshotId } from './confirmation.ts';
 import type {
   ExerciseId,
   Prescription,
   CompatibilityEntryId,
   EnvironmentIndependentDeclarationId,
-} from './exercise';
+} from './exercise.ts';
 
 /** A list that cannot be empty. Used where an empty value would be a defect. */
 export type NonEmpty<T> = readonly [T, ...T[]];
