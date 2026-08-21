@@ -12,13 +12,13 @@
 
 MoveHere explores a simple product hypothesis:
 
-> **Can understanding the physical environment around a user remove enough workout-planning friction to help them exercise more consistently?**
+> **Can understanding the environment, resources, and time a user actually has remove enough workout-planning friction to help them exercise more consistently?**
 
-Parks are the initial wedge.
+Instead of asking users to search a workout library and determine whether a workout fits their circumstances, MoveHere builds a session from what is actually available where they are.
 
-Instead of asking users to search a workout library and determine whether a workout fits their surroundings, MoveHere creates a structured inventory of **user-confirmed supported features** in a nearby park and uses that inventory to construct a compatible workout.
+**The park is the first environment in which that capability is implemented**, and the current differentiating proof that the mechanism works: confirmed park features materially change the generated session (§16, Gate I). Today MoveHere creates a structured inventory of **user-confirmed supported features** in a nearby park and uses that inventory to construct a compatible workout. Beyond the park and environment-independent sessions, nothing is built (§4).
 
-### Initial experience
+### Initial experience — the park
 
 ```text
 Scan park
@@ -38,19 +38,29 @@ Correct venue information when needed
 
 Indoor venue awareness remains a potential mechanism for maintaining continuity during periods when outdoor exercise is impractical. It is a **hypothesis to validate**, not proof that seasonality has been solved.
 
-**MoveHere is park-first and potentially venue-capable — not a universal workout generator.**
+**MoveHere is environment-aware in purpose and park-first in implementation — not a universal workout generator.**
 
 ---
 
 ## 2. Problem Statement
 
-The hypothesized beachhead user already has convenient access to a nearby park and may already walk or run there, but does not consistently use the environment for strength or structured training.
+### The general friction
 
-The hypothesized friction is:
+Sessions are not usually skipped because someone did not want to train. They are skipped because the setup was wrong — the gym required a trip, the weather turned, the equipment was not there, or the time available did not match the plan.
+
+The hypothesized friction is therefore:
+
+> **“I could train right now, but not in the way I think I'm supposed to, so I don't.”**
+
+MoveHere attempts to eliminate the translation work between whatever environment, equipment and time a person actually has and an executable workout.
+
+### The park instance of it
+
+The hypothesized beachhead user already has convenient access to a nearby park and may already walk or run there, but does not consistently use the environment for strength or structured training. For them the friction reads:
 
 > **“I have somewhere nearby where I could exercise, but I don't know what useful workout I can do with what is actually there.”**
 
-MoveHere attempts to eliminate the translation work between the physical environment and an executable workout.
+This is one instance of the general friction, not a narrower replacement for it. The park is where MoveHere addresses it first (§5), and the only environment currently implemented.
 
 This problem has **not yet been validated through formal customer interviews**. Development proceeds to prototype and evaluate the technical and product mechanism without treating the hypothesis as established evidence.
 
@@ -142,6 +152,28 @@ Potential alternatives include:
 
 The exact competitive behavior of the beachhead user remains unvalidated.
 
+### Three levels, kept distinct
+
+Conflating these is how "park-first" drifts into "park-only", and how a parity feature gets mistaken for a differentiator. They are stated separately and should stay that way in the plan, the product and any external description.
+
+**Product vision.** MoveHere builds a workout around the environment a person is in, the resources and equipment available to them, the time they have, and the goal they choose.
+
+**Current implementation.** Park-aware sessions built from user-confirmed park features, plus environment-independent sessions requiring no equipment at all. Nothing else is built.
+
+**Current differentiating proof.** The park is MoveHere's first environment-aware implementation, and the evidence that the mechanism works: confirmed park features materially change the generated workout (§16, Gate I).
+
+### Environment awareness is the capability; the park is the first instance
+
+The differentiating capability is **environment awareness** — understanding what is actually available where a person is, and generating from it. The park is the first environment in which that capability is implemented, not the capability itself.
+
+This matters for sequencing as well as language. Supporting a further environment is the same capability pointed somewhere new, subject to the same admission, confirmation and safety boundaries (§5, §7, §9). It is not a different product.
+
+### No-equipment generation is not the differentiation
+
+Environment-independent workouts overlap substantially with capabilities existing fitness products already offer. MoveHere does not claim that capability as its differentiation.
+
+Its role is **continuity**: it is what keeps a person training when the park is unavailable, the weather turns, or nothing has been confirmed yet. Continuity is the promise; environment awareness is the proof.
+
 ### Positioning constraint
 
 MoveHere should not compete primarily on:
@@ -150,6 +182,7 @@ MoveHere should not compete primarily on:
 - Exercise-library size.
 - Number of workout videos.
 - AI novelty.
+- Bodyweight or no-equipment workout generation.
 
 The sentence future validation must support is:
 
@@ -169,6 +202,12 @@ The park remains the initial product and acquisition story because it provides:
 - An existing behavioral trigger.
 - A concrete reason for venue awareness.
 
+### Park-first is a sequencing decision, not the product boundary
+
+The park is where environment awareness is implemented first. It is not the limit of what MoveHere is for (§2, §4).
+
+The domain model already reflects this. The candidate → confirmation → confirmed inventory contract, the compatibility engine and the generator say nothing about parks; only the supported-feature registry (§7) is park-specific, and it is park-specific by deliberate choice rather than by structural constraint.
+
 ### Venue-aware
 
 The underlying architecture may eventually generalize beyond parks.
@@ -178,6 +217,8 @@ However:
 > **Venue-capable does not mean every venue belongs in the product.**
 
 New venue classes should only be supported when evidence justifies them and the safety/domain model can support them responsibly.
+
+Both statements hold at once. Park-first does not narrow the product's purpose, and a broad purpose does not widen the registry. Nothing enters on the strength of the vision alone.
 
 ---
 
@@ -650,6 +691,21 @@ If supported later, indoor venues require their own supported-feature registry a
 
 Do not transfer outdoor assumptions to arbitrary household furniture.
 
+### Home resources enter through the same boundaries
+
+A future home or equipment mode is the same environment-awareness capability applied to another place (§4). It is not an exemption from any of the boundaries that govern the park.
+
+Any home resource — a chair, a step, a band, a dumbbell — must satisfy the same requirements as a park feature:
+
+- The five-condition admission test for the supported-feature registry (§7).
+- Class A / B / C classification by load-bearing assumption (§7).
+- Candidate → confirmation → confirmed inventory, with no separate path into generation (§6).
+- Reviewed compatibility claims that make no unfounded structural assumption (§8, §9).
+
+**The existing Class C exclusions stand unchanged.** Doorframes, countertops, sofa arms, walls and ledges are excluded today and a home mode does not reopen them. Being indoors is not evidence that an object is safe to load; if anything, household furniture is less predictable than purpose-built outdoor equipment.
+
+Purpose-built portable equipment — a resistance band, a dumbbell — is a different case from household furniture and may be more admissible, but it enters through the same test rather than around it.
+
 ---
 
 ## 13. Venue Data as a Potential Compounding Asset
@@ -779,9 +835,13 @@ Build semantic structure, keyboard access, visible focus, readable contrast, acc
 
 Formal customer validation is intentionally deferred during the current engineering phase.
 
+The gates are stated at the level of the thesis they test, which is environment awareness (§4). The **park is the only evidence surface currently available**, because it is the only environment implemented. A gate phrased broadly is not a claim that home or equipment support exists; it records what the gate would have to answer, evaluated today against the park.
+
 ### Gate A — Problem
 
-Do target users actually experience difficulty translating nearby parks into useful structured workouts?
+Do target users actually experience difficulty translating the environment and resources they actually have into useful structured workouts?
+
+Currently evaluable only for the park.
 
 ### Gate B — Proximity
 
@@ -816,6 +876,8 @@ During adverse outdoor periods, is there a continuity mechanism that retains eno
 Do materially different confirmed venue inventories produce materially different sessions?
 
 If a minimally equipped park and a feature-rich park produce near-identical sessions, venue awareness may not create meaningful differentiation.
+
+**Gate I is deliberately park-scoped.** It is the current MVP evidence surface, and it should stay park-scoped rather than being restated in broader environment terms the implementation cannot yet support.
 
 ### Gate J — Incremental Value
 
