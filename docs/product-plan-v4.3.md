@@ -256,6 +256,8 @@ The initial session goals are:
 - Conditioning.
 - Mobility.
 
+Mobility's inclusion is provisional. It is listed here because it appears in the current plan, not because it has been established that mobility belongs in the supported goal set. Whether mobility is a goal MoveHere should program at all, and whether it can be expressed in the same programming model as strength and conditioning, are open questions for domain review (§8). Mobility may be removed.
+
 Available time is chosen from a fixed set of durations:
 
 - 10 minutes.
@@ -424,6 +426,36 @@ The initial question is:
 
 > **Can a small, trustworthy compatibility system generate useful sessions from confirmed venue features?**
 
+### Goal programming policy
+
+The compatibility matrix answers which movements a venue supports. It does not answer what a session should contain. That second question — which movement patterns a goal calls for, in what priority, in what structure, at what volume, with what rest — is fitness judgment, and it must not live in the generator.
+
+MoveHere separates the two:
+
+```text
+GENERATOR
+deterministic mechanism
+       ↕
+REVIEWED GOAL POLICY
+fitness judgment, expressed as data
+```
+
+The generator selects, orders, and fills according to a policy it is given. It contains no programming knowledge of its own. A reader should be able to read the entire generator without learning anything about exercise programming.
+
+Goal programming policy is therefore **reviewed data, not generator code**. It lives in the repository under version control, is reviewed like code, covers every supported session duration exhaustively, and resolves prescriptions deterministically. A policy is validated against the compatibility matrix before use, so that a policy the matrix cannot satisfy is caught when it is loaded rather than when a user asks for a workout.
+
+Policy carries its own goal. Generation is given one reviewed policy rather than a goal plus a policy, so the two cannot disagree.
+
+### Policy review requirement
+
+Programming policy is the highest-stakes domain content in the product. Compatibility asserts that a movement is possible at a feature; policy asserts what a person should do. The review standard differs accordingly.
+
+A goal programming policy may be treated as authoritative only when reviewed by a **qualified fitness professional holding recognized training or programming credentials, with relevant practical experience**. The review must record the reviewer reference, the review date, and the supporting sources the policy rests on.
+
+This standard is **provisional**. What counts as a recognized credential has not been defined, and defining it is an open decision. A policy with no cited basis is an opinion and must not be structurally indistinguishable from reviewed content.
+
+This review authorizes **general fitness programming only**. It does not authorize medical, rehabilitation, diagnostic, or injury-specific programming, which remain excluded under §10.
+
 ### Differentiation risk
 
 A conservative registry may cause many parks to resolve to:
@@ -514,6 +546,8 @@ Future injury-aware programming requires:
 - Test coverage.
 - Clear refusal/escalation behavior.
 - Legal review.
+
+Review of a goal programming policy under §8 does not satisfy any part of this list. A qualified fitness professional signing a general-fitness programming policy authorizes general fitness programming and nothing further. It is not authorization for injury-aware programming, condition-specific substitution, or any claim about what is safe for a medical condition, and it must never be represented as such.
 
 ---
 
@@ -656,6 +690,17 @@ Current direction:
 - RLS in Phase 2.
 - PostGIS only when geographic venue discovery requires it.
 
+### Goal programming policy
+
+Goal programming policy is data, authored in-repo and version controlled. It moves through the same review as code. It is data for authoring, not for runtime mutation.
+
+### Carried-forward contract work
+
+Recorded so it is not lost between passes. Neither is implemented:
+
+- **Laterality.** The prescription contract cannot currently express a per-side movement. The capability is authorized; no exercise or policy has been assigned a laterality value.
+- **Test-fixture authority.** If generation accepts only reviewed policy, test fixtures must be shaped as reviewed, which would mean fabricating a reviewer reference to make tests compile — reintroducing fabricated authority one layer above the venue brands. This is an open design question for the goal-policy contract pass, deliberately not yet solved.
+
 ### ORM
 
 Prisma remains removed unless a later requirement justifies reconsideration.
@@ -694,7 +739,9 @@ Can ordinary phone photos plus user confirmation create the minimum reliable sup
 
 ### Gate E — Generation
 
-Can the curated compatibility matrix produce sensible sessions?
+Can the curated compatibility matrix and a reviewed goal programming policy together produce sensible sessions?
+
+Sensibility is jointly determined. The matrix establishes what a venue supports; the policy establishes what a session should contain. Gate E cannot be evaluated before at least one reviewed goal policy exists (§8).
 
 ### Gate F — Behavior
 
@@ -847,6 +894,7 @@ This deferral is a sequencing decision, not a finding. The absence of this resea
 - The supported-feature registry and Class A/B/C classification (§7).
 - The candidate → confirmation → confirmed venue inventory contract (§6).
 - The exercise compatibility matrix (§8).
+- The goal programming policy contract (§8) — the schema, not the values.
 - Deterministic session generation.
 - Safety invariants and the authority boundary (§9).
 - The conditions gate and the environment-independent substitute session (§11).
@@ -863,9 +911,25 @@ This deferral is a sequencing decision, not a finding. The absence of this resea
 - Venue classes beyond the park wedge (§5).
 - Commercial claims, pricing, and marketing.
 
+### Blocked pending external input
+
+**Goal programming values require qualified fitness-domain review and may not be invented by the implementation agent.**
+
+The blocked values are the eligible movement patterns per goal and their priority order; block count, roles, and role vocabulary; slot counts and which slots are required; set counts, rep ranges, hold durations, and distance ranges; rest durations at every level; work/rest structure and its vocabulary; volume caps per duration; laterality rules; whether an exercise may repeat within a session; the minimum viable program per goal and duration; and whether mobility is expressible in the same programming model at all.
+
+Building the policy contract is not blocked. Populating it is. An implementation agent may design the schema, the loader, and the feasibility check, and may not author the values or infer them from general knowledge.
+
 ### Leaving Phase 0
 
-Exit is a judgment, not a schedule. Phase 0 has done its work when the domain model survives park audits, Gate I shows that confirmed venue inventories materially change generated sessions, and the remaining hypotheses are still stated as hypotheses.
+Exit is a judgment, not a schedule, and it is worth separating two things that are easy to conflate.
+
+**Mechanism complete** — the contracts, loaders, feasibility validation, generator, and verification are finished and passing. This is achievable entirely within the team and does not depend on external review.
+
+**Phase 0 exit** — mechanism complete, the domain model survives park audits, Gate I shows that confirmed venue inventories materially change generated sessions, and the remaining hypotheses are still stated as hypotheses.
+
+Exit additionally requires at least one reviewed goal programming policy, because Gate E and Gate I are both unevaluable without one: neither "are these sessions sensible" nor "do different venues produce different sessions" can be answered from sessions no qualified reviewer has authorized.
+
+Separating the two matters because it lets engineering finish without waiting on review, and without the wait creating pressure to sign a policy quickly in order to declare a phase complete.
 
 ### Phase 1 and Phase 2
 
