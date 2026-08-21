@@ -250,13 +250,12 @@ Initially collect only:
 - Available time.
 - Session goal.
 
-The initial session goals are:
+The initial supported session goals are:
 
 - Strength.
 - Conditioning.
-- Mobility.
 
-Mobility's inclusion is provisional. It is listed here because it appears in the current plan, not because it has been established that mobility belongs in the supported goal set. Whether mobility is a goal MoveHere should program at all, and whether it can be expressed in the same programming model as strength and conditioning, are open questions for domain review (§8). Mobility may be removed.
+**Mobility is a candidate goal, not an initial supported goal.** It is demoted pending reviewed domain input on two questions: whether mobility is a goal MoveHere should program at all, and whether it can be expressed in the same programming model as strength and conditioning (§8). Initial goal-policy work covers strength and conditioning only. Mobility is promoted or removed on evidence, not on the fact that it was listed first.
 
 Available time is chosen from a fixed set of durations:
 
@@ -446,6 +445,18 @@ Goal programming policy is therefore **reviewed data, not generator code**. It l
 
 Policy carries its own goal. Generation is given one reviewed policy rather than a goal plus a policy, so the two cannot disagree.
 
+### Policy authority boundaries
+
+Four rules govern how policy reaches production generation. All four are standing decisions.
+
+**Draft policy cannot enter production generation.** Draft and reviewed policy are distinguishable, and only reviewed policy is eligible. Drafts are dropped when policy is loaded, and every drop is reported — a half-reviewed policy set must never look complete.
+
+**Production-reviewed authority and test-fixture authority must remain structurally distinct.** Testing the generator requires policy, and fabricating a reviewer reference to satisfy a test would reintroduce, one layer higher, exactly the fabricated authority the venue confirmation boundary exists to prevent. Test authority must be unable to carry review provenance, must be refused in authored policy data, and must remain visible in the provenance of anything generated from it, so that a session built on test policy can never be presented to a user as a real one.
+
+**Feasibility validation is a mandatory boundary.** Policy is validated against the compatibility matrix before it can enter production generation, so a policy the matrix cannot satisfy is caught as a defect rather than surfacing as a user receiving no session. This is enforced in CI and build verification, and again at loading or startup where applicable.
+
+**Reviewed goal policy is general-fitness authority only.** It can never represent medical, rehabilitation, diagnostic, or injury-specific authority — see §10.
+
 ### Policy review requirement
 
 Programming policy is the highest-stakes domain content in the product. Compatibility asserts that a movement is possible at a feature; policy asserts what a person should do. The review standard differs accordingly.
@@ -455,6 +466,17 @@ A goal programming policy may be treated as authoritative only when reviewed by 
 This standard is **provisional**. What counts as a recognized credential has not been defined, and defining it is an open decision. A policy with no cited basis is an opinion and must not be structurally indistinguishable from reviewed content.
 
 This review authorizes **general fitness programming only**. It does not authorize medical, rehabilitation, diagnostic, or injury-specific programming, which remain excluded under §10.
+
+### Unresolved domain questions
+
+The following are recorded so they are not quietly resolved by an implementation. **No further design should be built around them until reviewed fitness-domain input exists.**
+
+- **Block roles.** The permitted vocabulary of block roles within a session.
+- **Work/rest structures.** The permitted vocabulary of work and rest structures, and which applies to which goal.
+- **Prescription resolution.** How a prescribed range is resolved to a single value. Taking the minimum, the midpoint, or scaling by duration are materially different training decisions, so the rule is domain input rather than a mechanism default.
+- **Minimum viable program.** What the smallest program that still counts as a given goal at a given duration consists of.
+- **Specific-exercise requirements.** Whether a policy may ever mandate a particular movement rather than a movement pattern. The current model selects exercises to fill pattern-based slots; mandating a specific exercise would require a different structure.
+- **Venue-richness policy.** Whether a better-equipped venue should be programmed differently, or merely substituted into. The current model is venue-agnostic policy plus mechanism substitution.
 
 ### Differentiation risk
 
@@ -698,7 +720,7 @@ Goal programming policy is data, authored in-repo and version controlled. It mov
 
 Recorded so it is not lost between passes. Neither is implemented:
 
-- **Laterality.** The prescription contract cannot currently express a per-side movement. The capability is authorized; no exercise or policy has been assigned a laterality value.
+- **Laterality and rep counting.** Two separate concepts, decided but not implemented. **Laterality is an intrinsic property of an exercise** — `bilateral | unilateral` — because whether a movement works one side at a time is a fact about the movement, not a policy choice. **Rep counting is a property of a prescription** — `total | per-side` — because it states what a prescribed number means. Neither concept exists in the contracts yet, and no exercise has been assigned a laterality value.
 - **Test-fixture authority.** If generation accepts only reviewed policy, test fixtures must be shaped as reviewed, which would mean fabricating a reviewer reference to make tests compile — reintroducing fabricated authority one layer above the venue brands. This is an open design question for the goal-policy contract pass, deliberately not yet solved.
 
 ### ORM
@@ -915,9 +937,24 @@ This deferral is a sequencing decision, not a finding. The absence of this resea
 
 **Goal programming values require qualified fitness-domain review and may not be invented by the implementation agent.**
 
-The blocked values are the eligible movement patterns per goal and their priority order; block count, roles, and role vocabulary; slot counts and which slots are required; set counts, rep ranges, hold durations, and distance ranges; rest durations at every level; work/rest structure and its vocabulary; volume caps per duration; laterality rules; whether an exercise may repeat within a session; the minimum viable program per goal and duration; and whether mobility is expressible in the same programming model at all.
+The blocked values are the eligible movement patterns per goal and their priority order; block count, roles, and role vocabulary; slot counts and which slots are required; set counts, rep ranges, hold durations, and distance ranges; rest durations at every level; work/rest structure and its vocabulary; volume caps per duration; prescription resolution rules; laterality values; whether an exercise may repeat within a session; the minimum viable program per goal and duration; and the unresolved domain questions in §8.
 
 Building the policy contract is not blocked. Populating it is. An implementation agent may design the schema, the loader, and the feasibility check, and may not author the values or infer them from general knowledge.
+
+### External input task
+
+**Obtain qualified general-fitness programming review for the initial strength and conditioning policies, and for the minimum exercise compatibility set.**
+
+Scope of the review:
+
+- Goal programming policy values for strength and conditioning across all four supported durations (§6 step 4).
+- The minimum exercise compatibility set — which movements are compatible with which supported features, and the environment-independent movements the substitute session depends on (§8).
+- The unresolved domain questions in §8.
+- Whether mobility belongs in the supported goal set at all, and if so whether it fits the same programming model.
+
+Reviewer requirement and recorded provenance are defined in §8. The review authorizes general fitness programming only.
+
+This is the single external dependency currently on the Phase 0 critical path. Gate E and Gate I are unevaluable until it is satisfied.
 
 ### Leaving Phase 0
 
