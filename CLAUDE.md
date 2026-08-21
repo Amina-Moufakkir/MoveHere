@@ -4,7 +4,11 @@
 
 `docs/product-plan-v4.3.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
 
-MoveHere is in **Phase 0 — Product & Engineering Foundation** (§19). Phase 0 is not the MVP.
+MoveHere has two clients over one shared domain (§15): the **web** client (Next.js, released as `web-mvp-v1`) and the **native mobile** client (Expo + React Native, iOS and Android).
+
+The current phase is **Native Mobile Client** (§20): feature parity with the released web MVP, over the same shared domain. Parity is an implementation result — not validation, not traction, not evidence of product-market fit.
+
+Phase 0 — Product & Engineering Foundation (§19) is mechanism-complete but **did not close its exit conditions**. Park audits, Gate I, and qualified fitness review of goal programming policy remain open and carry forward. Shipped training content is project content and is labeled as such. Adding a second client resolves none of this.
 
 ## Invariants
 
@@ -26,17 +30,25 @@ These are standing product and safety decisions, not preferences. User demand do
 
 ## Phase boundaries
 
-Do not introduce Supabase, authentication, server-side persistence, RLS, or PostGIS during Phase 0 or Phase 1 unless the canonical product plan is explicitly revised first. Phase 0 state is local only.
+Out of scope for the current native parity phase (§20), on **both** clients:
 
-Vision inference, indoor venues, and venue classes beyond parks are likewise out of scope for Phase 0.
+- Supabase, authentication, accounts, server-side persistence, RLS, and PostGIS. State is local only on both clients. Do not introduce any of these unless the canonical product plan is explicitly revised first.
+- Vision inference and camera capture.
+- Location and GPS.
+- Home-equipment support, indoor venues, and venue classes beyond parks.
+- Notifications, Apple Health and Health Connect, payments, and community features.
+
+A native runtime makes several of these newly *possible* rather than newly appropriate. A device capability being available is not a reason to use it — each exclusion stays governed by the plan section that made it.
 
 ## Engineering conventions
 
 - Keep deterministic domain logic isolated from UI and testable without React.
+- `src/` is shared by both clients and must stay platform-independent: no DOM, no Node, no React Native, no browser or device APIs. `npm run typecheck:domain` enforces this by compiling `src/` against ES2022 only with no `@types`. Platform access belongs behind a port, as `StorageLike` already does.
+- Safety-critical copy is shared source, not re-authored per client. Wording governed by §9, §10, and §11 — safety authority, medical scope, substitute-session labeling — lives in shared `src/`, and each client renders the same meaning in its own UI. Two independently written copies of a safety claim can drift, and only one would be reviewed.
 - Never use a type assertion (`as`, `as unknown as`) to create a branded trusted domain value such as `ConfirmedVenueInventory`, `ConfirmedFeatureSet`, `GenerationVenueView`, or `SessionMinutes`. Brands stop object literals, update-by-spread, structural clones, and untrusted persisted state; they cannot stop a deliberate assertion. Trusted values come only from their owning constructor or rehydration boundary. The one place an assertion is legitimate is inside that constructor, after validation.
 - Do not call `JSON.parse` on persisted venue state outside the rehydration boundary. It returns `any`, which assigns to anything and silently defeats the confirmation guarantee across a reload.
 - Generation must be deterministic and reproducible from the same inputs.
-- Accessibility is a design and engineering constraint from Phase 0 and an implementation requirement from Phase 1. Do not make Phase 0 architecture decisions that make accessible implementation harder later. Phase 1 UI must target WCAG 2.1 AA or the applicable current standard defined by the canonical plan (§15).
+- Accessibility constrains architecture from the start on both clients and is not a later pass. **Web** targets WCAG 2.1 AA, or the applicable current standard defined by the canonical plan (§15). **Native mobile** uses the iOS and Android accessibility APIs and platform guidance, carrying the equivalent principles: contrast, meaningful labels, focus and reading order, scalable text, reduced motion, adequate touch targets, screen-reader usability under VoiceOver and TalkBack. Never describe the native client as WCAG conformant — WCAG is written for the web, and inheriting the label because the other client targets it is a conformance claim nobody verified.
 - No Prisma.
 - Prefer a small, reviewable exercise set over library breadth.
 
@@ -44,7 +56,7 @@ Vision inference, indoor venues, and venue classes beyond parks are likewise out
 
 - Never write copy stating or implying that MoveHere has verified a structure is safe.
 - Label an adverse-conditions session as a substitute, never as a park session.
-- Describe hypotheses as hypotheses. Do not present Phase 0 output as validation, traction, or product-market fit.
+- Describe hypotheses as hypotheses. Do not present output from any phase, on either client, as validation, traction, or product-market fit.
 
 ## Ask before
 
