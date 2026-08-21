@@ -5,3 +5,6 @@ node_modules/
 .env.*
 .next/
 next-env.d.ts
+
+# Local design inspiration only — not project assets, and not ours to commit.
+design_references/

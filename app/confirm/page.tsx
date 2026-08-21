@@ -33,15 +33,15 @@ export default function ConfirmPage() {
         {CONFIRMED.map((item) => (
           <Card key={item.label} as="li" className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-1">
-              <p className="font-medium text-ink">{item.label}</p>
-              <p className="text-sm text-ink-muted text-pretty">{item.prompt}</p>
+              <p className="font-medium text-spruce">{item.label}</p>
+              <p className="text-sm text-spruce-muted text-pretty">{item.prompt}</p>
             </div>
             <Badge tone="moss">Confirmed</Badge>
           </Card>
         ))}
       </ul>
 
-      <p className="text-sm text-ink-faint text-pretty">
+      <p className="text-sm text-spruce-faint text-pretty">
         Confirming means you can see it and use it. It is not a judgement about whether a structure
         is safe — MoveHere cannot make that call, and does not try to.
       </p>

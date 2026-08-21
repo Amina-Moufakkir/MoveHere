@@ -20,8 +20,8 @@ export function Progress({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between text-label">
-        <span className="font-medium text-ink-muted">{label}</span>
-        <span className="tabular-nums text-ink-faint">
+        <span className="font-medium text-spruce-muted">{label}</span>
+        <span className="tabular-nums text-spruce-faint">
           {clamped} of {total}
         </span>
       </div>
@@ -31,10 +31,10 @@ export function Progress({
         aria-valuemin={0}
         aria-valuemax={total}
         aria-label={label}
-        className="h-1.5 overflow-hidden rounded-full bg-surface-sunken"
+        className="h-1.5 overflow-hidden rounded-full bg-chalk-deep"
       >
         <div
-          className="h-full rounded-full bg-moss transition-[width] duration-(--duration-settle) ease-(--ease-out-soft)"
+          className="h-full rounded-full bg-persimmon-deep transition-[width] duration-(--duration-settle) ease-(--ease-out-soft)"
           style={{ width: `${percent}%` }}
         />
       </div>

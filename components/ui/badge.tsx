@@ -3,9 +3,9 @@ import type { ReactNode } from 'react';
 type Tone = 'neutral' | 'moss' | 'clay';
 
 const tones: Record<Tone, string> = {
-  neutral: 'border-line bg-surface-sunken text-ink-muted',
-  moss: 'border-moss-line bg-moss-soft text-moss-deep',
-  clay: 'border-clay-line bg-clay-soft text-clay',
+  neutral: 'border-rule bg-chalk-deep text-spruce-muted',
+  moss: 'border-rule-strong bg-persimmon-soft text-persimmon-deep',
+  clay: 'border-ochre bg-ochre-soft text-ochre-deep',
 };
 
 export function Badge({

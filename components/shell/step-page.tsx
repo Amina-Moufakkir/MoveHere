@@ -26,7 +26,7 @@ export function StepPage({
     <PageContainer className="flex flex-1 flex-col gap-8 py-10 sm:py-14">
       <div className="flex flex-col gap-3">
         {eyebrow !== undefined && (
-          <p className="text-label font-semibold uppercase tracking-(--text-label--letter-spacing) text-moss">
+          <p className="text-label font-semibold uppercase tracking-(--text-label--letter-spacing) text-persimmon-deep">
             {eyebrow}
           </p>
         )}
@@ -39,7 +39,7 @@ export function StepPage({
       <div className="flex flex-1 flex-col gap-6">{children}</div>
 
       {footer !== undefined && (
-        <div className="flex flex-col gap-4 border-t border-line pt-6">{footer}</div>
+        <div className="flex flex-col gap-4 border-t border-rule pt-6">{footer}</div>
       )}
     </PageContainer>
   );

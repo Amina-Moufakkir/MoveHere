@@ -22,11 +22,11 @@ export function Heading({
   const sizes = {
     display: 'text-display font-semibold text-balance',
     title: 'text-title font-semibold text-balance',
-    section: 'text-label font-semibold uppercase tracking-(--text-label--letter-spacing) text-ink-faint',
+    section: 'text-label font-semibold uppercase tracking-(--text-label--letter-spacing) text-spruce-faint',
   };
   return <Tag className={[sizes[size], className].filter(Boolean).join(' ')}>{children}</Tag>;
 }
 
 export function Lede({ children }: { readonly children: ReactNode }) {
-  return <p className="max-w-prose text-lede text-ink-muted text-pretty">{children}</p>;
+  return <p className="max-w-prose text-lede text-spruce-muted text-pretty">{children}</p>;
 }

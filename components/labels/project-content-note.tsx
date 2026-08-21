@@ -9,11 +9,11 @@
 export function ProjectContentNote({ className }: { readonly className?: string }) {
   return (
     <p
-      className={['flex items-start gap-2 text-sm text-ink-faint text-pretty', className]
+      className={['flex items-start gap-2 text-sm leading-snug text-navy-muted text-pretty', className]
         .filter(Boolean)
         .join(' ')}
     >
-      <span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-full bg-ink-faint/60" />
+      <span aria-hidden className="mt-1.5 size-1.5 shrink-0 rounded-full bg-current opacity-50" />
       <span>
         Sessions are built from project-authored training content, not programming reviewed by a
         qualified fitness professional.

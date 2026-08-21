@@ -31,12 +31,12 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <ol className="grid gap-px overflow-hidden rounded-[--radius-lg] border border-line bg-line sm:grid-cols-3">
+      <ol className="grid gap-px overflow-hidden rounded-[--radius-lg] border border-rule bg-rule sm:grid-cols-3">
         {STEPS.map((step) => (
-          <li key={step.n} className="flex flex-col gap-2 bg-surface p-5">
-            <span className="text-label font-semibold tabular-nums text-moss">{step.n}</span>
-            <h2 className="font-semibold text-ink">{step.title}</h2>
-            <p className="text-sm text-ink-muted text-pretty">{step.body}</p>
+          <li key={step.n} className="flex flex-col gap-2 bg-chalk-raised p-5">
+            <span className="text-label font-semibold tabular-nums text-persimmon-deep">{step.n}</span>
+            <h2 className="font-semibold text-spruce">{step.title}</h2>
+            <p className="text-sm text-spruce-muted text-pretty">{step.body}</p>
           </li>
         ))}
       </ol>

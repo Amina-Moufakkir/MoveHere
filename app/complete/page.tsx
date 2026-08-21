@@ -29,7 +29,7 @@ export default function CompletePage() {
         <Heading level={2} size="section">
           Was anything unusable?
         </Heading>
-        <p className="text-sm text-ink-muted text-pretty">
+        <p className="text-sm text-spruce-muted text-pretty">
           If something was occupied, flooded or fenced off, say so. It stays on the park&rsquo;s
           record and is left out of sessions until you say it is back.
         </p>

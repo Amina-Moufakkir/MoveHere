@@ -10,9 +10,9 @@ const base =
   'active:translate-y-px disabled:pointer-events-none disabled:opacity-45';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-moss text-white hover:bg-moss-deep',
-  secondary: 'border border-line-strong bg-surface text-ink hover:border-ink-muted',
-  quiet: 'text-ink-muted hover:bg-surface-sunken hover:text-ink',
+  primary: 'bg-persimmon-deep text-white hover:bg-persimmon-deep',
+  secondary: 'border border-rule-strong bg-chalk-raised text-spruce hover:border-ink-muted',
+  quiet: 'text-spruce-muted hover:bg-chalk-deep hover:text-spruce',
 };
 
 const sizes: Record<Size, string> = {

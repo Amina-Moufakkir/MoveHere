@@ -16,12 +16,12 @@ export function SubstituteNotice({
   readonly reason: string;
 }) {
   return (
-    <div className="rounded-[--radius-md] border border-clay-line border-l-4 bg-clay-soft px-4 py-3.5">
+    <div className="rounded-[--radius-md] border border-ochre border-l-4 bg-ochre-soft px-4 py-3.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Badge tone="clay">Substitute session</Badge>
-        <p className="text-sm font-medium text-ink">Not a park session</p>
+        <p className="text-sm font-medium text-spruce">Not a park session</p>
       </div>
-      <p className="mt-2 text-sm text-ink-muted text-pretty">{reason}</p>
+      <p className="mt-2 text-sm text-spruce-muted text-pretty">{reason}</p>
     </div>
   );
 }

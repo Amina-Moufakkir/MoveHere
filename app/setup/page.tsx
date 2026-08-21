@@ -29,7 +29,7 @@ export default function SetupPage() {
             {DURATIONS.map((value, index) => (
               <label
                 key={value}
-                className="relative flex cursor-pointer flex-col items-center gap-0.5 rounded-[--radius-md] border border-line bg-surface px-3 py-4 transition-colors duration-(--duration-quick) hover:border-line-strong has-checked:border-moss has-checked:bg-moss-soft has-focus-visible:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus"
+                className="relative flex cursor-pointer flex-col items-center gap-0.5 rounded-[--radius-md] border border-rule bg-chalk-raised px-3 py-4 transition-colors duration-(--duration-quick) hover:border-rule-strong has-checked:border-persimmon has-checked:bg-persimmon-soft has-focus-visible:outline has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus"
               >
                 <input
                   type="radio"
@@ -39,7 +39,7 @@ export default function SetupPage() {
                   className="sr-only"
                 />
                 <span className="text-title font-semibold tabular-nums">{value}</span>
-                <span className="text-label text-ink-muted">minutes</span>
+                <span className="text-label text-spruce-muted">minutes</span>
               </label>
             ))}
           </div>

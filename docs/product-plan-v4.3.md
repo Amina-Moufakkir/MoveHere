@@ -742,6 +742,18 @@ Current direction:
 
 Goal programming policy is data, authored in-repo and version controlled. It moves through the same review as code. It is data for authoring, not for runtime mutation.
 
+### Carried-forward design work
+
+Recorded so it is not lost between passes. Not implemented:
+
+- **Consistent exercise visuals in the workout player.** The player currently
+  carries a movement name, a prescription and written cues. A coherent set of
+  exercise illustrations or diagrams would make a movement recognisable without
+  reading, which matters most at the moment it matters most — mid-session, at
+  arm's length, outdoors. Deferred from M5 because a partial or inconsistent
+  set would read worse than none, and because the set has to be designed as a
+  system rather than drawn one movement at a time.
+
 ### Carried-forward contract work
 
 Recorded so it is not lost between passes. Neither is implemented:

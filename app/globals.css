@@ -1,125 +1,158 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   MoveHere design tokens
+   MoveHere — Open Air
 
-   Deliberately small. One accent, one signal colour, two elevation levels,
-   and a type scale with real jumps between steps. Spacing uses Tailwind's
-   default 4px rhythm rather than inventing a parallel scale.
+   Daylight, fresh air, movement, invitation. Cloud-white ground, a dusk-sky
+   blue as the primary, fresh green for confirmation, deep navy instead of
+   black, and warm yellow held back for the substitute-session accent.
 
-   Direction: outdoors and active. Warm paper rather than clinical white, a
-   deep moss green that reads as trail rather than gym, and a dry amber clay
-   for the substitute-session signal — deliberately off the red axis, because a
-   substitute session is not an error. No gradients, no glass, no chart
-   furniture.
+   Depth comes from soft elevation and pale tinted surfaces, not gradients or
+   glass. Motion is small and physical: things press, lift, and fill.
+
+   Every colour is declared exactly once, as light-dark(light, dark). Light is
+   first because light is MoveHere's primary presentation; dark is its
+   nighttime counterpart, selected by system preference or by an explicit
+   data-theme override, both of which work by switching color-scheme rather
+   than by redeclaring the palette.
+
+   Contrast, measured rather than guessed:
+     · white on blue #456da3 is 5.29:1 — the primary carries a label directly
+     · white on blue-deep is 6.95:1, blue-ink on cloud 7.94:1
+     · white on green-deep #1a7846 is 5.50:1 — the fill that carries text
+     · green #1f8a52 is 4.36:1 with white, so it marks and fills but never
+       sits behind small text
+     · navy-faint is 3.9:1 — large text and UI only; body copy uses navy-muted
 --------------------------------------------------------------------------- */
 
 @theme {
-  /* Surfaces and ink */
-  --color-paper: oklch(98.5% 0.006 95);
-  --color-surface: oklch(100% 0 0);
-  --color-surface-sunken: oklch(96.5% 0.008 95);
-  --color-line: oklch(89% 0.008 95);
-  --color-line-strong: oklch(80% 0.01 95);
-  --color-ink: oklch(22% 0.012 150);
-  --color-ink-muted: oklch(47% 0.012 150);
-  --color-ink-faint: oklch(62% 0.01 150);
+  --color-cloud: light-dark(#f4f8fc, #0d1729);
+  --color-cloud-deep: light-dark(#e8eff8, #091120);
+  --color-white: light-dark(#ffffff, #16233c);
 
-  /* Accent — moss. Primary actions and active state. */
-  --color-moss: oklch(48% 0.09 158);
-  --color-moss-deep: oklch(38% 0.08 158);
-  --color-moss-soft: oklch(94% 0.03 158);
-  --color-moss-line: oklch(82% 0.05 158);
+  --color-pale: light-dark(#e3ebf6, #1d2c44);
+  --color-pale-green: light-dark(#e1f5ea, #10301f);
 
-  /* Signal — clay. Substitute sessions only. Never an error colour. */
-  --color-clay: oklch(52% 0.095 72);
-  --color-clay-soft: oklch(95.5% 0.028 82);
-  --color-clay-line: oklch(85% 0.05 78);
+  --color-navy: light-dark(#111f3d, #eef4fb);
+  --color-navy-muted: light-dark(#4a5a78, #9fb0cc);
+  --color-navy-faint: light-dark(#6e7d98, #7d8ea9);
 
-  --color-focus: oklch(55% 0.16 250);
+  /* Sampled from the iOS weather widget: a greyed dusk-sky denim, not a
+     saturated signal blue. See design_references (local only). */
+  --color-blue: light-dark(#456da3, #7fa3cf);
+  --color-blue-deep: light-dark(#345b8c, #9dbadd);
+  --color-blue-ink: light-dark(#2c4e7a, #bcd0e8);
 
-  /* Type scale — few steps, large jumps */
-  --text-display: 2.75rem;
-  --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.03em;
-  --text-title: 1.5rem;
-  --text-title--line-height: 1.2;
-  --text-title--letter-spacing: -0.015em;
-  --text-lede: 1.125rem;
-  --text-lede--line-height: 1.55;
-  --text-label: 0.8125rem;
-  --text-label--line-height: 1.3;
-  --text-label--letter-spacing: 0.04em;
+  /* Deepened so confirmation stays unmistakable without out-shouting the
+     primary. green marks; green-deep is the fill that carries text. */
+  --color-green: light-dark(#1f8a52, #34c46f);
+  --color-green-deep: light-dark(#1a7846, #5fd98d);
+  --color-green-ink: light-dark(#116634, #8fe6b0);
 
-  /* Radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 1rem;
+  --color-yellow: light-dark(#ffc240, #ffcb5c);
+  --color-yellow-ink: light-dark(#8a5a00, #ffd985);
 
-  /* Elevation — two levels, both restrained */
-  --shadow-raised: 0 1px 2px oklch(22% 0.012 150 / 0.06), 0 2px 8px oklch(22% 0.012 150 / 0.05);
-  --shadow-lifted: 0 2px 4px oklch(22% 0.012 150 / 0.07), 0 12px 28px oklch(22% 0.012 150 / 0.08);
+  --color-line: light-dark(#dbe5f2, #22314f);
+  --color-line-strong: light-dark(#bccce3, #33456a);
+  --color-focus: light-dark(#2c4e7a, #9dbadd);
 
-  /* Motion */
-  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --duration-quick: 120ms;
-  --duration-settle: 220ms;
+  /* Large type is rationed: exercise name, prescription, progress, completion. */
+  --text-hero: 2.5rem;
+  --text-hero--line-height: 1.02;
+  --text-hero--letter-spacing: -0.03em;
+  --text-count: 5rem;
+  --text-count--line-height: 0.85;
+  --text-count--letter-spacing: -0.05em;
+  --text-page: 1.75rem;
+  --text-page--line-height: 1.15;
+  --text-page--letter-spacing: -0.02em;
+  --text-marker: 0.75rem;
+  --text-marker--line-height: 1.25;
+  --text-marker--letter-spacing: 0.08em;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-lift: 0 1px 2px rgb(17 31 61 / 0.05), 0 4px 14px rgb(17 31 61 / 0.06);
+  --shadow-raise: 0 2px 6px rgb(17 31 61 / 0.07), 0 14px 32px rgb(17 31 61 / 0.1);
+
+  --ease-spring: cubic-bezier(0.2, 0.8, 0.25, 1);
+  --duration-quick: 130ms;
+  --duration-settle: 260ms;
+
+  /* --- transitional aliases -------------------------------------------------
+     Routes not yet redesigned still reference the previous token names. Mapped
+     here so they keep building and stay on-palette until their own pass.
+     Remove once every route is Open Air. */
+  --color-chalk: var(--color-cloud);
+  --color-chalk-deep: var(--color-cloud-deep);
+  --color-chalk-raised: var(--color-white);
+  --color-spruce: var(--color-navy);
+  --color-spruce-muted: var(--color-navy-muted);
+  --color-spruce-faint: var(--color-navy-faint);
+  --color-persimmon: var(--color-blue);
+  --color-persimmon-deep: var(--color-blue-deep);
+  --color-persimmon-soft: var(--color-pale);
+  --color-ochre: var(--color-yellow);
+  --color-ochre-deep: var(--color-yellow-ink);
+  --color-ochre-soft: var(--color-pale-green);
+  --color-rule: var(--color-line);
+  --color-rule-strong: var(--color-line-strong);
+  --text-blaze: var(--text-hero);
+  --text-display: var(--text-page);
+  --text-title: 1.25rem;
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 40rem) {
   @theme {
-    --text-display: 3.75rem;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-paper: oklch(19% 0.012 150);
-    --color-surface: oklch(23% 0.014 150);
-    --color-surface-sunken: oklch(16% 0.01 150);
-    --color-line: oklch(31% 0.012 150);
-    --color-line-strong: oklch(40% 0.014 150);
-    --color-ink: oklch(96% 0.006 95);
-    --color-ink-muted: oklch(76% 0.012 150);
-    --color-ink-faint: oklch(62% 0.012 150);
-
-    --color-moss: oklch(72% 0.11 158);
-    --color-moss-deep: oklch(82% 0.1 158);
-    --color-moss-soft: oklch(28% 0.04 158);
-    --color-moss-line: oklch(38% 0.06 158);
-
-    --color-clay: oklch(82% 0.085 82);
-    --color-clay-soft: oklch(27% 0.028 80);
-    --color-clay-line: oklch(38% 0.04 78);
-
-    --color-focus: oklch(72% 0.14 250);
+    --text-hero: 3.5rem;
+    --text-count: 7.5rem;
+    --text-page: 2.25rem;
   }
 }
 
 @layer base {
+  /* Light by default; dark when the system asks. The explicit overrides let a
+     viewer — or a screenshot — pin one without redeclaring any colour. */
+  :root {
+    color-scheme: light dark;
+  }
+  :root[data-theme='light'] {
+    color-scheme: light;
+  }
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
-    font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-    text-rendering: optimizeLegibility;
+    background-color: var(--color-cloud);
+    color: var(--color-navy);
+    font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* One focus treatment everywhere, always visible, never removed. */
   :focus-visible {
-    outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
     border-radius: var(--radius-sm);
   }
 
   ::selection {
-    background-color: var(--color-moss-soft);
-    color: var(--color-ink);
+    background-color: var(--color-pale);
+    color: var(--color-navy);
   }
+}
+
+/* Open sky: a soft wash of daylight behind hero areas. Two flat stops rather
+   than a decorative gradient — atmosphere, not ornament. */
+@utility open-sky {
+  background-image: linear-gradient(180deg, var(--color-pale) 0%, var(--color-cloud) 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {

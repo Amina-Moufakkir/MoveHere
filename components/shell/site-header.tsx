@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PageContainer } from '@/components/shell/page-container';
+import { Wordmark } from '@/components/brand/wordmark';
 
 /**
  * Header for a no-auth MVP.
@@ -25,15 +26,10 @@ export function SiteHeader() {
   const inFlow = activeIndex >= 0;
 
   return (
-    <header className="sticky top-0 z-10 border-b border-line bg-paper/85 backdrop-blur-sm">
-      <PageContainer className="flex h-16 items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="flex items-center gap-2 font-semibold tracking-tight text-ink"
-          aria-label="MoveHere home"
-        >
-          <span aria-hidden className="size-2.5 rounded-full bg-moss" />
-          MoveHere
+    <header className="sticky top-0 z-10 border-b border-line bg-cloud/85 backdrop-blur-sm">
+      <PageContainer className="flex h-16 max-w-2xl items-center justify-between gap-4">
+        <Link href="/" aria-label="MoveHere home" className="text-spruce">
+          <Wordmark />
         </Link>
 
         {inFlow && (
@@ -58,10 +54,10 @@ export function SiteHeader() {
                         className={[
                           'block h-1.5 rounded-full transition-all duration-(--duration-settle) ease-(--ease-out-soft)',
                           isCurrent
-                            ? 'w-7 bg-moss'
+                            ? 'w-7 bg-persimmon-deep'
                             : isDone
-                              ? 'w-3 bg-moss-line'
-                              : 'w-3 bg-line-strong group-hover:bg-ink-faint',
+                              ? 'w-3 bg-persimmon-deep-line'
+                              : 'w-3 bg-rule-strong group-hover:bg-spruce-faint',
                         ].join(' ')}
                       />
                     </Link>
