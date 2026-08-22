@@ -50,14 +50,24 @@ test('copy that has no business discussing safety does not mention it', () => {
 test('the provenance note names project content and withholds professional review', () => {
   assert.match(
     PROJECT_CONTENT_NOTE,
-    /project-authored/i,
-    'a session built from project content must say so (§8)',
+    /project-created/i,
+    'content the project authored must say so (§8)',
   );
   assert.match(
     PROJECT_CONTENT_NOTE,
-    /not programming reviewed by a qualified fitness professional/i,
+    /has not been reviewed by a qualified fitness professional/i,
     'the note must withhold the claim of professional review, not merely omit it',
   );
+});
+
+test('the provenance note covers depictions, not only programming', () => {
+  assert.match(
+    PROJECT_CONTENT_NOTE,
+    /visuals?/i,
+    'once every movement carries a demonstration, a note that names only ' +
+      'programming leaves the picture readable as separately vouched for',
+  );
+  assert.match(PROJECT_CONTENT_NOTE, /sessions/i, 'and it still has to cover the programming');
 });
 
 test('the standing disclaimers refuse medical and safety authority', () => {

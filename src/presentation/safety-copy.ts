@@ -17,14 +17,26 @@
  */
 
 /**
- * Provenance label for generated programming (§8).
+ * Provenance label for generated content (§8).
  *
  * Persistent but quiet: it belongs on screen for the whole session, because a
- * user should never be mid-workout and unaware of what authored the
- * programming. It is a caption, not a warning, and must not be styled as one.
+ * user should never be mid-workout and unaware of what authored what they are
+ * being shown. It is a caption, not a warning, and must not be styled as one.
+ *
+ * It names visuals as well as programming. "Training content" was technically
+ * broad enough to cover a demonstration, but a note that only says
+ * *programming* has not been reviewed leaves room to read the picture as
+ * separately vouched for — and once every movement carries one, that reading
+ * gets easier, not harder.
+ *
+ * **One statement, not one per asset.** The provenance question is whether the
+ * instructional content has had professional review, not which tool helped
+ * make the pixels. A per-image "AI-generated" badge would answer a question
+ * nobody is asking while burying the one that matters, and would turn every
+ * workout screen into a warning.
  */
 export const PROJECT_CONTENT_NOTE =
-  'Sessions are built from project-authored training content, not programming reviewed by a qualified fitness professional.';
+  'Sessions and exercise visuals use project-created training content that has not been reviewed by a qualified fitness professional.';
 
 /** Standing disclaimers. Present on every screen, on every client. */
 export const NOT_MEDICAL_ADVICE =
