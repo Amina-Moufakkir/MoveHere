@@ -5,6 +5,7 @@
  * component owns only how they are rendered through react-native-svg.
  */
 import Svg, { Path } from 'react-native-svg';
+import { glyphStroke } from '../theme/tokens';
 import {
   CHECK_PATH,
   CHECK_STROKE_WIDTH,
@@ -31,7 +32,7 @@ export function FeatureGlyph({
           d={d}
           fill="none"
           stroke={color}
-          strokeWidth={GLYPH_STROKE.width}
+          strokeWidth={glyphStroke(size)}
           strokeLinecap={GLYPH_STROKE.linecap}
           strokeLinejoin={GLYPH_STROKE.linejoin}
         />

@@ -1,7 +1,7 @@
 /**
  * Palette drift gate.
  *
- * The Open Air colour values live in src/design/palette.ts and are consumed
+ * The Daylight colour values live in src/design/palette.ts and are consumed
  * directly by the native client. The web client keeps its own @theme block,
  * deliberately: rewriting a released stylesheet to import a token module would
  * risk visual regression for purity nobody can evaluate (§15).
@@ -19,7 +19,7 @@ import { readFileSync } from 'node:fs';
 const CSS = 'app/globals.css';
 const DECL = /^\s*(--color-[a-z-]+):\s*light-dark\(\s*(#[0-9a-fA-F]{3,8})\s*,\s*(#[0-9a-fA-F]{3,8})\s*\)\s*;/;
 
-const { OPEN_AIR_PALETTE, cssVarName } = await import('../src/design/palette.ts');
+const { DAYLIGHT_PALETTE, cssVarName } = await import('../src/design/palette.ts');
 
 const fromCss = new Map();
 for (const line of readFileSync(CSS, 'utf8').split('\n')) {
@@ -35,7 +35,7 @@ if (fromCss.size === 0) {
 let failed = 0;
 const seen = new Set();
 
-for (const [name, pair] of Object.entries(OPEN_AIR_PALETTE)) {
+for (const [name, pair] of Object.entries(DAYLIGHT_PALETTE)) {
   const varName = cssVarName(name);
   seen.add(varName);
   const css = fromCss.get(varName);
@@ -60,6 +60,6 @@ for (const varName of fromCss.keys()) {
   }
 }
 
-const total = Object.keys(OPEN_AIR_PALETTE).length;
-console.log(`\n  ${total - failed}/${total} Open Air colours agree between the stylesheet and shared source`);
+const total = Object.keys(DAYLIGHT_PALETTE).length;
+console.log(`\n  ${total - failed}/${total} Daylight colours agree between the stylesheet and shared source`);
 process.exit(failed === 0 ? 0 : 1);

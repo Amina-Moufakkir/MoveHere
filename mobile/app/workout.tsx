@@ -24,6 +24,13 @@
  * reason both come from shared source.
  *
  * No timers, no keep-awake, no haptics. Advancing is a tap, as on the web.
+ *
+ * The media slot is deliberate empty space held open. It is reserved for the
+ * consistent exercise visual system §15 defers, and until that exists it shows
+ * the environment glyph — but only when the item actually cites a confirmed
+ * feature. An environment-independent movement gets a neutral treatment rather
+ * than a fabricated object, because depicting a bench for a movement that needs
+ * no bench is exactly the kind of invention the whole product refuses.
  */
 import { useMemo } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
@@ -39,10 +46,11 @@ import {
   isSingleEffort,
 } from '../../src/presentation/prescription-copy.ts';
 import { useVenue } from '../components/venue-provider';
+import { FeatureGlyph } from '../components/feature-glyph';
 import { ProjectContentNote } from '../components/project-content-note';
 import { EmptyState } from '../components/empty-state';
 import { makeSeed } from '../../src/programming/seed.ts';
-import { radius, space, touch, type, useTheme } from '../theme/tokens';
+import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
 export default function WorkoutScreen() {
   const router = useRouter();
@@ -105,36 +113,33 @@ export default function WorkoutScreen() {
   };
 
   const basis = current?.item.basis;
+  const featureId = basis?.kind === 'confirmed-feature' ? basis.featureId : null;
   const featureLabel =
-    basis?.kind === 'confirmed-feature'
-      ? (findSupportedFeature(basis.featureId)?.label ?? basis.featureId)
-      : null;
+    featureId === null ? null : (findSupportedFeature(featureId)?.label ?? featureId);
   const parts = current === undefined ? (['', ''] as const) : doseParts(current.item.prescription);
   const [big, small] = parts;
   const cues = current === undefined ? [] : exerciseCues(current.item.exerciseId);
 
   return (
     <View style={{ flex: 1, backgroundColor: t.color.cloud }}>
-      <ScrollView contentContainerStyle={{ padding: space.lg, paddingBottom: space.xl }}>
-        {/* Progress derived from the generated items, never from a stored count
-            of what a session was expected to contain. */}
+      <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
+        {/* Progress, full-bleed. Derived from the generated items. */}
         <View
           accessible
           accessibilityRole="progressbar"
           accessibilityLabel="Movements completed"
           accessibilityValue={{ min: 0, max: total, now: done }}
-          style={{ flexDirection: 'row', gap: 5 }}
+          style={{ flexDirection: 'row', gap: 3, paddingHorizontal: gutter, paddingTop: space.md }}
         >
           {items.map((entry, i) => (
             <View
               key={`${entry.item.exerciseId}-${i}`}
               style={{
-                height: 6,
+                height: 4,
                 flex: 1,
-                borderRadius: 3,
+                borderRadius: 2,
                 backgroundColor:
-                  i < done ? t.color.green : i === done ? t.color.blue : t.color.lineStrong,
-                opacity: i > done ? 0.6 : 1,
+                  i < done ? t.color.green : i === done ? t.color.blue : t.color.line,
               }}
             />
           ))}
@@ -144,16 +149,15 @@ export default function WorkoutScreen() {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'baseline',
-            marginTop: space.md,
-            gap: space.md,
+            paddingHorizontal: gutter,
+            marginTop: space.sm,
           }}
         >
-          <Text style={{ ...type.marker, color: t.color.blueInk, textTransform: 'uppercase' }}>
+          <Text style={{ ...type.label, color: t.color.navyMuted }}>
             Movement {Math.min(done + 1, total)} of {total}
           </Text>
-          <Text style={{ ...type.marker, color: t.color.navyMuted, textTransform: 'uppercase' }}>
-            {session.minutes} min · {session.goal}
+          <Text style={{ ...type.label, color: t.color.navyMuted }}>
+            {session.minutes} min · {session.goal[0]!.toUpperCase()}{session.goal.slice(1)}
           </Text>
         </View>
 
@@ -161,31 +165,29 @@ export default function WorkoutScreen() {
           <View
             accessible
             accessibilityLabel={`${SUBSTITUTE_LABEL}. ${SUBSTITUTE_REASON[workout.reason.kind]}`}
-            style={[
-              {
-                marginTop: space.lg,
-                borderRadius: radius.md,
-                borderLeftWidth: 4,
-                borderLeftColor: t.color.yellow,
-                backgroundColor: t.color.white,
-                paddingHorizontal: space.lg,
-                paddingVertical: space.md,
-              },
-              t.shadow.lift,
-            ]}
+            style={{
+              marginTop: space.lg,
+              marginHorizontal: gutter,
+              borderRadius: radius.md,
+              borderLeftWidth: 4,
+              borderLeftColor: t.color.yellow,
+              backgroundColor: t.color.pale,
+              paddingHorizontal: space.lg,
+              paddingVertical: space.md,
+            }}
           >
-            <Text style={{ ...type.marker, color: t.color.yellowInk, textTransform: 'uppercase' }}>
+            <Text style={{ ...type.micro, color: t.color.yellowInk, textTransform: 'uppercase' }}>
               {SUBSTITUTE_LABEL}
             </Text>
-            <Text style={{ ...type.tileHint, marginTop: space.xs, color: t.color.navyMuted }}>
+            <Text style={{ ...type.body, marginTop: space.xs, color: t.color.navyMuted }}>
               {SUBSTITUTE_REASON[workout.reason.kind]}
             </Text>
           </View>
         )}
 
         {current !== undefined && (
-          <View style={{ marginTop: space.xl, gap: space.lg }}>
-            {/* Provenance, visible but quiet. Names the actual basis. */}
+          <View style={{ marginTop: space.lg }}>
+            {/* ---- Media slot: reserved for the exercise visual system ---- */}
             <View
               accessible
               accessibilityLabel={
@@ -193,133 +195,110 @@ export default function WorkoutScreen() {
                   ? 'No equipment needed for this movement'
                   : `Using the ${featureLabel}`
               }
-              style={[
-                {
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-start',
-                  gap: 6,
-                  borderRadius: radius.pill,
-                  backgroundColor: t.color.white,
-                  paddingHorizontal: space.md,
-                  paddingVertical: 6,
-                },
-                t.shadow.lift,
-              ]}
-            >
-              <View
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: 3,
-                  backgroundColor: featureLabel === null ? t.color.blue : t.color.green,
-                }}
-              />
-              <Text
-                style={{
-                  ...type.marker,
-                  textTransform: 'uppercase',
-                  color: featureLabel === null ? t.color.navyMuted : t.color.greenInk,
-                }}
-              >
-                {featureLabel === null ? 'No equipment' : `Using the ${featureLabel}`}
-              </Text>
-            </View>
-
-            {/* One movement dominates. */}
-            <Text
-              accessibilityRole="header"
               style={{
-                fontSize: 40,
-                lineHeight: 42,
-                fontWeight: '800',
-                letterSpacing: -1.2,
-                color: t.color.navy,
+                marginHorizontal: gutter,
+                /* Height, not aspect ratio. A 4:3 slot holding one glyph reads
+                   as a hole in the screen; when real exercise visuals arrive
+                   this can grow to their natural ratio. */
+                height: 180,
+                borderRadius: radius.lg,
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: space.md,
+                backgroundColor: featureLabel === null ? t.color.blueWash : t.color.paleGreen,
               }}
             >
-              {exerciseName(current.item.exerciseId)}
-            </Text>
+              {featureLabel === null ? (
+                /* Neutral. No object is depicted, because none is required. */
+                <Text style={{ ...type.subtitle, color: t.color.blue }}>No equipment</Text>
+              ) : (
+                <>
+                  <FeatureGlyph
+                    id={featureId ?? ''}
+                    size={glyph.context}
+                    color={t.color.greenInk}
+                  />
+                  <Text style={{ ...type.label, color: t.color.greenInk }}>
+                    Using the {featureLabel}
+                  </Text>
+                </>
+              )}
+            </View>
 
-            <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: space.lg }}>
-              <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: space.sm }}>
+            <View style={{ paddingHorizontal: gutter, marginTop: space.xl }}>
+              <Text
+                accessibilityRole="header"
+                style={{ ...type.title, color: t.color.navy }}
+              >
+                {exerciseName(current.item.exerciseId)}
+              </Text>
+
+              {/* The prescription is the event on this screen. */}
+              <View
+                accessible
+                accessibilityLabel={doseText(current.item.prescription)}
+                style={{ flexDirection: 'row', alignItems: 'baseline', marginTop: space.sm }}
+              >
                 <Text
                   style={{
-                    fontSize: 76,
-                    lineHeight: 76,
-                    fontWeight: '800',
-                    letterSpacing: -3,
+                    ...type.display,
                     fontVariant: ['tabular-nums'],
-                    color: t.color.blueInk,
+                    color: t.color.blueVivid,
                   }}
                 >
                   {big}
                 </Text>
                 {!isSingleEffort(parts) && (
-                  <Text style={{ fontSize: 30, fontWeight: '800', color: t.color.navyFaint }}>
+                  <Text
+                    style={{ ...type.displaySm, marginHorizontal: 6, color: t.color.navyFaint }}
+                  >
                     ×
                   </Text>
                 )}
                 <Text
                   style={{
-                    fontSize: small.length > 2 ? 44 : 76,
-                    lineHeight: small.length > 2 ? 50 : 76,
-                    fontWeight: '800',
-                    letterSpacing: -2,
+                    ...(small.length > 2 ? type.displaySm : type.display),
                     fontVariant: ['tabular-nums'],
-                    color: t.color.blueInk,
+                    color: t.color.blueVivid,
                   }}
                 >
                   {small}
                 </Text>
               </View>
 
-              <Text
-                style={{
-                  ...type.marker,
-                  paddingBottom: space.sm,
-                  textTransform: 'uppercase',
-                  color: t.color.navyMuted,
-                }}
-              >
-                {doseText(current.item.prescription)}
-                {'\n'}
+              <Text style={{ ...type.label, color: t.color.navyMuted, marginTop: space.sm }}>
                 {current.block}
               </Text>
-            </View>
 
-            {cues.length > 0 && (
-              <View
-                style={[
-                  {
-                    borderRadius: radius.md,
-                    backgroundColor: t.color.white,
-                    padding: space.lg,
-                    gap: space.sm,
-                  },
-                  t.shadow.lift,
-                ]}
-              >
-                {cues.map((cue) => (
-                  <View
-                    key={cue}
-                    style={{ flexDirection: 'row', alignItems: 'flex-start', gap: space.sm }}
-                  >
+              {cues.length > 0 && (
+                <View style={{ marginTop: space.xl, borderTopWidth: 1, borderTopColor: t.color.line }}>
+                  {cues.map((cue) => (
                     <View
+                      key={cue}
                       style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: 3,
-                        marginTop: 8,
-                        backgroundColor: t.color.blue,
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
+                        gap: space.md,
+                        paddingVertical: space.md,
+                        borderBottomWidth: 1,
+                        borderBottomColor: t.color.line,
                       }}
-                    />
-                    <Text style={{ flex: 1, fontSize: 16, lineHeight: 22, color: t.color.navy }}>
-                      {cue}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            )}
+                    >
+                      <View
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: 3,
+                          marginTop: 8,
+                          backgroundColor: t.color.blue,
+                        }}
+                      />
+                      <Text style={{ flex: 1, ...type.lead, color: t.color.navy }}>{cue}</Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
           </View>
         )}
       </ScrollView>
@@ -328,8 +307,8 @@ export default function WorkoutScreen() {
         style={{
           borderTopWidth: 1,
           borderTopColor: t.color.line,
-          backgroundColor: t.color.white,
-          paddingHorizontal: space.lg,
+          backgroundColor: t.color.cloud,
+          paddingHorizontal: gutter,
           paddingTop: space.lg,
           paddingBottom: Math.max(insets.bottom, space.lg),
           gap: space.md,
@@ -356,22 +335,13 @@ export default function WorkoutScreen() {
           </Text>
         </Pressable>
 
-        <View
-          style={{ flexDirection: 'row', justifyContent: 'space-between', gap: space.lg }}
-        >
-          <Text style={{ flex: 1, fontSize: 13, fontWeight: '600', color: t.color.navyMuted }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: space.lg }}>
+          <Text style={{ flex: 1, ...type.label, fontWeight: '400', color: t.color.navyMuted }}>
             {done + 1 < total
               ? `Next — ${exerciseName(items[done + 1]!.item.exerciseId)}`
               : 'Last movement'}
           </Text>
-          <Text
-            style={{
-              fontSize: 13,
-              fontWeight: '600',
-              color: t.color.navyMuted,
-              fontVariant: ['tabular-nums'],
-            }}
-          >
+          <Text style={{ ...type.label, color: t.color.navyMuted, fontVariant: ['tabular-nums'] }}>
             {Math.max(total - done - 1, 0)} to go
           </Text>
         </View>
@@ -386,16 +356,13 @@ export default function WorkoutScreen() {
               style={{
                 borderRadius: radius.pill,
                 borderWidth: 1,
-                borderColor: t.color.line,
+                borderColor: t.color.lineStrong,
                 paddingHorizontal: space.md,
-                paddingVertical: space.sm,
                 minHeight: touch.min,
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ fontSize: 13, fontWeight: '700', color: t.color.navyMuted }}>
-                Generate another
-              </Text>
+              <Text style={{ ...type.label, color: t.color.navyMuted }}>Generate another</Text>
             </Pressable>
           )}
         </View>

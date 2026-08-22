@@ -36,35 +36,38 @@
 --------------------------------------------------------------------------- */
 
 @theme {
-  --color-cloud: light-dark(#f4f8fc, #0d1729);
-  --color-cloud-deep: light-dark(#e8eff8, #091120);
-  --color-white: light-dark(#ffffff, #16233c);
+  --color-cloud: light-dark(#FFFFFF, #0B0F16);
+  --color-cloud-deep: light-dark(#F0F3F8, #070A0F);
+  --color-white: light-dark(#FFFFFF, #141A24);
 
-  --color-pale: light-dark(#e3ebf6, #1d2c44);
-  --color-pale-green: light-dark(#e1f5ea, #10301f);
+  --color-pale: light-dark(#F5F7FA, #1B2330);
+  --color-pale-green: light-dark(#E4F5EC, #0E2A1D);
 
-  --color-navy: light-dark(#111f3d, #eef4fb);
-  --color-navy-muted: light-dark(#4a5a78, #9fb0cc);
-  --color-navy-faint: light-dark(#6e7d98, #7d8ea9);
+  --color-navy: light-dark(#0B1220, #F5F7FA);
+  --color-navy-muted: light-dark(#5A6478, #9AA4B8);
+  --color-navy-faint: light-dark(#79839A, #7A8496);
 
   /* A greyed dusk-sky denim rather than a saturated signal blue, so the
      primary can carry a label without shouting. */
-  --color-blue: light-dark(#456da3, #7fa3cf);
-  --color-blue-deep: light-dark(#345b8c, #9dbadd);
-  --color-blue-ink: light-dark(#2c4e7a, #bcd0e8);
+  --color-blue: light-dark(#1D5CF0, #5B9BFF);
+  --color-blue-deep: light-dark(#1748C4, #7FB2FF);
+  --color-blue-ink: light-dark(#1D5CF0, #8FBBFF);
 
   /* Deepened so confirmation stays unmistakable without out-shouting the
      primary. green marks; green-deep is the fill that carries text. */
-  --color-green: light-dark(#1f8a52, #34c46f);
-  --color-green-deep: light-dark(#1a7846, #5fd98d);
-  --color-green-ink: light-dark(#116634, #8fe6b0);
+  --color-blue-vivid: light-dark(#2F6BFF, #6AA6FF);
+  --color-blue-wash: light-dark(#EAF0FE, #16233A);
 
-  --color-yellow: light-dark(#ffc240, #ffcb5c);
-  --color-yellow-ink: light-dark(#8a5a00, #ffd985);
+  --color-green: light-dark(#12A566, #3FCB85);
+  --color-green-deep: light-dark(#0E7C50, #45D68D);
+  --color-green-ink: light-dark(#0B6B44, #7EE3AF);
 
-  --color-line: light-dark(#dbe5f2, #22314f);
-  --color-line-strong: light-dark(#bccce3, #33456a);
-  --color-focus: light-dark(#2c4e7a, #9dbadd);
+  --color-yellow: light-dark(#FFB020, #FFC043);
+  --color-yellow-ink: light-dark(#7A4E00, #FFD37A);
+
+  --color-line: light-dark(#E6EAF0, #232B38);
+  --color-line-strong: light-dark(#CFD6E0, #35404F);
+  --color-focus: light-dark(#1D5CF0, #6AA6FF);
 
   /* Large type is rationed: exercise name, prescription, progress, completion. */
   --text-hero: 2.5rem;

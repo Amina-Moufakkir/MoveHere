@@ -34,7 +34,7 @@ import { REPORTED_CONDITIONS } from '../../src/programming/conditions.ts';
 import type { ReportedConditions } from '../../src/programming/conditions.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
-import { radius, space, touch, type, useTheme } from '../theme/tokens';
+import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 import { makeSeed } from '../../src/programming/seed.ts';
 
 /** Exhaustive by construction: a new goal without copy fails to compile. */
@@ -59,66 +59,34 @@ export default function SetupScreen() {
   const usable = (inventory?.features ?? []).filter((f) => f.usability.kind === 'usable');
   const venueBlind = request.conditions !== 'acceptable' || usable.length === 0;
 
-  const sectionLabel = {
-    ...type.marker,
-    color: t.color.navyMuted,
-    textTransform: 'uppercase',
-  } as const;
+  const sectionLabel = { ...type.label, color: t.color.navyMuted } as const;
 
   return (
     <View style={{ flex: 1, backgroundColor: t.color.cloud }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
-        <View
-          style={{
-            backgroundColor: t.color.pale,
-            paddingHorizontal: space.lg,
-            paddingTop: space.xxl,
-            paddingBottom: space.xl,
-          }}
-        >
-          <Text style={{ ...type.marker, color: t.color.blueInk, textTransform: 'uppercase' }}>
-            Step 3 of 3 · Set up
+      <ScrollView contentContainerStyle={{ paddingBottom: space.section }}>
+        <View style={{ paddingHorizontal: gutter, paddingTop: space.xl, paddingBottom: space.xl }}>
+          <Text style={{ ...type.micro, color: t.color.blue, textTransform: 'uppercase' }}>
+            Step 3 of 3
           </Text>
           <Text
             accessibilityRole="header"
-            style={{ ...type.page, color: t.color.navy, marginTop: space.md }}
+            style={{ ...type.title, color: t.color.navy, marginTop: space.sm }}
           >
             How long have you got?
           </Text>
 
-          {/* What was confirmed, carried forward so the choice has context. */}
+          {/* Confirmed venue, carried forward. Green: trusted environment. */}
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: space.lg }}>
             {loadOutcome?.kind === 'unusable' && (
-              <View
-                style={[
-                  {
-                    borderRadius: radius.pill,
-                    backgroundColor: t.color.white,
-                    paddingHorizontal: space.md,
-                    paddingVertical: space.sm,
-                  },
-                  t.shadow.lift,
-                ]}
-              >
-                <Text style={{ fontSize: 13, fontWeight: '600', color: t.color.navyMuted }}>
+              <View style={{ borderRadius: radius.pill, backgroundColor: t.color.pale, paddingHorizontal: space.md, paddingVertical: space.sm }}>
+                <Text style={{ ...type.label, color: t.color.navyMuted }}>
                   Saved park data couldn’t be read — confirm again
                 </Text>
               </View>
             )}
-
             {usable.length === 0 ? (
-              <View
-                style={[
-                  {
-                    borderRadius: radius.pill,
-                    backgroundColor: t.color.white,
-                    paddingHorizontal: space.md,
-                    paddingVertical: space.sm,
-                  },
-                  t.shadow.lift,
-                ]}
-              >
-                <Text style={{ fontSize: 13, fontWeight: '600', color: t.color.navyMuted }}>
+              <View style={{ borderRadius: radius.pill, backgroundColor: t.color.pale, paddingHorizontal: space.md, paddingVertical: space.sm }}>
+                <Text style={{ ...type.label, color: t.color.navyMuted }}>
                   No park confirmed — no-equipment session
                 </Text>
               </View>
@@ -140,10 +108,8 @@ export default function SetupScreen() {
                       paddingVertical: space.sm,
                     }}
                   >
-                    <FeatureGlyph id={f.featureId} size={16} color={t.color.greenInk} />
-                    <Text style={{ fontSize: 13, fontWeight: '700', color: t.color.greenInk }}>
-                      {label}
-                    </Text>
+                    <FeatureGlyph id={f.featureId} size={glyph.chip} color={t.color.greenInk} />
+                    <Text style={{ ...type.label, color: t.color.greenInk }}>{label}</Text>
                   </View>
                 );
               })
@@ -151,8 +117,8 @@ export default function SetupScreen() {
           </View>
         </View>
 
-        <View style={{ paddingHorizontal: space.lg, paddingTop: space.xl, gap: space.xxl }}>
-          {/* ---- Minutes ---- */}
+        <View style={{ paddingHorizontal: gutter, gap: space.section }}>
+          {/* ---- Minutes: duration is movement-critical, so it gets scale ---- */}
           <View>
             <Text style={sectionLabel}>Minutes</Text>
             <View
@@ -169,23 +135,20 @@ export default function SetupScreen() {
                     accessibilityRole="radio"
                     accessibilityState={{ checked: on, selected: on }}
                     accessibilityLabel={`${minutes} minutes`}
-                    style={({ pressed }) => [
-                      {
-                        flex: 1,
-                        borderRadius: radius.md,
-                        alignItems: 'center',
-                        paddingVertical: space.xl,
-                        backgroundColor: on ? t.color.blue : t.color.white,
-                        transform: [{ scale: pressed ? 0.98 : 1 }],
-                      },
-                      on ? t.shadow.raise : t.shadow.lift,
-                    ]}
+                    style={({ pressed }) => ({
+                      flex: 1,
+                      borderRadius: radius.lg,
+                      alignItems: 'center',
+                      paddingVertical: space.md,
+                      borderWidth: 1,
+                      borderColor: on ? t.color.blue : t.color.line,
+                      backgroundColor: on ? t.color.blue : t.color.cloud,
+                      transform: [{ scale: pressed ? 0.98 : 1 }],
+                    })}
                   >
                     <Text
                       style={{
-                        fontSize: 28,
-                        fontWeight: '800',
-                        letterSpacing: -1.1,
+                        ...type.displaySm,
                         fontVariant: ['tabular-nums'],
                         color: on ? t.color.white : t.color.navy,
                       }}
@@ -194,11 +157,9 @@ export default function SetupScreen() {
                     </Text>
                     <Text
                       style={{
-                        ...type.marker,
-                        marginTop: 2,
+                        ...type.micro,
                         textTransform: 'uppercase',
-                        opacity: 0.7,
-                        color: on ? t.color.white : t.color.navy,
+                        color: on ? t.color.white : t.color.navyFaint,
                       }}
                     >
                       min
@@ -227,26 +188,25 @@ export default function SetupScreen() {
                     accessibilityRole="radio"
                     accessibilityState={{ checked: on, selected: on }}
                     accessibilityLabel={`${copy.label}. ${copy.hint}`}
-                    style={({ pressed }) => [
-                      {
-                        flex: 1,
-                        borderRadius: radius.md,
-                        padding: space.lg,
-                        gap: space.xs,
-                        backgroundColor: on ? t.color.blue : t.color.white,
-                        transform: [{ scale: pressed ? 0.985 : 1 }],
-                      },
-                      on ? t.shadow.raise : t.shadow.lift,
-                    ]}
+                    style={({ pressed }) => ({
+                      flex: 1,
+                      borderRadius: radius.lg,
+                      padding: space.lg,
+                      gap: space.xs,
+                      borderWidth: 1,
+                      borderColor: on ? t.color.blue : t.color.line,
+                      backgroundColor: on ? t.color.blue : t.color.cloud,
+                      transform: [{ scale: pressed ? 0.98 : 1 }],
+                    })}
                   >
-                    <Text style={{ ...type.tileLabel, color: on ? t.color.white : t.color.navy }}>
+                    <Text style={{ ...type.subtitle, color: on ? t.color.white : t.color.navy }}>
                       {copy.label}
                     </Text>
                     <Text
                       style={{
-                        ...type.tileHint,
-                        opacity: 0.75,
+                        ...type.body,
                         color: on ? t.color.white : t.color.navyMuted,
+                        opacity: on ? 0.9 : 1,
                       }}
                     >
                       {copy.hint}
@@ -257,13 +217,13 @@ export default function SetupScreen() {
             </View>
           </View>
 
-          {/* ---- Conditions ---- */}
+          {/* ---- Conditions: rows on the canvas, hairline separated ---- */}
           <View>
             <Text style={sectionLabel}>Conditions outside</Text>
             <View
               accessibilityRole="radiogroup"
               accessibilityLabel="Conditions outside, as you report them"
-              style={{ gap: space.sm, marginTop: space.md }}
+              style={{ marginTop: space.md, borderTopWidth: 1, borderTopColor: t.color.line }}
             >
               {REPORTED_CONDITIONS.map((value: ReportedConditions) => {
                 const on = request.conditions === value;
@@ -275,66 +235,39 @@ export default function SetupScreen() {
                     accessibilityRole="radio"
                     accessibilityState={{ checked: on, selected: on }}
                     accessibilityLabel={`${copy.label}. ${copy.hint}`}
-                    style={({ pressed }) => [
-                      {
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: space.md,
-                        borderRadius: radius.md,
-                        minHeight: touch.min,
-                        paddingHorizontal: space.lg,
-                        paddingVertical: space.md,
-                        backgroundColor: on ? t.color.blue : t.color.white,
-                        transform: [{ scale: pressed ? 0.99 : 1 }],
-                      },
-                      t.shadow.lift,
-                    ]}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: space.md,
+                      minHeight: touch.action,
+                      paddingVertical: space.md,
+                      borderBottomWidth: 1,
+                      borderBottomColor: t.color.line,
+                    }}
                   >
                     <View style={{ flex: 1 }}>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '800',
-                          color: on ? t.color.white : t.color.navy,
-                        }}
-                      >
+                      <Text style={{ ...type.subtitle, fontSize: 17, color: on ? t.color.blue : t.color.navy }}>
                         {copy.label}
                       </Text>
-                      <Text
-                        style={{
-                          ...type.tileHint,
-                          marginTop: 2,
-                          opacity: 0.75,
-                          color: on ? t.color.white : t.color.navyMuted,
-                        }}
-                      >
+                      <Text style={{ ...type.body, marginTop: 1, color: t.color.navyMuted }}>
                         {copy.hint}
                       </Text>
                     </View>
-                    {/* Filled when chosen. The web leaves this ring empty and
-                        relies on the row fill alone, which reads as unselected
-                        at a glance; a radio that looks empty when it is on is
-                        worth diverging over. */}
                     <View
                       style={{
-                        width: 20,
-                        height: 20,
+                        width: 22,
+                        height: 22,
                         borderRadius: radius.pill,
                         borderWidth: 2,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        borderColor: on ? t.color.white : t.color.lineStrong,
+                        borderColor: on ? t.color.blue : t.color.lineStrong,
                       }}
                     >
                       {on && (
                         <View
-                          style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: radius.pill,
-                            backgroundColor: t.color.white,
-                          }}
+                          style={{ width: 11, height: 11, borderRadius: radius.pill, backgroundColor: t.color.blue }}
                         />
                       )}
                     </View>
@@ -350,22 +283,20 @@ export default function SetupScreen() {
         style={{
           borderTopWidth: 1,
           borderTopColor: t.color.line,
-          backgroundColor: t.color.white,
-          paddingHorizontal: space.lg,
+          backgroundColor: t.color.cloud,
+          paddingHorizontal: gutter,
           paddingTop: space.lg,
           paddingBottom: Math.max(insets.bottom, space.lg),
           gap: space.md,
         }}
       >
-        {/* Which path this will take, before it is taken. A substitute is never
-            presented as a park session (§11). */}
+        {/* Which path this will take, before it is taken (§11). */}
         <Text
           accessibilityLiveRegion="polite"
           style={{
-            fontSize: 14,
-            fontWeight: '600',
+            ...type.label,
             textAlign: 'center',
-            color: t.color.navyMuted,
+            color: venueBlind ? t.color.yellowInk : t.color.greenInk,
           }}
         >
           {venueBlind
@@ -375,7 +306,6 @@ export default function SetupScreen() {
 
         <Pressable
           onPress={() => {
-            // A seed is minted here, once, and persisted with the session.
             startSession(makeSeed(Date.now()));
             router.push('/workout');
           }}

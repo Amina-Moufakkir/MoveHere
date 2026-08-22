@@ -28,7 +28,7 @@ import type { SupportedFeatureId } from '../../src/domain/feature.ts';
 import { SHORT_HINT, SHORT_LABEL, byPresentation } from '../../src/presentation/feature-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { CheckGlyph, FeatureGlyph } from '../components/feature-glyph';
-import { radius, space, touch, type, useTheme } from '../theme/tokens';
+import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
 /** Sorted once at module scope: the order is registry data, not screen state. */
 const FEATURES = [...FEATURE_REGISTRY.supported].sort((a, b) => byPresentation(a.id, b.id));
@@ -40,7 +40,6 @@ export default function ParkScreen() {
   const { width } = useWindowDimensions();
   const { candidates, proposeCandidates } = useVenue();
 
-  // Seeded from candidates so returning from /confirm shows what was proposed.
   const [picked, setPicked] = useState<ReadonlySet<SupportedFeatureId>>(
     () => new Set(candidates.map((c) => c.featureId)),
   );
@@ -59,41 +58,34 @@ export default function ParkScreen() {
     router.push('/confirm');
   };
 
-  // Two columns, thumb-reachable. Wider devices get roomier tiles, not more.
-  const gutter = space.lg;
-  const tileWidth = (Math.min(width, 560) - gutter * 3) / 2;
+  const tileWidth = (Math.min(width, 560) - gutter * 2 - space.md) / 2;
   const empty = picked.size === 0;
 
   return (
     <View style={{ flex: 1, backgroundColor: t.color.cloud }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: space.xxl }}>
-        <View style={{ backgroundColor: t.color.pale, paddingHorizontal: gutter, paddingTop: space.xxl, paddingBottom: space.xl }}>
-          <Text style={{ ...type.marker, color: t.color.blueInk, textTransform: 'uppercase' }}>
-            Step 1 of 3 · Look around
+      <ScrollView contentContainerStyle={{ paddingBottom: space.section }}>
+        <View style={{ paddingHorizontal: gutter, paddingTop: space.xl, paddingBottom: space.xl }}>
+          <Text style={{ ...type.micro, color: t.color.blue, textTransform: 'uppercase' }}>
+            Step 1 of 3
           </Text>
           <Text
             accessibilityRole="header"
-            style={{ ...type.page, color: t.color.navy, marginTop: space.md }}
+            style={{ ...type.title, color: t.color.navy, marginTop: space.sm }}
           >
             What do you see?
           </Text>
-          <Text style={{ ...type.body, color: t.color.navyMuted, marginTop: space.md, maxWidth: 340 }}>
+          <Text style={{ ...type.lead, color: t.color.navyMuted, marginTop: space.sm }}>
             Tap anything that’s here. You’ll decide what MoveHere should trust on the next screen.
           </Text>
         </View>
 
-        {/* No grouping role on the container. The web uses a fieldset/legend,
-            which React Native has no equivalent of, and a label on a
-            non-accessible View is metadata VoiceOver never reads. The heading
-            above provides the context; each tile carries its own label, hint,
-            and checked state. */}
+        {/* Candidate selection stays blue: choosing is not yet trusting. */}
         <View
           style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
-            gap: gutter,
+            gap: space.md,
             paddingHorizontal: gutter,
-            paddingTop: space.xl,
           }}
         >
           {FEATURES.map((feature) => {
@@ -106,68 +98,42 @@ export default function ParkScreen() {
                 accessibilityState={{ checked: on }}
                 accessibilityLabel={SHORT_LABEL[feature.id]}
                 accessibilityHint={SHORT_HINT[feature.id]}
-                style={({ pressed }) => [
-                  {
-                    width: tileWidth,
-                    minHeight: 148,
-                    borderRadius: radius.md,
-                    padding: space.lg,
-                    justifyContent: 'space-between',
-                    backgroundColor: on ? t.color.greenDeep : t.color.white,
-                    transform: [{ scale: pressed ? 0.985 : 1 }],
-                  },
-                  on ? t.shadow.raise : t.shadow.lift,
-                ]}
+                style={({ pressed }) => ({
+                  width: tileWidth,
+                  borderRadius: radius.lg,
+                  paddingHorizontal: space.lg,
+                  paddingTop: space.lg,
+                  paddingBottom: space.lg,
+                  borderWidth: 1,
+                  borderColor: on ? t.color.blue : t.color.line,
+                  backgroundColor: on ? t.color.blue : t.color.cloud,
+                  transform: [{ scale: pressed ? 0.98 : 1 }],
+                })}
               >
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <View
-                    style={{
-                      width: 56,
-                      height: 56,
-                      borderRadius: radius.sm,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: on ? 'rgba(255,255,255,0.2)' : t.color.pale,
-                    }}
-                  >
-                    <FeatureGlyph
-                      id={feature.id}
-                      size={32}
-                      color={on ? t.color.white : t.color.blueInk}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: radius.pill,
-                      borderWidth: 2,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginTop: space.xs,
-                      borderColor: on ? t.color.white : t.color.lineStrong,
-                      backgroundColor: on ? t.color.white : 'transparent',
-                    }}
-                  >
-                    {on && <CheckGlyph size={16} color={t.color.greenDeep} />}
-                  </View>
-                </View>
-
-                <View style={{ marginTop: space.md }}>
-                  <Text style={{ ...type.tileLabel, color: on ? t.color.white : t.color.navy }}>
-                    {SHORT_LABEL[feature.id]}
-                  </Text>
-                  <Text
-                    style={{
-                      ...type.tileHint,
-                      marginTop: 2,
-                      color: on ? t.color.white : t.color.navyMuted,
-                      opacity: on ? 0.85 : 1,
-                    }}
-                  >
-                    {SHORT_HINT[feature.id]}
-                  </Text>
-                </View>
+                <FeatureGlyph
+                  id={feature.id}
+                  size={glyph.tile}
+                  color={on ? t.color.white : t.color.blue}
+                />
+                <Text
+                  style={{
+                    ...type.subtitle,
+                    marginTop: space.md,
+                    color: on ? t.color.white : t.color.navy,
+                  }}
+                >
+                  {SHORT_LABEL[feature.id]}
+                </Text>
+                <Text
+                  style={{
+                    ...type.body,
+                    marginTop: 2,
+                    color: on ? t.color.white : t.color.navyMuted,
+                    opacity: on ? 0.9 : 1,
+                  }}
+                >
+                  {SHORT_HINT[feature.id]}
+                </Text>
               </Pressable>
             );
           })}
@@ -178,7 +144,7 @@ export default function ParkScreen() {
         style={{
           borderTopWidth: 1,
           borderTopColor: t.color.line,
-          backgroundColor: t.color.white,
+          backgroundColor: t.color.cloud,
           paddingHorizontal: gutter,
           paddingTop: space.lg,
           paddingBottom: Math.max(insets.bottom, space.lg),
@@ -190,31 +156,24 @@ export default function ParkScreen() {
           disabled={empty}
           accessibilityRole="button"
           accessibilityState={{ disabled: empty }}
-          accessibilityLabel={
-            empty ? 'Pick what you can see' : `Continue with ${picked.size} selected`
-          }
+          accessibilityLabel={empty ? 'Pick what you can see' : `Continue with ${picked.size} selected`}
           style={({ pressed }) => [
             {
               minHeight: touch.action,
               borderRadius: radius.pill,
               alignItems: 'center',
               justifyContent: 'center',
-              paddingHorizontal: space.xxl,
-              backgroundColor: t.color.blue,
-              opacity: empty ? 0.45 : 1,
+              backgroundColor: empty ? t.color.pale : t.color.blue,
               transform: [{ scale: pressed && !empty ? 0.98 : 1 }],
             },
             empty ? null : t.shadow.lift,
           ]}
         >
-          {/* The `white` token, not literal white: it inverts to deep navy in dark
-              mode, where the blue fill lightens. Hardcoding #fff here measured about
-              2.2:1 against the dark-mode fill. */}
-          <Text style={{ ...type.action, color: t.color.white }}>
+          <Text style={{ ...type.action, color: empty ? t.color.navyFaint : t.color.white }}>
             {empty ? 'Pick what you can see' : `Continue with ${picked.size}`}
           </Text>
         </Pressable>
-        <Text style={{ ...type.tileHint, color: t.color.navyMuted, textAlign: 'center' }}>
+        <Text style={{ ...type.label, fontWeight: '400', color: t.color.navyMuted, textAlign: 'center' }}>
           Nothing is trusted yet. Nothing leaves your phone.
         </Text>
       </View>

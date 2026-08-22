@@ -1,37 +1,45 @@
 /**
- * Open Air — the palette. Values only.
+ * Daylight — the MoveHere palette. Values only.
  *
  * Canonical plan: §15.
  *
- * Deliberately just colour. Spacing, type scale, radii, elevation, and motion
- * are **not** here, because those are where the two rendering models genuinely
- * disagree: `light-dark()` has no React Native equivalent, CSS layers two
- * shadows where RN takes one plus an elevation, and the web's rem scale and
- * RN's unitless points are not the same measurement. Colour values carried over
- * between clients unchanged; the structures around them did not. Sharing only
- * what actually transferred keeps this a fact rather than an abstraction.
+ * One identity across both clients. The released Open Air appearance is
+ * preserved at the `web-mvp-v1` tag; main evolves.
  *
- * Each colour is a light/dark pair. The web expresses that as
- * `light-dark(light, dark)` in a CSS custom property; the native client
- * resolves it through useColorScheme(). Same values, two mechanisms.
+ * The canvas is white. Not a tinted off-white — white, because a tinted ground
+ * with white cards floating on it is what made the product read as
+ * administrative software rather than something used outdoors. Depth now comes
+ * from hairlines and from one saturated colour, not from elevation.
  *
- * The web stylesheet remains the canonical *visual* reference — it is the
- * released client and its rendering is what the identity was tuned against.
- * This module is the canonical *source of the values*, and
- * `npm run check:palette` fails if the two disagree, so the duplication cannot
- * drift silently.
+ * Semantics, unchanged from Open Air and load-bearing:
+ *   · blue  — the current choice or action. What you are doing now.
+ *   · green — confirmed, trusted environment. What you told us is there.
+ *   · yellow — substitute and detour only (§11). Never decoration.
  *
- * Contrast, measured rather than guessed. These are binding on both clients:
- *   · white on blue #456da3 — 5.29:1, so the primary carries a label directly
- *   · white on blue-deep — 6.95:1; blue-ink on cloud — 7.94:1
- *   · white on green-deep #1a7846 — 5.50:1, the fill that carries text
- *   · green #1f8a52 — 4.36:1 with white, so it marks and fills but never sits
- *     behind small text
- *   · navy-faint — 3.9:1, large text and UI only; body copy uses navy-muted
+ * Candidate selection on /park stays blue: choosing is not yet trusting.
+ * Confirmation on /confirm turns green, which is the moment trust is granted.
  *
- * In dark mode the pairs invert rather than dim: green-deep becomes a light
- * green and `white` becomes a deep navy, so a filled surface still carries its
- * label at high contrast.
+ * `blueVivid` exists for one reason. Large text needs only 3:1, so the hero
+ * numerals — prescriptions, the completion figure, future timers — can take the
+ * most saturated blue in the system while `blue` stays safe for fills that
+ * carry a label.
+ *
+ * Deliberately just colour. Spacing, type scale, radii, elevation and motion
+ * are not here, because that is where the two rendering models genuinely
+ * disagree.
+ *
+ * Contrast, measured rather than guessed. Binding on both clients:
+ *   · ink on canvas — 18.7:1
+ *   · inkMuted on canvas — 5.95:1; body copy never goes lighter
+ *   · inkFaint — 3.8:1, large text and UI only
+ *   · white on blue #1D5CF0 — 5.47:1, so the primary carries a label directly
+ *   · white on greenDeep #0E7C50 — 5.23:1, the fill that carries text
+ *   · blueVivid #2F6BFF on canvas — 4.5:1, ample at display size
+ *   · greenInk on paleGreen — 5.8:1; yellowInk on canvas — 7.2:1
+ *
+ * In dark the pairs invert rather than dim: a filled surface becomes light and
+ * takes near-black text, so every fill still carries its label — verified at
+ * 6.9:1 on blue and 10.3:1 on green.
  */
 
 export interface ColorPair {
@@ -39,47 +47,52 @@ export interface ColorPair {
   readonly dark: string;
 }
 
-export const OPEN_AIR_PALETTE = {
-  cloud: { light: '#f4f8fc', dark: '#0d1729' },
-  cloudDeep: { light: '#e8eff8', dark: '#091120' },
-  white: { light: '#ffffff', dark: '#16233c' },
+export const DAYLIGHT_PALETTE = {
+  /* Ground and surfaces. The canvas is white; `pale` is a quiet inset, used
+     for grouped rows and the workout media slot — never as the page itself. */
+  cloud: { light: '#FFFFFF', dark: '#0B0F16' },
+  cloudDeep: { light: '#F0F3F8', dark: '#070A0F' },
+  white: { light: '#FFFFFF', dark: '#141A24' },
 
-  pale: { light: '#e3ebf6', dark: '#1d2c44' },
-  paleGreen: { light: '#e1f5ea', dark: '#10301f' },
+  pale: { light: '#F5F7FA', dark: '#1B2330' },
+  paleGreen: { light: '#E4F5EC', dark: '#0E2A1D' },
 
-  navy: { light: '#111f3d', dark: '#eef4fb' },
-  navyMuted: { light: '#4a5a78', dark: '#9fb0cc' },
-  navyFaint: { light: '#6e7d98', dark: '#7d8ea9' },
+  navy: { light: '#0B1220', dark: '#F5F7FA' },
+  navyMuted: { light: '#5A6478', dark: '#9AA4B8' },
+  navyFaint: { light: '#79839A', dark: '#7A8496' },
 
-  /* A greyed dusk-sky denim rather than a saturated signal blue, so the
-     primary can carry a label without shouting. */
-  blue: { light: '#456da3', dark: '#7fa3cf' },
-  blueDeep: { light: '#345b8c', dark: '#9dbadd' },
-  blueInk: { light: '#2c4e7a', dark: '#bcd0e8' },
+  /* A saturated athletic blue, not a greyed denim. It is the only colour doing
+     real work: primary action, current choice, and — as blueVivid — the
+     numerals a person reads at arm's length mid-effort. */
+  blue: { light: '#1D5CF0', dark: '#5B9BFF' },
+  blueDeep: { light: '#1748C4', dark: '#7FB2FF' },
+  blueInk: { light: '#1D5CF0', dark: '#8FBBFF' },
+  blueVivid: { light: '#2F6BFF', dark: '#6AA6FF' },
+  blueWash: { light: '#EAF0FE', dark: '#16233A' },
 
-  /* Deepened so confirmation stays unmistakable without out-shouting the
-     primary. green marks; green-deep is the fill that carries text. */
-  green: { light: '#1f8a52', dark: '#34c46f' },
-  greenDeep: { light: '#1a7846', dark: '#5fd98d' },
-  greenInk: { light: '#116634', dark: '#8fe6b0' },
+  /* Confirmed, trusted environment. green marks; greenDeep is the fill that
+     carries text; greenInk is text on a wash. */
+  green: { light: '#12A566', dark: '#3FCB85' },
+  greenDeep: { light: '#0E7C50', dark: '#45D68D' },
+  greenInk: { light: '#0B6B44', dark: '#7EE3AF' },
 
-  /* Held back for the substitute-session accent (§11). */
-  yellow: { light: '#ffc240', dark: '#ffcb5c' },
-  yellowInk: { light: '#8a5a00', dark: '#ffd985' },
+  /* Substitute and detour only (§11). */
+  yellow: { light: '#FFB020', dark: '#FFC043' },
+  yellowInk: { light: '#7A4E00', dark: '#FFD37A' },
 
-  line: { light: '#dbe5f2', dark: '#22314f' },
-  lineStrong: { light: '#bccce3', dark: '#33456a' },
-  focus: { light: '#2c4e7a', dark: '#9dbadd' },
+  line: { light: '#E6EAF0', dark: '#232B38' },
+  lineStrong: { light: '#CFD6E0', dark: '#35404F' },
+  focus: { light: '#1D5CF0', dark: '#6AA6FF' },
 } as const satisfies Record<string, ColorPair>;
 
-export type OpenAirColor = keyof typeof OPEN_AIR_PALETTE;
+export type DaylightColor = keyof typeof DAYLIGHT_PALETTE;
 
 /** The CSS custom-property name a colour is published under on the web. */
-export const cssVarName = (name: OpenAirColor): string =>
+export const cssVarName = (name: DaylightColor): string =>
   `--color-${name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`;
 
 /** Resolves a pair for a rendered appearance. */
-export const resolvePalette = (dark: boolean): Record<OpenAirColor, string> =>
+export const resolvePalette = (dark: boolean): Record<DaylightColor, string> =>
   Object.fromEntries(
-    Object.entries(OPEN_AIR_PALETTE).map(([k, v]) => [k, dark ? v.dark : v.light]),
-  ) as Record<OpenAirColor, string>;
+    Object.entries(DAYLIGHT_PALETTE).map(([k, v]) => [k, dark ? v.dark : v.light]),
+  ) as Record<DaylightColor, string>;

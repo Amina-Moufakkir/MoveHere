@@ -5,5 +5,6 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["*.ts", "*.tsx", "../src/**/*.ts"]
+  "//": "Every authored directory, not just the project root. The original glob was *.ts/*.tsx, written when the whole app was one App.tsx — it silently stopped covering the screens the moment they moved into app/.",
+  "include": ["*.ts", "*.tsx", "app/**/*", "components/**/*", "lib/**/*", "theme/**/*", "../src/**/*.ts"]
 }

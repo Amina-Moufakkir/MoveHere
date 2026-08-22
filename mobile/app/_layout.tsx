@@ -10,16 +10,30 @@
  *
  *     /  ·  /park  ·  /confirm  ·  /setup  ·  /workout  ·  /complete
  *
- * Header styling is left at the platform default. Open Air is a later
- * milestone, and a half-applied identity reads worse than none.
+ * The header is themed rather than left at the platform default. A stock header
+ * stays white in dark mode, which put a bright bar above a near-black canvas on
+ * every screen.
  */
 import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { VenueProvider } from '../components/venue-provider';
+import { type, useTheme } from '../theme/tokens';
 
 export default function RootLayout() {
+  const t = useTheme();
+
+  const screenOptions = {
+    headerStyle: { backgroundColor: t.color.cloud },
+    headerTintColor: t.color.blue,
+    headerTitleStyle: { ...type.action, color: t.color.navy },
+    headerShadowVisible: false,
+    contentStyle: { backgroundColor: t.color.cloud },
+  } as const;
+
   return (
     <VenueProvider>
-      <Stack>
+      <StatusBar style={t.dark ? 'light' : 'dark'} />
+      <Stack screenOptions={screenOptions}>
         <Stack.Screen name="index" options={{ title: 'MoveHere' }} />
         <Stack.Screen name="park" options={{ title: 'Look around' }} />
         <Stack.Screen name="confirm" options={{ title: 'Confirm' }} />

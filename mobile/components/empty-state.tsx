@@ -1,17 +1,12 @@
 /**
  * A screen that has nothing to show, and says why.
  *
- * Four of these exist across the flow — no candidates, no session, no session
- * that could be generated, nothing finished yet — and each is a dead end the
- * user reached honestly rather than an error. They were written separately per
- * screen, which is how the same situation starts looking like four different
- * situations.
- *
- * Deliberately not styled as a warning. Nothing has gone wrong: MoveHere has
- * simply not been told enough yet, and the action says what would fix that.
+ * Deliberately not styled as a warning. Nothing has gone wrong in any of these
+ * cases: MoveHere has simply not been told enough yet, and the action says what
+ * would fix that.
  */
 import { Pressable, Text, View } from 'react-native';
-import { radius, space, touch, type, useTheme } from '../theme/tokens';
+import { gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
 export function EmptyState({
   title,
@@ -29,16 +24,16 @@ export function EmptyState({
     <View
       style={{
         flex: 1,
-        backgroundColor: t.color.pale,
+        backgroundColor: t.color.cloud,
         justifyContent: 'center',
-        paddingHorizontal: space.lg,
+        paddingHorizontal: gutter,
         gap: space.lg,
       }}
     >
-      <Text accessibilityRole="header" style={{ ...type.page, color: t.color.navy }}>
+      <Text accessibilityRole="header" style={{ ...type.title, color: t.color.navy }}>
         {title}
       </Text>
-      <Text style={{ ...type.body, color: t.color.navyMuted, maxWidth: 340 }}>{body}</Text>
+      <Text style={{ ...type.lead, color: t.color.navyMuted, maxWidth: 340 }}>{body}</Text>
       <Pressable
         onPress={onAction}
         accessibilityRole="button"
@@ -48,7 +43,7 @@ export function EmptyState({
             alignSelf: 'flex-start',
             minHeight: touch.action,
             justifyContent: 'center',
-            paddingHorizontal: space.xxl,
+            paddingHorizontal: space.section,
             borderRadius: radius.pill,
             backgroundColor: t.color.blue,
             transform: [{ scale: pressed ? 0.98 : 1 }],

@@ -28,7 +28,7 @@ import { SHORT_LABEL, byPresentation } from '../../src/presentation/feature-copy
 import { BOUNDARY_HEADING, BOUNDARY_STATEMENTS } from '../../src/presentation/safety-copy.ts';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { ProjectContentNote } from '../components/project-content-note';
-import { radius, space, touch, type, useTheme } from '../theme/tokens';
+import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
 const STEPS = [
   {
@@ -60,41 +60,37 @@ export default function LandingScreen() {
   const insets = useSafeAreaInsets();
 
   const sectionLabel = (color: string) =>
-    ({ ...type.marker, color, textTransform: 'uppercase' }) as const;
+    ({ ...type.label, color }) as const;
 
-  const card = [
-    { borderRadius: radius.md, backgroundColor: t.color.white, padding: space.lg },
-    t.shadow.lift,
-  ];
+  /* No cards. Sections sit on the canvas and are divided by a hairline. */
+  const section = {
+    paddingHorizontal: gutter,
+    paddingTop: space.xl,
+    borderTopWidth: 1,
+    borderTopColor: t.color.line,
+  } as const;
 
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: t.color.cloud }}
-      contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, space.lg) + space.xl }}
+      contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, space.lg) + space.section }}
     >
       {/* ---- Hero ---- */}
       <View
         style={{
-          backgroundColor: t.color.pale,
-          paddingHorizontal: space.lg,
-          paddingTop: space.xxl,
+          paddingHorizontal: gutter,
+          paddingTop: space.xl,
           paddingBottom: space.xxl,
         }}
       >
         <Text
           accessibilityRole="header"
-          style={{
-            fontSize: 34,
-            lineHeight: 37,
-            fontWeight: '800',
-            letterSpacing: -1.1,
-            color: t.color.navy,
-          }}
+          style={{ ...type.title, color: t.color.navy }}
         >
           Train with what’s actually around you.
         </Text>
 
-        <Text style={{ ...type.body, color: t.color.navyMuted, marginTop: space.lg }}>
+        <Text style={{ ...type.lead, color: t.color.navyMuted, marginTop: space.md }}>
           Most fitness apps hand you a workout and leave you to work out whether you can do it here.
           MoveHere starts from the other end — the place you’re in, what’s actually in it, and the
           time you’ve got.
@@ -134,7 +130,7 @@ export default function LandingScreen() {
                 borderRadius: radius.pill,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: t.color.white,
+                backgroundColor: t.color.cloud,
                 borderWidth: 1,
                 borderColor: t.color.lineStrong,
                 transform: [{ scale: pressed ? 0.98 : 1 }],
@@ -148,16 +144,16 @@ export default function LandingScreen() {
       </View>
 
       {/* ---- What is built ---- */}
-      <View style={{ paddingHorizontal: space.lg, paddingTop: space.xxl, gap: space.lg }}>
-        <Text accessibilityRole="header" style={sectionLabel(t.color.blueInk)}>
+      <View style={[section, { gap: space.md }]}>
+        <Text accessibilityRole="header" style={sectionLabel(t.color.navyMuted)}>
           What’s built today
         </Text>
 
-        <View style={card}>
+        <View>
           <Text style={{ fontSize: 17, lineHeight: 23, fontWeight: '700', color: t.color.navy }}>
             The park. That’s the one environment MoveHere understands.
           </Text>
-          <Text style={{ ...type.tileHint, color: t.color.navyMuted, marginTop: space.sm }}>
+          <Text style={{ ...type.body, color: t.color.navyMuted, marginTop: space.sm }}>
             Tell it what’s there, confirm it, and the session is built from those features and
             nothing else. Haven’t confirmed a park, or can’t get to one? You can still generate a
             session that needs no equipment at all.
@@ -179,7 +175,7 @@ export default function LandingScreen() {
                   paddingVertical: space.sm,
                 }}
               >
-                <FeatureGlyph id={feature.id} size={16} color={t.color.greenInk} />
+                <FeatureGlyph id={feature.id} size={glyph.chip} color={t.color.greenInk} />
                 <Text style={{ fontSize: 13, fontWeight: '700', color: t.color.greenInk }}>
                   {SHORT_LABEL[feature.id] ?? feature.label}
                 </Text>
@@ -203,14 +199,14 @@ export default function LandingScreen() {
           </View>
         </View>
 
-        <Text style={{ ...type.tileHint, color: t.color.navyMuted }}>
+        <Text style={{ ...type.body, color: t.color.navyMuted }}>
           Anywhere else — home, a gym, whatever equipment you happen to have — is the same idea
           pointed somewhere new. None of it is built yet.
         </Text>
       </View>
 
       {/* ---- How it works ---- */}
-      <View style={{ paddingHorizontal: space.lg, paddingTop: space.xxl, gap: space.md }}>
+      <View style={[section, { gap: space.lg, marginTop: space.xl }]}>
         <Text accessibilityRole="header" style={sectionLabel(t.color.navyMuted)}>
           How it works
         </Text>
@@ -219,15 +215,14 @@ export default function LandingScreen() {
             key={step.n}
             accessible
             accessibilityLabel={`Step ${step.n}. ${step.title}. ${step.body}`}
-            style={card}
           >
-            <Text style={{ ...type.marker, color: t.color.blueInk, fontVariant: ['tabular-nums'] }}>
+            <Text style={{ ...type.micro, color: t.color.blue, textTransform: 'uppercase', fontVariant: ['tabular-nums'] }}>
               {step.n}
             </Text>
             <Text style={{ fontSize: 16, fontWeight: '800', color: t.color.navy, marginTop: space.xs }}>
               {step.title}
             </Text>
-            <Text style={{ ...type.tileHint, color: t.color.navyMuted, marginTop: space.xs }}>
+            <Text style={{ ...type.body, color: t.color.navyMuted, marginTop: space.xs }}>
               {step.body}
             </Text>
           </View>
@@ -235,7 +230,7 @@ export default function LandingScreen() {
       </View>
 
       {/* ---- The substitute, named as a substitute (§11) ---- */}
-      <View style={{ paddingHorizontal: space.lg, paddingTop: space.xxl }}>
+      <View style={{ paddingHorizontal: gutter, paddingTop: space.xl }}>
         <View
           style={{
             borderRadius: radius.md,
@@ -248,7 +243,7 @@ export default function LandingScreen() {
           <Text accessibilityRole="header" style={sectionLabel(t.color.blueInk)}>
             When the park isn’t an option
           </Text>
-          <Text style={{ ...type.tileHint, color: t.color.navyMuted, marginTop: space.sm }}>
+          <Text style={{ ...type.body, color: t.color.navyMuted, marginTop: space.sm }}>
             Weather turns, plans change, or there’s nothing confirmed yet. You still get a session —
             one that needs no equipment at all. MoveHere calls that a substitute, because that is
             what it is. It is not a park session and it won’t be presented as one.
@@ -259,8 +254,8 @@ export default function LandingScreen() {
       {/* ---- What it declines to decide, last ---- */}
       <View
         style={{
-          marginTop: space.xxl,
-          paddingHorizontal: space.lg,
+          marginTop: space.xl,
+          paddingHorizontal: gutter,
           paddingTop: space.xl,
           borderTopWidth: 1,
           borderTopColor: t.color.line,
@@ -279,7 +274,7 @@ export default function LandingScreen() {
             <Text style={{ fontSize: 16, fontWeight: '800', color: t.color.navy }}>
               {statement.heading}
             </Text>
-            <Text style={{ ...type.body, color: t.color.navyMuted, marginTop: space.xs }}>
+            <Text style={{ ...type.lead, color: t.color.navyMuted, marginTop: space.xs }}>
               {statement.body}
             </Text>
           </View>
