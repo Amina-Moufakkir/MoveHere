@@ -33,7 +33,7 @@ import type { SessionDuration, SessionGoal } from '../../src/domain/session.ts';
 import { REPORTED_CONDITIONS } from '../../src/programming/conditions.ts';
 import type { ReportedConditions } from '../../src/programming/conditions.ts';
 import { useVenue } from '../components/venue-provider';
-import { FeatureGlyph } from '../components/feature-glyph';
+import { FeatureGlyph, GoalGlyph } from '../components/feature-glyph';
 import { PrimaryAction } from '../components/primary-action';
 import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 import { makeSeed } from '../../src/programming/seed.ts';
@@ -200,7 +200,19 @@ export default function SetupScreen() {
                       transform: [{ scale: pressed ? 0.98 : 1 }],
                     })}
                   >
-                    <Text style={{ ...type.subtitle, color: on ? t.color.white : t.color.navy }}>
+                    <GoalGlyph
+                      goal={goal}
+                      size={glyph.row}
+                      color={on ? t.color.white : t.color.blue}
+                      surface={on ? t.color.blue : t.color.cloud}
+                    />
+                    <Text
+                      style={{
+                        ...type.subtitle,
+                        marginTop: space.xs,
+                        color: on ? t.color.white : t.color.navy,
+                      }}
+                    >
                       {copy.label}
                     </Text>
                     <Text

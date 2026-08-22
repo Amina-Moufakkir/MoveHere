@@ -21,6 +21,8 @@ import {
   glyphPathsFor,
 } from '../../src/presentation/feature-glyphs.ts';
 import { FEATURE_REGISTRY } from '../../src/domain/feature-registry.ts';
+import { SESSION_GOALS } from '../../src/domain/session.ts';
+import { goalMarkFor } from '../../src/presentation/feature-glyphs.ts';
 
 const supported = FEATURE_REGISTRY.supported.map((f) => f.id);
 
@@ -77,4 +79,20 @@ test('presentation order is not registry order', () => {
     'the registry is ordered by load-bearing class, which is the wrong order for ' +
       'someone standing in a park — if these coincide, one of them has drifted',
   );
+});
+
+test('every session goal has its own mark', () => {
+  for (const goal of SESSION_GOALS) {
+    const paths = goalMarkFor(goal).fill;
+    assert.ok(
+      paths.length > 0,
+      `${goal}: a goal is one of two things a user asks for — a control with no ` +
+        'mark makes that choice harder to recognise than it needs to be',
+    );
+    assert.notDeepEqual(
+      paths,
+      goalMarkFor(SESSION_GOALS.find((g) => g !== goal) ?? goal).fill,
+      `${goal}: two goals drawn identically communicate nothing`,
+    );
+  }
 });

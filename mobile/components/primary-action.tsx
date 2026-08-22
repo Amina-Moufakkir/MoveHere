@@ -22,11 +22,19 @@ import { radius, useTheme } from '../theme/tokens';
 
 /** The button itself, inside its track. */
 const HEIGHT = 66;
-/** Width of the pale ring. Enough to read as a track, not as a border. */
-const TRACK = 6;
-/** Inset beyond the screen gutter, so the control does not reach the edges. */
-const INSET = 26;
-const CHECK_SIZE = 28;
+/** A soft rim, not a second capsule around the first. */
+const TRACK = 4;
+/**
+ * The control hugs its label rather than filling the footer.
+ *
+ * A full-width capsule puts most of its area either side of the word, which
+ * reads as a bar across the bottom of the screen. Sized to the label with a
+ * floor, "Done" becomes a compact object you press and a longer label still
+ * grows to fit.
+ */
+const PAD_X = 40;
+const MIN_WIDTH = 190;
+const CHECK_SIZE = 31;
 
 export function PrimaryAction({
   label,
@@ -53,7 +61,8 @@ export function PrimaryAction({
   return (
     <View
       style={{
-        marginHorizontal: INSET,
+        alignSelf: 'center',
+        maxWidth: '100%',
         padding: TRACK,
         borderRadius: radius.pill,
         backgroundColor: track,
@@ -67,10 +76,11 @@ export function PrimaryAction({
         accessibilityLabel={accessibilityLabel ?? label}
         style={({ pressed }) => ({
           height: HEIGHT,
+          minWidth: MIN_WIDTH,
           borderRadius: radius.pill,
           alignItems: 'center',
           justifyContent: 'center',
-          paddingHorizontal: 20,
+          paddingHorizontal: PAD_X,
           backgroundColor: fill,
           borderWidth: secondary ? 1 : 0,
           borderColor: t.color.lineStrong,
@@ -84,7 +94,7 @@ export function PrimaryAction({
                 d={CHECK_PATH}
                 fill="none"
                 stroke={labelColor}
-                strokeWidth={2.6}
+                strokeWidth={2.8}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -93,7 +103,7 @@ export function PrimaryAction({
         ) : (
           <Text
             numberOfLines={1}
-            style={{ fontSize: 18, lineHeight: 22, fontWeight: '800', color: labelColor }}
+            style={{ fontSize: 20, lineHeight: 24, fontWeight: '800', color: labelColor }}
           >
             {label}
           </Text>

@@ -14,6 +14,8 @@
  * Air's geometry. Stroke weight, colour, and size belong to the client.
  */
 
+import type { SessionGoal } from '../domain/session.ts';
+
 /** Every glyph is drawn in this coordinate space. */
 export const GLYPH_VIEWBOX = '0 0 24 24';
 
@@ -55,3 +57,62 @@ export const glyphPathsFor = (id: string): readonly string[] =>
 export const CHECK_VIEWBOX = '0 0 20 20';
 export const CHECK_PATH = 'M4.5 10.5l3.5 3.5 7.5-8';
 export const CHECK_STROKE_WIDTH = 2.75;
+
+/**
+ * Session-goal marks — a separate icon subsystem, deliberately.
+ *
+ * MoveHere has two kinds of mark and they are not the same job:
+ *
+ *   · **Environment glyphs** depict physical structures — a bench, a bar, a
+ *     staircase. Those are line structures in the world, so they are line
+ *     structures here, and the stroke system above renders them well.
+ *
+ *   · **Goal marks** communicate a fitness concept rather than an object. A
+ *     flexed arm carries its meaning through silhouette mass — the bicep read
+ *     against the limb — and three attempts to force it into thin open strokes
+ *     produced a squiggle, then a form close enough to the stairs glyph to be
+ *     confusable, then a shape resembling a flag. Mass is the meaning, so these
+ *     may use fill.
+ *
+ * The two subsystems are matched on **optical weight at the rendered size**,
+ * not on path construction. Forcing identical construction is what broke the
+ * arm; a filled arm beside a hairline heart would be the same mistake from the
+ * other direction, so the heart is filled too and carries its pulse as a
+ * knockout in the surface colour.
+ *
+ * Do not "fix" these into the stroke system. The difference is the point.
+ */
+export interface GoalMark {
+  /** Painted in the mark's own colour. */
+  readonly fill: readonly string[];
+  /** Painted in the surface colour, cutting through the fill. */
+  readonly knockout?: readonly string[];
+  readonly knockoutWidth?: number;
+}
+
+export const GOAL_MARKS: Record<SessionGoal, GoalMark> = {
+  /* A flexed arm: upper arm along the bottom, forearm rising at the right,
+     and the bicep as the swell across the top. */
+  strength: {
+    /*
+     * Composed from primitives rather than one hand-fitted outline: an upper-arm
+     * capsule, a forearm capsule rising from the elbow, and the bicep as a disc
+     * overlapping their junction. Filled paths union, so the three read as one
+     * limb — and each piece can be reasoned about, which four attempts at a
+     * single traced contour could not.
+     */
+    fill: [
+      'M3.5 16h8.5a2.4 2.4 0 0 1 0 4.8H3.5a2.4 2.4 0 0 1 0-4.8z',
+      'M16 4a2.4 2.4 0 0 1 2.4 2.4v12a2.4 2.4 0 0 1-4.8 0V6.4A2.4 2.4 0 0 1 16 4z',
+      'M9 10.2a3.6 3.6 0 1 1 0 7.2 3.6 3.6 0 0 1 0-7.2z',
+    ],
+  },
+  /* A heart carrying a pulse: sustained effort rather than maximal effort. */
+  conditioning: {
+    fill: ['M12 20.4 4.9 13.3a4.6 4.6 0 1 1 6.5-6.5l.6.6.6-.6a4.6 4.6 0 1 1 6.5 6.5z'],
+    knockout: ['M6.4 12.3h2.5l1.5-3.1 2.4 5.4 1.5-3.1 1 .8h3.1'],
+    knockoutWidth: 2,
+  },
+};
+
+export const goalMarkFor = (goal: SessionGoal): GoalMark => GOAL_MARKS[goal];

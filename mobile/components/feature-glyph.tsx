@@ -6,6 +6,7 @@
  */
 import Svg, { Path } from 'react-native-svg';
 import { glyphStroke } from '../theme/tokens';
+import type { SessionGoal } from '../../src/domain/session.ts';
 import {
   CHECK_PATH,
   CHECK_STROKE_WIDTH,
@@ -13,6 +14,7 @@ import {
   GLYPH_STROKE,
   GLYPH_VIEWBOX,
   glyphPathsFor,
+  goalMarkFor,
 } from '../../src/presentation/feature-glyphs.ts';
 
 export function FeatureGlyph({
@@ -53,6 +55,46 @@ export function CheckGlyph({ size, color }: { readonly size: number; readonly co
         strokeLinecap={GLYPH_STROKE.linecap}
         strokeLinejoin={GLYPH_STROKE.linejoin}
       />
+    </Svg>
+  );
+}
+
+/**
+ * Session-goal mark.
+ *
+ * A separate subsystem from the environment glyphs — filled rather than
+ * stroked, because these communicate a concept through mass. `surface` is the
+ * colour the mark sits on, used to knock the pulse out of the heart, so the
+ * pair reads at the same optical weight.
+ */
+export function GoalGlyph({
+  goal,
+  size,
+  color,
+  surface,
+}: {
+  readonly goal: SessionGoal;
+  readonly size: number;
+  readonly color: string;
+  readonly surface: string;
+}) {
+  const mark = goalMarkFor(goal);
+  return (
+    <Svg width={size} height={size} viewBox={GLYPH_VIEWBOX}>
+      {mark.fill.map((d) => (
+        <Path key={d} d={d} fill={color} />
+      ))}
+      {(mark.knockout ?? []).map((d) => (
+        <Path
+          key={d}
+          d={d}
+          fill="none"
+          stroke={surface}
+          strokeWidth={mark.knockoutWidth ?? 2}
+          strokeLinecap={GLYPH_STROKE.linecap}
+          strokeLinejoin={GLYPH_STROKE.linejoin}
+        />
+      ))}
     </Svg>
   );
 }

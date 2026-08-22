@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Action } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
+import { GoalGlyph } from '@/components/brand/goal-glyph';
 import { useVenue } from '@/components/venue/venue-provider';
 import type { ReportedConditions } from '@/src/programming/conditions.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
@@ -104,7 +105,7 @@ export function SetupClient() {
               {GOALS.map((goal) => (
                 <label
                   key={goal.value}
-                  className="relative flex cursor-pointer flex-col gap-1 rounded-2xl border border-line bg-cloud p-5 transition-[transform,background-color,border-color] duration-(--duration-quick) ease-(--ease-spring) hover:border-line-strong active:scale-[0.985] has-checked:border-blue has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
+                  className="group relative flex cursor-pointer flex-col gap-1 rounded-2xl border border-line bg-cloud p-5 transition-[transform,background-color,border-color] duration-(--duration-quick) ease-(--ease-spring) hover:border-line-strong active:scale-[0.985] has-checked:border-blue has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
                 >
                   <input
                     type="radio"
@@ -113,6 +114,11 @@ export function SetupClient() {
                     checked={request.goal === goal.value}
                     onChange={() => setRequest({ goal: goal.value })}
                     className="sr-only"
+                  />
+                  <GoalGlyph
+                    goal={goal.value}
+                    className="size-10 text-blue transition-colors duration-(--duration-quick) group-has-checked:text-white"
+                    surfaceClassName="text-cloud group-has-checked:text-blue"
                   />
                   <span className="text-lg font-extrabold leading-tight tracking-[-0.02em]">
                     {goal.label}
