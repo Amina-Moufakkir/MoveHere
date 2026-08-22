@@ -62,23 +62,25 @@ interface VisualEntry {
  * information, and their near-square ratio letterboxed while pushing the cues
  * below the fold.
  *
+ * **Bench Step-up is the approved style specimen.** The remaining school-project
+ * assets are generated to match it: a wide movement frame, the two phases of the
+ * movement, the structure it is performed on, and nothing else.
+ *
  * Entries are keyed by the movement *as performed on a specific structure*, and
  * `aspectRatio` is the asset's true ratio: the slot sizes itself from the asset
  * rather than the asset being squeezed into a slot.
  *
- * Anything here is provisional project-created content until a qualified
- * fitness professional has reviewed it. Nothing may be labelled approved,
- * verified, or authoritative, and the §8 provenance language does not change to
- * accommodate it.
+ * **A visual may only claim what the matrix already claims.** A depiction of a
+ * bench maps to that exercise performed with a bench, and to nothing else —
+ * adding an entry does not create compatibility, it illustrates compatibility
+ * that generation already established. `npm run check:exercise-media` fails the
+ * build on any pair the matrix does not hold, so a depiction cannot quietly
+ * assert a movement is possible on a structure the domain never authorised.
  *
- * **This registry is frozen at one entry, deliberately.**
- *
- * Bench Step-up is the specimen the trainer review is meant to judge: whether
- * this depiction, at this fidelity, in this relationship to the app's own cues,
- * is acceptable at all. Producing the other twenty-one before that answer
- * arrives would mean either discarding them or defending them — and the second
- * is how unreviewed content quietly becomes the standard. Do not add entries
- * here until the review returns.
+ * Authority is unchanged by any of this. These visuals are project-created and
+ * have not been reviewed by a qualified fitness professional. That review is a
+ * commercialization gate, not a gate on the school build, and nothing here —
+ * copy, label, or badge — may imply that a trainer has approved a depiction.
  */
 const VISUALS: readonly VisualEntry[] = [
   {
