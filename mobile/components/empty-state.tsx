@@ -23,10 +23,16 @@ export function EmptyState({
   const t = useTheme();
   return (
     <View
+      /* Centred optically rather than geometrically. A block centred on the
+         full height reads as low, because the eye weights the space above
+         content against the space below it — and with a nav bar overhead there
+         is already mass at the top. Pulling it up by a share of the height puts
+         it where "centred" actually looks centred. */
       style={{
         flex: 1,
         backgroundColor: t.color.cloud,
         justifyContent: 'center',
+        paddingBottom: '34%',
         paddingHorizontal: gutter,
         gap: space.lg,
       }}

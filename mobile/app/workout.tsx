@@ -55,6 +55,7 @@ import { doseText, prescriptionDisplay } from '../../src/presentation/prescripti
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { PrimaryAction } from '../components/primary-action';
+import { ProgressTrack } from '../components/progress-track';
 import { exerciseVisualFor } from '../media/exercise-visuals.ts';
 import { ProjectContentNote } from '../components/project-content-note';
 import { EmptyState } from '../components/empty-state';
@@ -171,26 +172,11 @@ export default function WorkoutScreen() {
     <View style={{ flex: 1, backgroundColor: t.color.cloud }}>
       <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
         {/* Progress, full-bleed. Derived from the generated items. */}
-        <View
-          accessible
-          accessibilityRole="progressbar"
-          accessibilityLabel="Movements completed"
-          accessibilityValue={{ min: 0, max: total, now: done }}
-          style={{ flexDirection: 'row', gap: 3, paddingHorizontal: gutter, paddingTop: space.md }}
-        >
-          {items.map((entry, i) => (
-            <View
-              key={`${entry.item.exerciseId}-${i}`}
-              style={{
-                height: 4,
-                flex: 1,
-                borderRadius: 2,
-                backgroundColor:
-                  i < done ? t.color.green : i === done ? t.color.blue : t.color.line,
-              }}
-            />
-          ))}
-        </View>
+        <ProgressTrack
+          total={total}
+          done={done}
+          style={{ paddingHorizontal: gutter, paddingTop: space.md }}
+        />
 
         <View
           style={{
