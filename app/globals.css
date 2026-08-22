@@ -75,9 +75,9 @@
   --text-hero: 1.875rem;
   --text-hero--line-height: 1.1;
   --text-hero--letter-spacing: -0.02em;
-  --text-count: 5.5rem;
-  --text-count--line-height: 0.92;
-  --text-count--letter-spacing: -0.045em;
+  --text-count: 4rem;
+  --text-count--line-height: 1;
+  --text-count--letter-spacing: -0.04em;
   --text-page: 1.875rem;
   --text-page--line-height: 1.12;
   --text-page--letter-spacing: -0.02em;
@@ -104,7 +104,7 @@
 @media (min-width: 40rem) {
   @theme {
     --text-hero: 2.5rem;
-    --text-count: 7rem;
+    --text-count: 4.75rem;
     --text-page: 2.25rem;
   }
 }

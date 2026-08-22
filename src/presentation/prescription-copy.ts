@@ -24,36 +24,74 @@ export const doseText = (p: Prescription): string => {
 };
 
 /**
- * The dose split into two display parts, for the oversized numerals.
- *
- * A single long effort reads as minutes rather than "1 × 240s": three-digit
- * seconds overflow the display size, and nobody counts a four-minute walk in
- * seconds anyway. Multi-set work keeps sets × duration.
- *
- * Returned as data so each client decides how to lay it out — the web sets a
- * multiplication sign between them, and a client with less width need not.
- */
-export const doseParts = (p: Prescription): readonly [string, string] => {
-  if (p.kind === 'reps') return [String(p.sets), String(p.reps)];
-  if (p.kind === 'time') {
-    if (p.sets === 1 && p.seconds >= 120) return [String(Math.round(p.seconds / 60)), 'min'];
-    return [String(p.sets), `${p.seconds}s`];
-  }
-  return [String(p.meters), 'm'];
-};
-
-/**
  * The counting qualifier on its own.
  *
- * doseParts renders numerals only, so a screen showing "3 × 8" would silently
- * drop what that 8 means. Rep counting is a property of the prescription and
- * states what a prescribed number stands for (§15) — losing it halves or
- * doubles the work — so a display that spends its largest type on the numbers
- * has to show this beside them.
+ * A display that spends its largest type on numerals would otherwise drop what
+ * those numerals mean. Rep counting states what a prescribed number stands for
+ * (§15); losing it halves or doubles the work.
  */
 export const countingNote = (p: Prescription): string | null =>
   'counting' in p && p.counting === 'per-side' ? 'per side' : null;
 
-/** True when the two parts are a count and a unit rather than sets × amount. */
-export const isSingleEffort = (parts: readonly [string, string]): boolean =>
-  parts[1] === 'min' || parts[1] === 'm';
+/**
+ * How a prescription should be displayed, by kind.
+ *
+ * One display treatment cannot serve every prescription. "4 × 10" is two
+ * numbers that both matter. "1 × 45s" is one number that matters and one that
+ * does not — rendering the `1 ×` at display size spends the loudest type in the
+ * product on the least useful digit on the screen, and pushes the duration,
+ * which is the thing a person actually needs mid-effort, down to the same
+ * weight as the noise.
+ *
+ * So a single timed effort promotes its duration and demotes the set count to
+ * supporting text. Counting stays supporting text too: it qualifies the number
+ * rather than being one.
+ *
+ * Returned as data. Each client decides sizes; this decides what is the hero.
+ */
+export type PrescriptionDisplay =
+  | {
+      /** Two numerals that both carry meaning, shown as `first × second`. */
+      readonly kind: 'pair';
+      readonly first: string;
+      readonly second: string;
+      readonly support: readonly string[];
+    }
+  | {
+      /** One numeral and its unit. The unit is set smaller than the value. */
+      readonly kind: 'single';
+      readonly value: string;
+      readonly unit: string;
+      readonly support: readonly string[];
+    };
+
+export const prescriptionDisplay = (p: Prescription): PrescriptionDisplay => {
+  const side = countingNote(p);
+  const support = (extra: readonly string[]): readonly string[] =>
+    side === null ? extra : [...extra, side];
+
+  if (p.kind === 'reps') {
+    return { kind: 'pair', first: String(p.sets), second: String(p.reps), support: support([]) };
+  }
+
+  if (p.kind === 'time') {
+    if (p.sets === 1) {
+      // Nobody counts a four-minute walk in seconds, and nobody needs "1 ×".
+      const asMinutes = p.seconds >= 120;
+      return {
+        kind: 'single',
+        value: asMinutes ? String(Math.round(p.seconds / 60)) : String(p.seconds),
+        unit: asMinutes ? 'min' : 's',
+        support: support(['1 set']),
+      };
+    }
+    return {
+      kind: 'pair',
+      first: String(p.sets),
+      second: `${p.seconds}s`,
+      support: support([]),
+    };
+  }
+
+  return { kind: 'single', value: String(p.meters), unit: 'm', support: support([]) };
+};

@@ -26,12 +26,17 @@ export type ColorName = DaylightColor;
  * on marketing. That reservation is what makes the number the event on screen
  * rather than one loud thing among several.
  *
+ * 64 rather than 88. Large enough to read at arm's length mid-effort, small
+ * enough that the number sits inside a composition instead of becoming it —
+ * which is the balance the reference strikes and 88 did not.
+ *
  * `micro` is the tracked small-cap marker. It is rationed to one use per
  * screen: repeated six times it stops reading as a marker and starts reading as
  * an analytics dashboard, which is precisely the look this replaces.
  */
 export const type = {
-  display: { fontSize: 88, lineHeight: 84, fontWeight: '800', letterSpacing: -4 },
+  display: { fontSize: 64, lineHeight: 64, fontWeight: '800', letterSpacing: -2.6 },
+  displayUnit: { fontSize: 30, lineHeight: 34, fontWeight: '800', letterSpacing: -0.8 },
   displaySm: { fontSize: 44, lineHeight: 46, fontWeight: '800', letterSpacing: -1.3 },
   title: { fontSize: 30, lineHeight: 34, fontWeight: '800', letterSpacing: -0.6 },
   subtitle: { fontSize: 20, lineHeight: 26, fontWeight: '800', letterSpacing: -0.2 },

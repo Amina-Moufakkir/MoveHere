@@ -11,9 +11,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   countingNote,
-  doseParts,
   doseText,
-  isSingleEffort,
+  prescriptionDisplay,
 } from '../../src/presentation/prescription-copy.ts';
 import type { Prescription } from '../../src/domain/exercise.ts';
 import { loadMatrix } from '../../src/domain/matrix-loader.ts';
@@ -47,42 +46,50 @@ test('held time and distance render in their own units', () => {
   assert.equal(doseText({ kind: 'distance', meters: 400 }), '400 m');
 });
 
-test('a single long effort reads as minutes, not as one set of seconds', () => {
+test('a single timed effort promotes the duration and demotes the set count', () => {
   assert.deepEqual(
-    doseParts({ kind: 'time', sets: 1, seconds: 240, counting: 'total' }),
-    ['4', 'min'],
-    'nobody counts a four-minute walk in seconds, and three digits overflow the display',
+    prescriptionDisplay({ kind: 'time', sets: 1, seconds: 45, counting: 'total' }),
+    { kind: 'single', value: '45', unit: 's', support: ['1 set'] },
+    'the duration is the useful number; rendering "1 ×" at display size spends ' +
+      'the loudest type in the product on the least useful digit on screen',
   );
   assert.deepEqual(
-    doseParts({ kind: 'time', sets: 3, seconds: 240, counting: 'total' }),
-    ['3', '240s'],
-    'multi-set work keeps sets × duration — the minutes reading is for one continuous effort only',
-  );
-  assert.deepEqual(
-    doseParts({ kind: 'time', sets: 1, seconds: 45, counting: 'total' }),
-    ['1', '45s'],
-    'a short single effort is still sets × duration',
+    prescriptionDisplay({ kind: 'time', sets: 1, seconds: 240, counting: 'total' }),
+    { kind: 'single', value: '4', unit: 'min', support: ['1 set'] },
+    'nobody counts a four-minute walk in seconds',
   );
 });
 
-test('the counting qualifier survives a numerals-only display', () => {
-  // A screen that spends its largest type on the numbers still has to say what
-  // the number means — doseParts alone would silently drop it.
-  assert.equal(
-    countingNote({ kind: 'reps', sets: 3, reps: 8, counting: 'per-side' }),
-    'per side',
-    'a unilateral dose must carry its qualifier even when only numerals are shown',
-  );
-  assert.equal(countingNote({ kind: 'reps', sets: 3, reps: 8, counting: 'total' }), null);
-  assert.equal(countingNote({ kind: 'time', sets: 2, seconds: 30, counting: 'per-side' }), 'per side');
-  assert.equal(countingNote({ kind: 'distance', meters: 400 }), null, 'distance has no side');
+test('two numbers that both matter stay a pair', () => {
+  assert.deepEqual(prescriptionDisplay({ kind: 'reps', sets: 4, reps: 10, counting: 'total' }), {
+    kind: 'pair',
+    first: '4',
+    second: '10',
+    support: [],
+  });
+  assert.deepEqual(prescriptionDisplay({ kind: 'time', sets: 2, seconds: 40, counting: 'total' }), {
+    kind: 'pair',
+    first: '2',
+    second: '40s',
+    support: [],
+  });
 });
 
-test('isSingleEffort agrees with what doseParts produced', () => {
-  assert.ok(isSingleEffort(doseParts({ kind: 'time', sets: 1, seconds: 240, counting: 'total' })));
-  assert.ok(isSingleEffort(doseParts({ kind: 'distance', meters: 400 })));
-  assert.ok(!isSingleEffort(doseParts({ kind: 'reps', sets: 3, reps: 8, counting: 'total' })));
-  assert.ok(!isSingleEffort(doseParts({ kind: 'time', sets: 2, seconds: 40, counting: 'total' })));
+test('counting is supporting text, never a numeral', () => {
+  const perSide = prescriptionDisplay({ kind: 'reps', sets: 3, reps: 8, counting: 'per-side' });
+  assert.deepEqual(perSide.support, ['per side'], 'the qualifier must survive a numerals-only display');
+  assert.equal(perSide.kind, 'pair');
+  const both = prescriptionDisplay({ kind: 'time', sets: 1, seconds: 30, counting: 'per-side' });
+  assert.deepEqual(both.support, ['1 set', 'per side'], 'a demoted set count and a qualifier both show');
+});
+
+test('distance is a value and a unit', () => {
+  assert.deepEqual(prescriptionDisplay({ kind: 'distance', meters: 400 }), {
+    kind: 'single',
+    value: '400',
+    unit: 'm',
+    support: [],
+  });
 });
 
 test('every prescription the shipped content can produce renders non-empty', () => {
@@ -97,9 +104,10 @@ test('every prescription the shipped content can produce renders non-empty', () 
       for (const block of p.policies.byGoal[goal].programs[duration].blocks) {
         for (const slot of block.slots) {
           const text = doseText(slot.prescription);
-          const [big, small] = doseParts(slot.prescription);
+          const d = prescriptionDisplay(slot.prescription);
           assert.ok(text.length > 0, 'a slot with no renderable dose would show the user nothing');
-          assert.ok(big.length > 0 && small.length > 0, `empty dose part for: ${text}`);
+          const parts = d.kind === 'pair' ? [d.first, d.second] : [d.value, d.unit];
+          assert.ok(parts.every((x) => x.length > 0), `empty display part for: ${text}`);
           assert.ok(!text.includes('undefined') && !text.includes('NaN'), `malformed dose: ${text}`);
           checked++;
         }

@@ -51,12 +51,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { findSupportedFeature } from '../../src/domain/feature-registry.ts';
 import { exerciseCues, exerciseName } from '../../src/programming/session-builder.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '../../src/presentation/session-copy.ts';
-import {
-  countingNote,
-  doseParts,
-  doseText,
-  isSingleEffort,
-} from '../../src/presentation/prescription-copy.ts';
+import { doseText, prescriptionDisplay } from '../../src/presentation/prescription-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { PrimaryAction } from '../components/primary-action';
@@ -165,8 +160,7 @@ export default function WorkoutScreen() {
   const featureId = basis?.kind === 'confirmed-feature' ? basis.featureId : null;
   const featureLabel =
     featureId === null ? null : (findSupportedFeature(featureId)?.label ?? featureId);
-  const parts = current === undefined ? (['', ''] as const) : doseParts(current.item.prescription);
-  const [big, small] = parts;
+  const dose = current === undefined ? null : prescriptionDisplay(current.item.prescription);
   const cues = current === undefined ? [] : exerciseCues(current.item.exerciseId);
 
   return (
@@ -282,44 +276,56 @@ export default function WorkoutScreen() {
                 {exerciseName(current.item.exerciseId)}
               </Text>
 
-              {/* The prescription is the event on this screen. */}
-              <View
-                accessible
-                accessibilityLabel={doseText(current.item.prescription)}
-                style={{ flexDirection: 'row', alignItems: 'baseline', marginTop: space.sm }}
-              >
-                <Text
-                  style={{
-                    ...type.display,
-                    fontVariant: ['tabular-nums'],
-                    color: t.color.blueVivid,
-                  }}
+              {/* The prescription is the event on this screen — but the hero
+                  is whichever number is actually useful. */}
+              {dose !== null && (
+                <View
+                  accessible
+                  accessibilityLabel={doseText(current.item.prescription)}
+                  style={{ marginTop: space.sm }}
                 >
-                  {big}
-                </Text>
-                {!isSingleEffort(parts) && (
-                  <Text
-                    style={{ ...type.displaySm, marginHorizontal: 6, color: t.color.navyFaint }}
-                  >
-                    ×
-                  </Text>
-                )}
-                <Text
-                  style={{
-                    ...(small.length > 2 ? type.displaySm : type.display),
-                    fontVariant: ['tabular-nums'],
-                    color: t.color.blueVivid,
-                  }}
-                >
-                  {small}
-                </Text>
-              </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                    {dose.kind === 'pair' ? (
+                      <>
+                        <Text
+                          style={{ ...type.display, fontVariant: ['tabular-nums'], color: t.color.blueVivid }}
+                        >
+                          {dose.first}
+                        </Text>
+                        <Text
+                          style={{ ...type.displayUnit, marginHorizontal: 8, color: t.color.navyFaint }}
+                        >
+                          ×
+                        </Text>
+                        <Text
+                          style={{ ...type.display, fontVariant: ['tabular-nums'], color: t.color.blueVivid }}
+                        >
+                          {dose.second}
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <Text
+                          style={{ ...type.display, fontVariant: ['tabular-nums'], color: t.color.blueVivid }}
+                        >
+                          {dose.value}
+                        </Text>
+                        <Text style={{ ...type.displayUnit, marginLeft: 4, color: t.color.blueVivid }}>
+                          {dose.unit}
+                        </Text>
+                      </>
+                    )}
+                  </View>
 
-              {countingNote(current.item.prescription) !== null && (
-                <Text style={{ ...type.subtitle, color: t.color.navy, marginTop: space.xs }}>
-                  {countingNote(current.item.prescription)}
-                </Text>
+                  {/* What the numbers mean, and anything demoted out of them. */}
+                  {dose.support.length > 0 && (
+                    <Text style={{ ...type.subtitle, color: t.color.navy, marginTop: space.xs }}>
+                      {dose.support.join(' · ')}
+                    </Text>
+                  )}
+                </View>
               )}
+
               <Text style={{ ...type.label, color: t.color.navyMuted, marginTop: space.sm }}>
                 {current.block}
               </Text>

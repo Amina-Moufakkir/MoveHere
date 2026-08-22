@@ -9,7 +9,7 @@ import { useVenue } from '@/components/venue/venue-provider';
 import { exerciseCues, exerciseName } from '@/src/programming/session-builder.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
-import { countingNote, doseParts, isSingleEffort } from '@/src/presentation/prescription-copy.ts';
+import { doseText, prescriptionDisplay } from '@/src/presentation/prescription-copy.ts';
 import { makeSeed } from '@/src/programming/seed.ts';
 
 export function WorkoutClient() {
@@ -74,7 +74,7 @@ export function WorkoutClient() {
     setDone(done + 1);
   };
 
-  const [big, small] = current === undefined ? ['', ''] : doseParts(current.item.prescription);
+  const dose = current === undefined ? null : prescriptionDisplay(current.item.prescription);
   const basis = current?.item.basis;
   const featureLabel =
     basis?.kind === 'confirmed-feature'
@@ -151,30 +151,36 @@ export function WorkoutClient() {
                 </h1>
               </div>
 
-              <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-                <p className="flex items-baseline gap-2.5 leading-none text-blue-vivid">
-                  <span className="text-count font-extrabold tabular-nums">{big}</span>
-                  {/* A single continuous effort is "4 min", not "4 × min". */}
-                  {!isSingleEffort([big, small]) && (
-                    <span className="text-4xl font-extrabold text-navy-faint">&times;</span>
+              {/* The hero is whichever number is actually useful: both numerals
+                  in a pair, the duration alone in a single timed effort. */}
+              {dose !== null && (
+                <div aria-label={doseText(current.item.prescription)}>
+                  <p className="flex items-baseline leading-none text-blue-vivid">
+                    {dose.kind === 'pair' ? (
+                      <>
+                        <span className="text-count font-extrabold tabular-nums">{dose.first}</span>
+                        <span className="mx-2 text-4xl font-extrabold text-navy-faint sm:text-5xl">
+                          &times;
+                        </span>
+                        <span className="text-count font-extrabold tabular-nums">{dose.second}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-count font-extrabold tabular-nums">{dose.value}</span>
+                        <span className="ml-1 text-4xl font-extrabold sm:text-5xl">{dose.unit}</span>
+                      </>
+                    )}
+                  </p>
+
+                  {dose.support.length > 0 && (
+                    <p className="mt-1.5 text-lg font-extrabold text-navy">
+                      {dose.support.join(' · ')}
+                    </p>
                   )}
-                  {/* Anything longer than two characters steps down a size so a
-                      long value cannot overflow the phone. */}
-                  <span
-                    className={`font-extrabold tabular-nums ${
-                      small.length > 2 ? 'text-5xl sm:text-7xl' : 'text-count'
-                    }`}
-                  >
-                    {small}
-                  </span>
-                </p>
-                <p className="pb-2 text-sm font-bold text-navy-muted">
-                  {countingNote(current.item.prescription) !== null && (
-                    <span className="block text-navy">{countingNote(current.item.prescription)}</span>
-                  )}
-                  {current.block}
-                </p>
-              </div>
+                </div>
+              )}
+
+              <p className="text-sm font-bold text-navy-muted">{current.block}</p>
 
               <ul className="flex flex-col border-t border-line">
                 {exerciseCues(current.item.exerciseId).map((cue) => (
