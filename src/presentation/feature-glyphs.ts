@@ -35,7 +35,11 @@ export const GLYPH_STROKE = {
  * drawing one.
  */
 export const FEATURE_GLYPH_PATHS: Record<string, readonly string[]> = {
-  'park-bench': ['M3 14h18', 'M3 10h18', 'M6 14v6', 'M18 14v6', 'M5.5 10V8', 'M18.5 10V8'],
+  /* Seat, legs, and a backrest. The backrest is what distinguishes a bench
+     from parallel bars — without it the two were a pair of rails and a pair of
+     rails, indistinguishable at tile size on the one screen whose whole job is
+     telling park objects apart. */
+  'park-bench': ['M3 13.5h18', 'M6.5 13.5v6', 'M17.5 13.5v6', 'M17.5 13.5V5.5', 'M8 9h9.5'],
   'pull-up-bar': ['M3 6h18', 'M6.5 6v14', 'M17.5 6v14', 'M9.5 6v3.5', 'M14.5 6v3.5'],
   'parallel-bars': ['M3 9h18', 'M3 15h18', 'M6.5 9v11', 'M17.5 9v11'],
   stairs: ['M3 20h4.5v-4.5H12V11h4.5V6.5H21'],
