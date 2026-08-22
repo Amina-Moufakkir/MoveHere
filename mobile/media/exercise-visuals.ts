@@ -52,37 +52,37 @@ interface VisualEntry {
  * where they are versioned, reviewed as content, and rendered at a size a
  * person can read.
  *
- * The registry is empty on purpose.
+ * The rule exists because the first drafts broke it. They were full
+ * instructional cards, and integrating them would have put four problems on the
+ * workout screen at once: their cue text disagreed with the matrix — "drive
+ * through the heel" against the exercise's "drive through the top leg", a
+ * different instruction rather than a rewording — they carried a muscles-worked
+ * panel the app has never had and no reviewer has seen, their text rendered at
+ * about six points on a phone, which is worse than absent because it looks like
+ * information, and their near-square ratio letterboxed while pushing the cues
+ * below the fold.
  *
- * The first drafts were full instructional cards, and integrating them would
- * have put four separate problems on the workout screen at once. Their cue text
- * disagreed with the matrix — the card said "drive through the heel" where the
- * exercise says "drive through the top leg", which is a different instruction,
- * not a rewording. They carried a "muscles worked" panel the app has never had
- * and no reviewer has seen. At phone size their text rendered around six
- * points, which is worse than absent because it looks like information. And
- * their near-square ratio letterboxed in the slot while pushing the cues below
- * the fold.
+ * Entries are keyed by the movement *as performed on a specific structure*, and
+ * `aspectRatio` is the asset's true ratio: the slot sizes itself from the asset
+ * rather than the asset being squeezed into a slot.
  *
- * So the mapping stays and the assets do not. Every movement falls back to the
- * environment glyph or the neutral no-equipment treatment, exactly as before,
- * until replacement assets exist that follow the rule above.
- *
- * When they do, an entry looks like this — keyed by the movement *as performed
- * on a specific structure*:
- *
- *     {
- *       exerciseId: 'step-up',
- *       featureId: 'park-bench',
- *       visual: { light, dark, alt, aspectRatio },
- *     }
- *
- * Anything added here is provisional project-created content until a qualified
+ * Anything here is provisional project-created content until a qualified
  * fitness professional has reviewed it. Nothing may be labelled approved,
  * verified, or authoritative, and the §8 provenance language does not change to
  * accommodate it.
  */
-const VISUALS: readonly VisualEntry[] = [];
+const VISUALS: readonly VisualEntry[] = [
+  {
+    exerciseId: 'step-up',
+    featureId: 'park-bench',
+    visual: {
+      light: require('../../img/daylight-bench.png'),
+      dark: require('../../img/dark-bench.png'),
+      alt: 'Bench step-up, in two phases: standing beside a park bench with one foot placed on the seat, then standing tall on the bench with the other knee driven up.',
+      aspectRatio: 1536 / 1024,
+    },
+  },
+];
 
 const key = (exerciseId: string, featureId: SupportedFeatureId | null): string =>
   `${exerciseId}@${featureId ?? '-'}`;

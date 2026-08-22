@@ -241,9 +241,12 @@ export default function WorkoutScreen() {
                  prescription, the cues and the action all have to stay within
                  reach without hunting for them. */
               <View
+                /* Sized from the asset's own ratio, not a fixed height, so a
+                   wide movement frame fills the width instead of letterboxing
+                   inside a box shaped for something else. */
                 style={{
                   marginHorizontal: gutter,
-                  height: 230,
+                  aspectRatio: visual.aspectRatio,
                   borderRadius: radius.lg,
                   overflow: 'hidden',
                   backgroundColor: t.color.pale,
@@ -254,11 +257,10 @@ export default function WorkoutScreen() {
                   accessible
                   accessibilityRole="image"
                   accessibilityLabel={visual.alt}
-                  resizeMode="contain"
+                  resizeMode="cover"
                   /* The container owns the box; the image fills it. An Image
-                     given a height but no width takes its intrinsic width —
-                     1199px here — which overflowed the screen and left the slot
-                     looking empty. */
+                     given a height but no width takes its intrinsic width,
+                     which overflows the screen and leaves the slot blank. */
                   style={{ width: '100%', height: '100%' }}
                 />
               </View>
@@ -298,7 +300,7 @@ export default function WorkoutScreen() {
               </View>
             )}
 
-            <View style={{ paddingHorizontal: gutter, marginTop: space.xl }}>
+            <View style={{ paddingHorizontal: gutter, marginTop: space.lg }}>
               <Text
                 accessibilityRole="header"
                 style={{ ...type.title, color: t.color.navy }}
@@ -356,12 +358,12 @@ export default function WorkoutScreen() {
                 </View>
               )}
 
-              <Text style={{ ...type.label, color: t.color.navyMuted, marginTop: space.sm }}>
+              <Text style={{ ...type.label, color: t.color.navyMuted, marginTop: space.xs }}>
                 {current.block}
               </Text>
 
               {cues.length > 0 && (
-                <View style={{ marginTop: space.xl, borderTopWidth: 1, borderTopColor: t.color.line }}>
+                <View style={{ marginTop: space.lg, borderTopWidth: 1, borderTopColor: t.color.line }}>
                   {cues.map((cue) => (
                     <View
                       key={cue}
