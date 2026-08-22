@@ -44,7 +44,7 @@
  * no bench is exactly the kind of invention the whole product refuses.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AccessibilityInfo, Pressable, ScrollView, Text, View } from 'react-native';
+import { AccessibilityInfo, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -55,6 +55,7 @@ import { doseText, prescriptionDisplay } from '../../src/presentation/prescripti
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { PrimaryAction } from '../components/primary-action';
+import { exerciseVisualFor } from '../media/exercise-visuals.ts';
 import { ProjectContentNote } from '../components/project-content-note';
 import { EmptyState } from '../components/empty-state';
 import { makeSeed } from '../../src/programming/seed.ts';
@@ -161,6 +162,9 @@ export default function WorkoutScreen() {
   const featureLabel =
     featureId === null ? null : (findSupportedFeature(featureId)?.label ?? featureId);
   const dose = current === undefined ? null : prescriptionDisplay(current.item.prescription);
+  /* Presentation only. A missing visual is expected, not a failure. */
+  const visual =
+    current === undefined ? null : exerciseVisualFor(current.item.exerciseId, featureId);
   const cues = current === undefined ? [] : exerciseCues(current.item.exerciseId);
 
   return (
@@ -230,43 +234,69 @@ export default function WorkoutScreen() {
 
         {current !== undefined && (
           <View style={{ marginTop: space.lg }}>
-            {/* ---- Media slot: reserved for the exercise visual system ---- */}
-            <View
-              accessible
-              accessibilityLabel={
-                featureLabel === null
-                  ? 'No equipment needed for this movement'
-                  : `Using the ${featureLabel}`
-              }
-              style={{
-                marginHorizontal: gutter,
-                /* Height, not aspect ratio. A 4:3 slot holding one glyph reads
-                   as a hole in the screen; when real exercise visuals arrive
-                   this can grow to their natural ratio. */
-                height: 180,
-                borderRadius: radius.lg,
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: space.md,
-                backgroundColor: featureLabel === null ? t.color.blueWash : t.color.paleGreen,
-              }}
-            >
-              {featureLabel === null ? (
-                /* Neutral. No object is depicted, because none is required. */
-                <Text style={{ ...type.subtitle, color: t.color.blue }}>No equipment</Text>
-              ) : (
-                <>
-                  <FeatureGlyph
-                    id={featureId ?? ''}
-                    size={glyph.context}
-                    color={t.color.greenInk}
-                  />
-                  <Text style={{ ...type.label, color: t.color.greenInk }}>
-                    Using the {featureLabel}
-                  </Text>
-                </>
-              )}
-            </View>
+            {/* ---- Media slot ---- */}
+            {visual !== null ? (
+              /* Provisional project-created instructional content. Sized to
+                 support the movement, not to dominate the screen: the
+                 prescription, the cues and the action all have to stay within
+                 reach without hunting for them. */
+              <View
+                style={{
+                  marginHorizontal: gutter,
+                  height: 230,
+                  borderRadius: radius.lg,
+                  overflow: 'hidden',
+                  backgroundColor: t.color.pale,
+                }}
+              >
+                <Image
+                  source={t.dark ? visual.dark : visual.light}
+                  accessible
+                  accessibilityRole="image"
+                  accessibilityLabel={visual.alt}
+                  resizeMode="contain"
+                  /* The container owns the box; the image fills it. An Image
+                     given a height but no width takes its intrinsic width —
+                     1199px here — which overflowed the screen and left the slot
+                     looking empty. */
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </View>
+            ) : (
+              <View
+                accessible
+                accessibilityLabel={
+                  featureLabel === null
+                    ? 'No equipment needed for this movement'
+                    : `Using the ${featureLabel}`
+                }
+                style={{
+                  marginHorizontal: gutter,
+                  height: 180,
+                  borderRadius: radius.lg,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: space.md,
+                  backgroundColor: featureLabel === null ? t.color.blueWash : t.color.paleGreen,
+                }}
+              >
+                {featureLabel === null ? (
+                  /* Neutral. No object is depicted, because none is required. */
+                  <Text style={{ ...type.subtitle, color: t.color.blue }}>No equipment</Text>
+                ) : (
+                  <>
+                    <FeatureGlyph
+                      id={featureId ?? ''}
+                      size={glyph.context}
+                      color={t.color.greenInk}
+                    />
+                    <Text style={{ ...type.label, color: t.color.greenInk }}>
+                      Using the {featureLabel}
+                    </Text>
+                  </>
+                )}
+              </View>
+            )}
 
             <View style={{ paddingHorizontal: gutter, marginTop: space.xl }}>
               <Text

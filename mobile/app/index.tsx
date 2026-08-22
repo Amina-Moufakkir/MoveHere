@@ -19,7 +19,7 @@
  * marketing copy. The boundary statements and the provenance note come from
  * shared source for the same reason.
  */
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, Text, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -49,6 +49,25 @@ const STEPS = [
   },
 ] as const;
 
+/**
+ * Brand photography — a real park, real people training in it.
+ *
+ * Atmospheric, not instructional, and not evidence of anything. It says what
+ * kind of product this is; it does not claim a capability, and no scope
+ * statement on this screen is derived from what happens to be visible in it.
+ *
+ * The frame is tall and its action — the bars and the people on them — sits in
+ * the upper-middle band, with bare canopy above and empty pavement below. A
+ * centred cover crop would land on the pavement, so the image is laid out at
+ * its true aspect inside a clipping view and offset by a *fraction* of its own
+ * height. That crops responsively at any width and never distorts.
+ */
+const PHOTO = require('../../img/landing-pic.jpg');
+const PHOTO_RATIO = 2391 / 3761;
+/** Skips the bare canopy so the crop keeps the strongest action area. */
+const PHOTO_SKIP = 0.11;
+const HERO_HEIGHT = 300;
+
 const SHOWN_FEATURES = [...FEATURE_REGISTRY.supported]
   .sort((a, b) => byPresentation(a.id, b.id))
   .slice(0, 4);
@@ -59,6 +78,8 @@ export default function LandingScreen() {
   const router = useRouter();
   const t = useTheme();
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const photoHeight = width / PHOTO_RATIO;
 
   const sectionLabel = (color: string) =>
     ({ ...type.label, color }) as const;
@@ -76,11 +97,25 @@ export default function LandingScreen() {
       style={{ flex: 1, backgroundColor: t.color.cloud }}
       contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, space.lg) + space.section }}
     >
+      {/* Photograph, then the words. No copy sits over the picture — the frame
+          is busy, and darkening it to force legibility would be decoration
+          standing in for composition. */}
+      <View style={{ height: HERO_HEIGHT, overflow: 'hidden' }}>
+        <Image
+          source={PHOTO}
+          accessible
+          accessibilityRole="image"
+          accessibilityLabel="An outdoor calisthenics park on a winter morning, with people training on the bars."
+          resizeMode="cover"
+          style={{ width, height: photoHeight, marginTop: -(photoHeight * PHOTO_SKIP) }}
+        />
+      </View>
+
       {/* ---- Hero ---- */}
       <View
         style={{
           paddingHorizontal: gutter,
-          paddingTop: space.xl,
+          paddingTop: space.xxl,
           paddingBottom: space.xxl,
         }}
       >
