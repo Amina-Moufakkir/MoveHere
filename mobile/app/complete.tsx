@@ -36,6 +36,7 @@ import { SUBSTITUTE_LABEL } from '../../src/presentation/session-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { ProjectContentNote } from '../components/project-content-note';
+import { EmptyState } from '../components/empty-state';
 import { radius, space, touch, type, useTheme } from '../theme/tokens';
 
 export default function CompleteScreen() {
@@ -58,41 +59,12 @@ export default function CompleteScreen() {
 
   if (session === null || session.completedAt === null) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: t.color.pale,
-          justifyContent: 'center',
-          paddingHorizontal: space.lg,
-          gap: space.lg,
-        }}
-      >
-        <Text accessibilityRole="header" style={{ ...type.page, color: t.color.navy }}>
-          Nothing finished yet
-        </Text>
-        <Text style={{ ...type.body, color: t.color.navyMuted, maxWidth: 340 }}>
-          Complete a session and this is where it lands.
-        </Text>
-        <Pressable
-          onPress={() => router.replace('/setup')}
-          accessibilityRole="button"
-          accessibilityLabel="Set up a session"
-          style={({ pressed }) => [
-            {
-              alignSelf: 'flex-start',
-              minHeight: touch.action,
-              justifyContent: 'center',
-              paddingHorizontal: space.xxl,
-              borderRadius: radius.pill,
-              backgroundColor: t.color.blue,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            },
-            t.shadow.lift,
-          ]}
-        >
-          <Text style={{ ...type.action, color: t.color.white }}>Set up a session</Text>
-        </Pressable>
-      </View>
+      <EmptyState
+        title="Nothing finished yet"
+        body="Complete a session and this is where it lands."
+        action="Set up a session"
+        onAction={() => router.replace('/setup')}
+      />
     );
   }
 

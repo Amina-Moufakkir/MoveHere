@@ -42,6 +42,7 @@ import {
 } from '../../src/presentation/feature-consequence.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
+import { EmptyState } from '../components/empty-state';
 import { radius, space, touch, type, useTheme } from '../theme/tokens';
 
 const DECISIONS: readonly { value: ConfirmationDecision; label: string }[] = [
@@ -93,42 +94,12 @@ export default function ConfirmScreen() {
 
   if (candidates.length === 0) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: t.color.pale,
-          justifyContent: 'center',
-          paddingHorizontal: space.lg,
-          gap: space.lg,
-        }}
-      >
-        <Text accessibilityRole="header" style={{ ...type.page, color: t.color.navy }}>
-          Nothing to confirm yet
-        </Text>
-        <Text style={{ ...type.body, color: t.color.navyMuted, maxWidth: 340 }}>
-          Tell MoveHere what you can see first. Confirmation is the only way a feature enters your
-          park.
-        </Text>
-        <Pressable
-          onPress={() => router.replace('/park')}
-          accessibilityRole="button"
-          accessibilityLabel="Look around"
-          style={({ pressed }) => [
-            {
-              alignSelf: 'flex-start',
-              minHeight: touch.action,
-              justifyContent: 'center',
-              paddingHorizontal: space.xxl,
-              borderRadius: radius.pill,
-              backgroundColor: t.color.blue,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            },
-            t.shadow.lift,
-          ]}
-        >
-          <Text style={{ ...type.action, color: t.color.white }}>Look around</Text>
-        </Pressable>
-      </View>
+      <EmptyState
+        title="Nothing to confirm yet"
+        body="Tell MoveHere what you can see first. Confirmation is the only way a feature enters your park."
+        action="Look around"
+        onAction={() => router.replace('/park')}
+      />
     );
   }
 

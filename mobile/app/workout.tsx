@@ -40,6 +40,7 @@ import {
 } from '../../src/presentation/prescription-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { ProjectContentNote } from '../components/project-content-note';
+import { EmptyState } from '../components/empty-state';
 import { makeSeed } from '../../src/programming/seed.ts';
 import { radius, space, touch, type, useTheme } from '../theme/tokens';
 
@@ -57,59 +58,29 @@ export default function WorkoutScreen() {
     [workout],
   );
 
-  const empty = (title: string, body: string, action: string, to: '/setup') => (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: t.color.pale,
-        justifyContent: 'center',
-        paddingHorizontal: space.lg,
-        gap: space.lg,
-      }}
-    >
-      <Text accessibilityRole="header" style={{ ...type.page, color: t.color.navy }}>
-        {title}
-      </Text>
-      <Text style={{ ...type.body, color: t.color.navyMuted, maxWidth: 340 }}>{body}</Text>
-      <Pressable
-        onPress={() => router.replace(to)}
-        accessibilityRole="button"
-        accessibilityLabel={action}
-        style={({ pressed }) => [
-          {
-            alignSelf: 'flex-start',
-            minHeight: touch.action,
-            justifyContent: 'center',
-            paddingHorizontal: space.xxl,
-            borderRadius: radius.pill,
-            backgroundColor: t.color.blue,
-            transform: [{ scale: pressed ? 0.98 : 1 }],
-          },
-          t.shadow.lift,
-        ]}
-      >
-        <Text style={{ ...type.action, color: t.color.white }}>{action}</Text>
-      </Pressable>
-    </View>
-  );
-
   if (session === null || workout === null) {
-    return empty(
-      'No session yet',
-      'Choose how long you have and MoveHere will build one.',
-      'Set up a session',
-      '/setup',
+    return (
+      <EmptyState
+        title="No session yet"
+        body="Choose how long you have and MoveHere will build one."
+        action="Set up a session"
+        onAction={() => router.replace('/setup')}
+      />
     );
   }
 
   if (workout.kind === 'not-generated') {
-    return empty(
-      'Couldn’t build a session',
-      workout.reason === 'insufficient-time'
-        ? 'There isn’t enough time for a full session at this length.'
-        : 'No movements are available. This is a content problem, not something you did.',
-      'Change the session',
-      '/setup',
+    return (
+      <EmptyState
+        title="Couldn’t build a session"
+        body={
+          workout.reason === 'insufficient-time'
+            ? 'There isn’t enough time for a full session at this length.'
+            : 'No movements are available. This is a content problem, not something you did.'
+        }
+        action="Change the session"
+        onAction={() => router.replace('/setup')}
+      />
     );
   }
 
