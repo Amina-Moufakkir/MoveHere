@@ -27,6 +27,7 @@ import { FEATURE_REGISTRY } from '../../src/domain/feature-registry.ts';
 import { SHORT_LABEL, byPresentation } from '../../src/presentation/feature-copy.ts';
 import { BOUNDARY_HEADING, BOUNDARY_STATEMENTS } from '../../src/presentation/safety-copy.ts';
 import { FeatureGlyph } from '../components/feature-glyph';
+import { PrimaryAction } from '../components/primary-action';
 import { ProjectContentNote } from '../components/project-content-note';
 import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
@@ -97,49 +98,12 @@ export default function LandingScreen() {
         </Text>
 
         <View style={{ gap: space.md, marginTop: space.xl }}>
-          <Pressable
-            onPress={() => router.push('/park')}
-            accessibilityRole="button"
-            accessibilityLabel="Set up a park"
-            style={({ pressed }) => [
-              {
-                minHeight: touch.action,
-                borderRadius: radius.pill,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: t.color.blue,
-                transform: [{ scale: pressed ? 0.98 : 1 }],
-              },
-              t.shadow.lift,
-            ]}
-          >
-            <Text style={{ ...type.action, color: t.color.white }}>Set up a park</Text>
-          </Pressable>
-
-          <Pressable
+          <PrimaryAction label="Set up a park" onPress={() => router.push('/park')} />
+          <PrimaryAction
+            label="Train without equipment"
+            variant="secondary"
             onPress={() => router.push('/setup')}
-            accessibilityRole="button"
-            accessibilityLabel="Train without equipment"
-            /* A distinct surface, not the hero's own tone. The web's soft
-               variant sits on a gradient, so `pale` on `pale` still separates
-               there; this hero is flat, and the same token made the secondary
-               action read as an empty outline in both appearances. */
-            style={({ pressed }) => [
-              {
-                minHeight: touch.action,
-                borderRadius: radius.pill,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: t.color.cloud,
-                borderWidth: 1,
-                borderColor: t.color.lineStrong,
-                transform: [{ scale: pressed ? 0.98 : 1 }],
-              },
-              t.shadow.lift,
-            ]}
-          >
-            <Text style={{ ...type.action, color: t.color.blueInk }}>Train without equipment</Text>
-          </Pressable>
+          />
         </View>
       </View>
 

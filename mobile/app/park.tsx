@@ -27,7 +27,8 @@ import { FEATURE_REGISTRY } from '../../src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '../../src/domain/feature.ts';
 import { SHORT_HINT, SHORT_LABEL, byPresentation } from '../../src/presentation/feature-copy.ts';
 import { useVenue } from '../components/venue-provider';
-import { CheckGlyph, FeatureGlyph } from '../components/feature-glyph';
+import { FeatureGlyph } from '../components/feature-glyph';
+import { PrimaryAction } from '../components/primary-action';
 import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
 /** Sorted once at module scope: the order is registry data, not screen state. */
@@ -151,28 +152,12 @@ export default function ParkScreen() {
           gap: space.md,
         }}
       >
-        <Pressable
-          onPress={onContinue}
-          disabled={empty}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: empty }}
+        <PrimaryAction
+          label={empty ? 'Pick what you can see' : `Continue with ${picked.size}`}
           accessibilityLabel={empty ? 'Pick what you can see' : `Continue with ${picked.size} selected`}
-          style={({ pressed }) => [
-            {
-              minHeight: touch.action,
-              borderRadius: radius.pill,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: empty ? t.color.pale : t.color.blue,
-              transform: [{ scale: pressed && !empty ? 0.98 : 1 }],
-            },
-            empty ? null : t.shadow.lift,
-          ]}
-        >
-          <Text style={{ ...type.action, color: empty ? t.color.navyFaint : t.color.white }}>
-            {empty ? 'Pick what you can see' : `Continue with ${picked.size}`}
-          </Text>
-        </Pressable>
+          disabled={empty}
+          onPress={onContinue}
+        />
         <Text style={{ ...type.label, fontWeight: '400', color: t.color.navyMuted, textAlign: 'center' }}>
           Nothing is trusted yet. Nothing leaves your phone.
         </Text>

@@ -44,6 +44,7 @@ import { byPresentation } from '../../src/presentation/feature-copy.ts';
 import { SUBSTITUTE_LABEL } from '../../src/presentation/session-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
+import { PrimaryAction } from '../components/primary-action';
 import { ProjectContentNote } from '../components/project-content-note';
 import { EmptyState } from '../components/empty-state';
 import { glyph, gutter, motion, radius, space, touch, type, useTheme } from '../theme/tokens';
@@ -289,27 +290,13 @@ export default function CompleteScreen() {
           gap: space.md,
         }}
       >
-        <Pressable
+        <PrimaryAction
+          label="Train again"
           onPress={() => {
             endSession();
             router.replace('/setup');
           }}
-          accessibilityRole="button"
-          accessibilityLabel="Train again"
-          style={({ pressed }) => [
-            {
-              minHeight: touch.action,
-              borderRadius: radius.pill,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: t.color.blue,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            },
-            t.shadow.lift,
-          ]}
-        >
-          <Text style={{ ...type.action, color: t.color.white }}>Train again</Text>
-        </Pressable>
+        />
         <ProjectContentNote />
       </View>
     </View>

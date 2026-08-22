@@ -34,6 +34,7 @@ import { REPORTED_CONDITIONS } from '../../src/programming/conditions.ts';
 import type { ReportedConditions } from '../../src/programming/conditions.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
+import { PrimaryAction } from '../components/primary-action';
 import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 import { makeSeed } from '../../src/programming/seed.ts';
 
@@ -304,27 +305,13 @@ export default function SetupScreen() {
             : `A park session using ${usable.length} confirmed ${usable.length === 1 ? 'feature' : 'features'}`}
         </Text>
 
-        <Pressable
+        <PrimaryAction
+          label="Build the session"
           onPress={() => {
             startSession(makeSeed(Date.now()));
             router.push('/workout');
           }}
-          accessibilityRole="button"
-          accessibilityLabel="Build the session"
-          style={({ pressed }) => [
-            {
-              minHeight: touch.action,
-              borderRadius: radius.pill,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: t.color.blue,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            },
-            t.shadow.lift,
-          ]}
-        >
-          <Text style={{ ...type.action, color: t.color.white }}>Build the session</Text>
-        </Pressable>
+        />
       </View>
     </View>
   );

@@ -5,8 +5,9 @@
  * cases: MoveHere has simply not been told enough yet, and the action says what
  * would fix that.
  */
-import { Pressable, Text, View } from 'react-native';
-import { gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
+import { Text, View } from 'react-native';
+import { gutter, space, type, useTheme } from '../theme/tokens';
+import { PrimaryAction } from './primary-action';
 
 export function EmptyState({
   title,
@@ -34,25 +35,7 @@ export function EmptyState({
         {title}
       </Text>
       <Text style={{ ...type.lead, color: t.color.navyMuted, maxWidth: 340 }}>{body}</Text>
-      <Pressable
-        onPress={onAction}
-        accessibilityRole="button"
-        accessibilityLabel={action}
-        style={({ pressed }) => [
-          {
-            alignSelf: 'flex-start',
-            minHeight: touch.action,
-            justifyContent: 'center',
-            paddingHorizontal: space.section,
-            borderRadius: radius.pill,
-            backgroundColor: t.color.blue,
-            transform: [{ scale: pressed ? 0.98 : 1 }],
-          },
-          t.shadow.lift,
-        ]}
-      >
-        <Text style={{ ...type.action, color: t.color.white }}>{action}</Text>
-      </Pressable>
+      <PrimaryAction label={action} onPress={onAction} />
     </View>
   );
 }

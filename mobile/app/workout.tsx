@@ -25,6 +25,17 @@
  *
  * No timers, no keep-awake, no haptics. Advancing is a tap, as on the web.
  *
+ * Finishing a movement gets a brief acknowledgement: the action shows a check,
+ * then the progress and the movement advance together. It is confirmation of
+ * physical work that was actually done, not a reward — so it is fast, silent,
+ * and happens once.
+ *
+ * The order of operations matters more than the animation. Progress is
+ * persisted **before** any of it, synchronously, on the tap. The check is
+ * played over state that is already saved, so backgrounding the app, killing
+ * it, or losing the frame mid-beat can never cost the user a completed
+ * movement. What the beat holds back is the render, never the record.
+ *
  * The media slot is deliberate empty space held open. It is reserved for the
  * consistent exercise visual system §15 defers, and until that exists it shows
  * the environment glyph — but only when the item actually cites a confirmed
@@ -32,8 +43,8 @@
  * than a fabricated object, because depicting a bench for a movement that needs
  * no bench is exactly the kind of invention the whole product refuses.
  */
-import { useMemo } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AccessibilityInfo, Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -47,6 +58,7 @@ import {
 } from '../../src/presentation/prescription-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
+import { PrimaryAction } from '../components/primary-action';
 import { ProjectContentNote } from '../components/project-content-note';
 import { EmptyState } from '../components/empty-state';
 import { makeSeed } from '../../src/programming/seed.ts';
@@ -64,6 +76,25 @@ export default function WorkoutScreen() {
         ? workout.blocks.flatMap((b) => b.items.map((item) => ({ block: b.name, item })))
         : [],
     [workout],
+  );
+
+  /**
+   * The acknowledgement beat.
+   *
+   * `held` freezes what is displayed — never what is stored — so the check can
+   * be seen on the movement it belongs to before the screen moves on.
+   *
+   * Declared with the other hooks, above every early return: a hook that runs
+   * only on some renders is a crash, not a style question.
+   */
+  const [confirming, setConfirming] = useState(false);
+  const [held, setHeld] = useState<number | null>(null);
+  const beat = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (beat.current !== null) clearTimeout(beat.current);
+    },
+    [],
   );
 
   if (session === null || workout === null) {
@@ -93,23 +124,40 @@ export default function WorkoutScreen() {
   }
 
   const total = items.length;
-  const done = Math.min(session.done, total);
+  const done = Math.min(held ?? session.done, total);
   const current = items[Math.min(done, total - 1)];
   const isSubstitute = workout.kind === 'substitute-session';
   const finished = done >= total;
 
   const advance = () => {
-    if (done + 1 >= total) {
+    if (confirming) return; // one tap, one movement
+    const last = done + 1 >= total;
+
+    // Persist first. Nothing below is allowed to delay this.
+    if (last) {
       setDone(total);
       completeSession(new Date().toISOString(), {
         movements: total,
         featuresUsed: workout.kind === 'park-session' ? [...workout.featuresUsed] : [],
         wasSubstitute: workout.kind === 'substitute-session',
       });
-      router.push('/complete');
-      return;
+    } else {
+      setDone(done + 1);
     }
-    setDone(done + 1);
+
+    void AccessibilityInfo.isReduceMotionEnabled().then((reduced) => {
+      if (reduced) {
+        if (last) router.push('/complete');
+        return;
+      }
+      setHeld(done);
+      setConfirming(true);
+      beat.current = setTimeout(() => {
+        setConfirming(false);
+        setHeld(null);
+        if (last) router.push('/complete');
+      }, 380);
+    });
   };
 
   const basis = current?.item.basis;
@@ -314,26 +362,12 @@ export default function WorkoutScreen() {
           gap: space.md,
         }}
       >
-        <Pressable
-          onPress={advance}
-          accessibilityRole="button"
+        <PrimaryAction
+          label={done + 1 >= total ? 'Finish session' : 'Done'}
           accessibilityLabel={done + 1 >= total ? 'Finish session' : 'Done, next movement'}
-          style={({ pressed }) => [
-            {
-              minHeight: touch.action,
-              borderRadius: radius.pill,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: t.color.blue,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            },
-            t.shadow.lift,
-          ]}
-        >
-          <Text style={{ ...type.action, color: t.color.white }}>
-            {done + 1 >= total ? 'Finish session' : 'Done'}
-          </Text>
-        </Pressable>
+          confirming={confirming}
+          onPress={advance}
+        />
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: space.lg }}>
           <Text style={{ flex: 1, ...type.label, fontWeight: '400', color: t.color.navyMuted }}>

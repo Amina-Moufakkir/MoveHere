@@ -42,6 +42,7 @@ import {
 } from '../../src/presentation/feature-consequence.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
+import { PrimaryAction } from '../components/primary-action';
 import { EmptyState } from '../components/empty-state';
 import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
@@ -254,27 +255,13 @@ export default function ConfirmScreen() {
             : `${trusted.length} confirmed · ${movementCount} movements available`}
         </Text>
 
-        <Pressable
+        <PrimaryAction
+          label="Confirm and continue"
           onPress={() => {
             confirm(decisions);
             router.push('/setup');
           }}
-          accessibilityRole="button"
-          accessibilityLabel="Confirm and continue"
-          style={({ pressed }) => [
-            {
-              minHeight: touch.action,
-              borderRadius: radius.pill,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: t.color.blue,
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-            },
-            t.shadow.lift,
-          ]}
-        >
-          <Text style={{ ...type.action, color: t.color.white }}>Confirm and continue</Text>
-        </Pressable>
+        />
 
         <Pressable
           onPress={() => router.replace('/park')}
