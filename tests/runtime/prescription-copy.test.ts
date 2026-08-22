@@ -10,6 +10,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
+  countingNote,
   doseParts,
   doseText,
   isSingleEffort,
@@ -62,6 +63,19 @@ test('a single long effort reads as minutes, not as one set of seconds', () => {
     ['1', '45s'],
     'a short single effort is still sets × duration',
   );
+});
+
+test('the counting qualifier survives a numerals-only display', () => {
+  // A screen that spends its largest type on the numbers still has to say what
+  // the number means — doseParts alone would silently drop it.
+  assert.equal(
+    countingNote({ kind: 'reps', sets: 3, reps: 8, counting: 'per-side' }),
+    'per side',
+    'a unilateral dose must carry its qualifier even when only numerals are shown',
+  );
+  assert.equal(countingNote({ kind: 'reps', sets: 3, reps: 8, counting: 'total' }), null);
+  assert.equal(countingNote({ kind: 'time', sets: 2, seconds: 30, counting: 'per-side' }), 'per side');
+  assert.equal(countingNote({ kind: 'distance', meters: 400 }), null, 'distance has no side');
 });
 
 test('isSingleEffort agrees with what doseParts produced', () => {

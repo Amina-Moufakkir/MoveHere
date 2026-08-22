@@ -56,21 +56,25 @@ export function CompleteClient() {
           <p className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-green-ink">
             Session complete
           </p>
-          <p className="mt-3 flex items-baseline gap-3 leading-none text-blue-ink">
+          <h1 className="mt-2 text-page font-extrabold text-balance">
+            You moved here.
+          </h1>
+          <p className="mt-4 flex items-baseline gap-3 leading-none text-blue-vivid">
             <span className="text-count font-extrabold tabular-nums">{session.minutes}</span>
             <span className="text-xl font-extrabold text-navy-muted sm:text-2xl">minutes</span>
           </p>
-          <h1 className="mt-4 text-page font-extrabold text-balance">
-            {movements} movements done.
-            {isSubstitute ? ' No equipment needed.' : ''}
-          </h1>
+          <p className="mt-4 text-sm font-bold text-navy-muted">
+            {movements} movements · <span className="capitalize">{session.goal}</span>
+            {isSubstitute ? ' · No equipment needed' : ''}
+          </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-white px-3 py-1.5 text-sm font-bold capitalize text-navy-muted shadow-(--shadow-lift)">
-              {session.goal}
-            </span>
+          {!isSubstitute && featuresUsed.length > 0 && (
+            <p className="mt-5 text-sm font-bold text-navy-muted">Used in this session</p>
+          )}
+
+          <div className="mt-2.5 flex flex-wrap items-center gap-2">
             {isSubstitute ? (
-              <span className="rounded-full border-l-4 border-yellow bg-white px-3 py-1.5 text-sm font-bold text-yellow-ink shadow-(--shadow-lift)">
+              <span className="rounded-full border-l-4 border-yellow bg-pale px-3 py-1.5 text-sm font-bold text-yellow-ink">
                 {SUBSTITUTE_LABEL}
               </span>
             ) : (
@@ -79,7 +83,7 @@ export function CompleteClient() {
                   key={id}
                   className="inline-flex items-center gap-1.5 rounded-full bg-pale-green px-3 py-1.5 text-sm font-bold text-green-ink"
                 >
-                  <FeatureGlyph id={id} className="size-4" />
+                  <FeatureGlyph id={id} className="size-5" />
                   {findSupportedFeature(id)?.label ?? id}
                 </span>
               ))
@@ -91,7 +95,7 @@ export function CompleteClient() {
       {confirmed.length > 0 && (
         <section className="px-5 py-7 sm:px-8">
           <div className="mx-auto w-full max-w-2xl">
-            <h2 className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-muted">
+            <h2 className="text-sm font-bold text-navy-muted">
               Anything not usable today?
             </h2>
             <p className="mt-2 max-w-md text-sm leading-snug text-navy-muted text-pretty">
@@ -99,20 +103,18 @@ export function CompleteClient() {
               on your park&rsquo;s record either way.
             </p>
 
-            <ul className="mt-4 flex flex-col gap-2.5">
+            <ul className="mt-4 flex flex-col border-t border-line">
               {confirmed.map((feature) => {
                 const unusable = feature.usability.kind === 'reported-unusable';
                 const justChanged = corrected.has(feature.featureId);
                 return (
                   <li
                     key={feature.featureId}
-                    className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors duration-(--duration-quick) ${
-                      unusable ? 'bg-cloud-deep' : 'bg-white shadow-(--shadow-lift)'
-                    }`}
+                    className="flex min-h-14 items-center gap-4 border-b border-line py-3"
                   >
                     <FeatureGlyph
                       id={feature.featureId}
-                      className={`size-6 shrink-0 ${unusable ? 'text-navy-faint' : 'text-blue-ink'}`}
+                      className={`size-10 shrink-0 ${unusable ? 'text-navy-faint' : 'text-green'}`}
                     />
                     <span className="min-w-0 flex-1">
                       <span className={`block font-extrabold ${unusable ? 'text-navy-muted' : ''}`}>
@@ -141,7 +143,7 @@ export function CompleteClient() {
         </section>
       )}
 
-      <section className="mt-auto border-t border-line bg-white px-5 pb-7 pt-5 sm:px-8">
+      <section className="mt-auto border-t border-line bg-cloud px-5 pb-7 pt-5 sm:px-8">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-3">
           <Action
             onClick={() => {

@@ -69,17 +69,19 @@
   --color-line-strong: light-dark(#CFD6E0, #35404F);
   --color-focus: light-dark(#1D5CF0, #6AA6FF);
 
-  /* Large type is rationed: exercise name, prescription, progress, completion. */
-  --text-hero: 2.5rem;
-  --text-hero--line-height: 1.02;
-  --text-hero--letter-spacing: -0.03em;
-  --text-count: 5rem;
-  --text-count--line-height: 0.85;
-  --text-count--letter-spacing: -0.05em;
-  --text-page: 1.75rem;
-  --text-page--line-height: 1.15;
+  /* The largest sizes are reserved for movement-critical information:
+     prescriptions, completion figures, future timers. Never a heading, never
+     marketing. `count` is the display size; `hero` and `page` are headings. */
+  --text-hero: 1.875rem;
+  --text-hero--line-height: 1.1;
+  --text-hero--letter-spacing: -0.02em;
+  --text-count: 5.5rem;
+  --text-count--line-height: 0.92;
+  --text-count--letter-spacing: -0.045em;
+  --text-page: 1.875rem;
+  --text-page--line-height: 1.12;
   --text-page--letter-spacing: -0.02em;
-  --text-marker: 0.75rem;
+  --text-marker: 0.6875rem;
   --text-marker--line-height: 1.25;
   --text-marker--letter-spacing: 0.08em;
 
@@ -88,18 +90,21 @@
   --radius-lg: 1.25rem;
   --radius-xl: 1.75rem;
 
-  --shadow-lift: 0 1px 2px rgb(17 31 61 / 0.05), 0 4px 14px rgb(17 31 61 / 0.06);
-  --shadow-raise: 0 2px 6px rgb(17 31 61 / 0.07), 0 14px 32px rgb(17 31 61 / 0.1);
+  /* Daylight takes its depth from colour and hairlines. What survives is the
+     faintest separation for a surface that must not merge with the canvas. */
+  --shadow-lift: 0 1px 2px rgb(11 18 32 / 0.06);
+  --shadow-raise: 0 1px 3px rgb(11 18 32 / 0.09);
 
   --ease-spring: cubic-bezier(0.2, 0.8, 0.25, 1);
   --duration-quick: 130ms;
   --duration-settle: 260ms;
 }
 
+/* Web keeps its own responsive behaviour; the phone does not have breakpoints. */
 @media (min-width: 40rem) {
   @theme {
-    --text-hero: 3.5rem;
-    --text-count: 7.5rem;
+    --text-hero: 2.5rem;
+    --text-count: 7rem;
     --text-page: 2.25rem;
   }
 }
@@ -140,10 +145,12 @@
   }
 }
 
-/* Open sky: a soft wash of daylight behind hero areas. Two flat stops rather
-   than a decorative gradient — atmosphere, not ornament. */
+/* Daylight has no gradient. The canvas is white and content sits directly on
+   it, so this is now a no-op kept only so hero sections retain a stable hook
+   for future treatment. Removing the class from every call site would be churn
+   for no visual difference. */
 @utility open-sky {
-  background-image: linear-gradient(180deg, var(--color-pale) 0%, var(--color-cloud) 100%);
+  background-color: var(--color-cloud);
 }
 
 @media (prefers-reduced-motion: reduce) {

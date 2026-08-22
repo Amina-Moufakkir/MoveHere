@@ -42,6 +42,18 @@ export const doseParts = (p: Prescription): readonly [string, string] => {
   return [String(p.meters), 'm'];
 };
 
+/**
+ * The counting qualifier on its own.
+ *
+ * doseParts renders numerals only, so a screen showing "3 × 8" would silently
+ * drop what that 8 means. Rep counting is a property of the prescription and
+ * states what a prescribed number stands for (§15) — losing it halves or
+ * doubles the work — so a display that spends its largest type on the numbers
+ * has to show this beside them.
+ */
+export const countingNote = (p: Prescription): string | null =>
+  'counting' in p && p.counting === 'per-side' ? 'per side' : null;
+
 /** True when the two parts are a count and a unit rather than sets × amount. */
 export const isSingleEffort = (parts: readonly [string, string]): boolean =>
   parts[1] === 'min' || parts[1] === 'm';

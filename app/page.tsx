@@ -82,7 +82,7 @@ export default function LandingPage() {
             What’s built today
           </h2>
 
-          <div className="rounded-xl bg-white p-5 shadow-(--shadow-lift) sm:p-6">
+          <div>
             <p className="text-lg font-bold leading-snug text-navy text-pretty">
               The park. That’s the one environment MoveHere understands.
             </p>
@@ -98,7 +98,7 @@ export default function LandingPage() {
                   key={feature.id}
                   className="inline-flex items-center gap-1.5 rounded-full bg-pale-green px-3 py-1.5 text-sm font-bold text-green-ink"
                 >
-                  <FeatureGlyph id={feature.id} className="size-4" />
+                  <FeatureGlyph id={feature.id} className="size-5" />
                   {SHORT_LABEL[feature.id] ?? feature.label}
                 </li>
               ))}
@@ -119,7 +119,7 @@ export default function LandingPage() {
 
       <section className="px-5 pb-10 sm:px-8 sm:pb-14">
         <div className="mx-auto w-full max-w-2xl">
-          <h2 className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-muted">
+          <h2 className="text-sm font-bold text-navy-muted">
             How it works
           </h2>
 
@@ -127,7 +127,7 @@ export default function LandingPage() {
             {STEPS.map((step) => (
               <li
                 key={step.n}
-                className="flex flex-col gap-1.5 rounded-xl bg-white p-5 shadow-(--shadow-lift)"
+                className="flex flex-col gap-1.5 border-t border-line pt-4"
               >
                 <span
                   aria-hidden
@@ -161,7 +161,7 @@ export default function LandingPage() {
 
       <section className="border-t border-line px-5 py-10 sm:px-8 sm:py-14">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
-          <h2 className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-muted">
+          <h2 className="text-sm font-bold text-navy-muted">
             {BOUNDARY_HEADING}
           </h2>
 

@@ -3,12 +3,13 @@
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { Action, ActionLink } from '@/components/ui/action';
+import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
 import { exerciseCues, exerciseName } from '@/src/programming/session-builder.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
-import { doseParts, doseText, isSingleEffort } from '@/src/presentation/prescription-copy.ts';
+import { countingNote, doseParts, isSingleEffort } from '@/src/presentation/prescription-copy.ts';
 import { makeSeed } from '@/src/programming/seed.ts';
 
 export function WorkoutClient() {
@@ -113,7 +114,7 @@ export function WorkoutClient() {
 
           {/* A substitute is never dressed up as a park session (§11). */}
           {isSubstitute && (
-            <div className="mt-4 rounded-xl border-l-4 border-yellow bg-white px-4 py-3 shadow-(--shadow-lift)">
+            <div className="mt-4 rounded-xl border-l-4 border-yellow bg-pale px-4 py-3">
               <p className="text-sm font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-yellow-ink">
                 {SUBSTITUTE_LABEL}
               </p>
@@ -126,26 +127,36 @@ export function WorkoutClient() {
           {current !== undefined && (
             <div className="flex flex-1 flex-col justify-center gap-6 py-8">
               <div className="flex flex-col gap-3">
-                <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) shadow-(--shadow-lift)">
-                  <span
-                    aria-hidden
-                    className={`size-1.5 rounded-full ${featureLabel === null ? 'bg-blue' : 'bg-green'}`}
-                  />
-                  <span className={featureLabel === null ? 'text-navy-muted' : 'text-green-ink'}>
-                    {featureLabel === null ? 'No equipment' : `Using the ${featureLabel}`}
-                  </span>
-                </span>
-                <h1 className="text-hero font-extrabold text-balance">
+                {/* Reserved for the exercise visual system §15 defers. Until it
+                    exists the environment glyph stands in — but only when the item
+                    actually cites a confirmed feature. An environment-independent
+                    movement gets a neutral treatment rather than a fabricated
+                    object. */}
+                <div
+                  className={`flex h-44 flex-col items-center justify-center gap-3 rounded-2xl sm:h-56 ${
+                    featureLabel === null ? 'bg-blue-wash' : 'bg-pale-green'
+                  }`}
+                >
+                  {featureLabel === null ? (
+                    <span className="text-xl font-extrabold text-blue">No equipment</span>
+                  ) : (
+                    <>
+                      <FeatureGlyph id={basis?.kind === 'confirmed-feature' ? basis.featureId : ''} className="size-24 text-green-ink sm:size-28" />
+                      <span className="text-sm font-bold text-green-ink">Using the {featureLabel}</span>
+                    </>
+                  )}
+                </div>
+                <h1 className="text-page font-extrabold text-balance">
                   {exerciseName(current.item.exerciseId)}
                 </h1>
               </div>
 
               <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-                <p className="flex items-baseline gap-2.5 leading-none text-blue-ink">
+                <p className="flex items-baseline gap-2.5 leading-none text-blue-vivid">
                   <span className="text-count font-extrabold tabular-nums">{big}</span>
                   {/* A single continuous effort is "4 min", not "4 × min". */}
                   {!isSingleEffort([big, small]) && (
-                    <span className="text-3xl font-extrabold text-navy-faint sm:text-4xl">&times;</span>
+                    <span className="text-4xl font-extrabold text-navy-faint">&times;</span>
                   )}
                   {/* Anything longer than two characters steps down a size so a
                       long value cannot overflow the phone. */}
@@ -157,16 +168,17 @@ export function WorkoutClient() {
                     {small}
                   </span>
                 </p>
-                <p className="pb-2 text-marker font-extrabold uppercase leading-snug tracking-(--text-marker--letter-spacing) text-navy-muted">
-                  {doseText(current.item.prescription)}
-                  <br />
+                <p className="pb-2 text-sm font-bold text-navy-muted">
+                  {countingNote(current.item.prescription) !== null && (
+                    <span className="block text-navy">{countingNote(current.item.prescription)}</span>
+                  )}
                   {current.block}
                 </p>
               </div>
 
-              <ul className="flex flex-col gap-2 rounded-xl bg-white p-4 shadow-(--shadow-lift) sm:p-5">
+              <ul className="flex flex-col border-t border-line">
                 {exerciseCues(current.item.exerciseId).map((cue) => (
-                  <li key={cue} className="flex items-start gap-2.5 text-base leading-snug sm:text-lg">
+                  <li key={cue} className="flex items-start gap-2.5 border-b border-line py-3 text-base leading-snug sm:text-lg">
                     <span aria-hidden className="mt-2 size-1.5 shrink-0 rounded-full bg-blue" />
                     {cue}
                   </li>
@@ -177,7 +189,7 @@ export function WorkoutClient() {
         </div>
       </section>
 
-      <section className="border-t border-line bg-white px-5 pb-7 pt-5 sm:px-8">
+      <section className="border-t border-line bg-cloud px-5 pb-7 pt-5 sm:px-8">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-3.5">
           <Action onClick={advance}>{done + 1 >= total ? 'Finish session' : 'Done'}</Action>
 

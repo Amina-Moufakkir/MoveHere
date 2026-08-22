@@ -54,7 +54,7 @@ export function SetupClient() {
                   key={f.featureId}
                   className="inline-flex items-center gap-1.5 rounded-full bg-pale-green px-3 py-1.5 text-sm font-bold text-green-ink"
                 >
-                  <FeatureGlyph id={f.featureId} className="size-4" />
+                  <FeatureGlyph id={f.featureId} className="size-5" />
                   {findSupportedFeature(f.featureId)?.label ?? f.featureId}
                 </span>
               ))
@@ -66,14 +66,14 @@ export function SetupClient() {
       <section className="flex flex-col gap-7 px-5 pb-6 pt-7 sm:px-8">
         <div className="mx-auto w-full max-w-2xl">
           <fieldset>
-            <legend className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-muted">
+            <legend className="text-sm font-bold text-navy-muted">
               Minutes
             </legend>
             <div className="mt-3 grid grid-cols-4 gap-2.5">
               {SESSION_DURATIONS.map((minutes: SessionDuration) => (
                 <label
                   key={minutes}
-                  className="relative flex cursor-pointer flex-col items-center gap-0.5 rounded-xl bg-white py-5 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 active:scale-[0.98] has-checked:bg-blue has-checked:text-white has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
+                  className="relative flex cursor-pointer flex-col items-center gap-0.5 rounded-2xl border border-line bg-cloud py-4 transition-[transform,background-color,border-color] duration-(--duration-quick) ease-(--ease-spring) hover:border-line-strong active:scale-[0.98] has-checked:border-blue has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
                 >
                   <input
                     type="radio"
@@ -83,7 +83,7 @@ export function SetupClient() {
                     onChange={() => setRequest({ minutes })}
                     className="sr-only"
                   />
-                  <span className="text-3xl font-extrabold tabular-nums leading-none tracking-[-0.04em] sm:text-4xl">
+                  <span className="text-4xl font-extrabold tabular-nums leading-none tracking-[-0.03em] sm:text-5xl">
                     {minutes}
                   </span>
                   <span className="text-marker font-bold uppercase tracking-(--text-marker--letter-spacing) opacity-70">
@@ -97,14 +97,14 @@ export function SetupClient() {
 
         <div className="mx-auto w-full max-w-2xl">
           <fieldset>
-            <legend className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-muted">
+            <legend className="text-sm font-bold text-navy-muted">
               Focus
             </legend>
             <div className="mt-3 grid grid-cols-2 gap-2.5">
               {GOALS.map((goal) => (
                 <label
                   key={goal.value}
-                  className="relative flex cursor-pointer flex-col gap-1 rounded-xl bg-white p-4 shadow-(--shadow-lift) transition-[transform,background-color,box-shadow] duration-(--duration-quick) ease-(--ease-spring) hover:-translate-y-0.5 active:scale-[0.985] has-checked:bg-blue has-checked:text-white has-checked:shadow-(--shadow-raise) has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
+                  className="relative flex cursor-pointer flex-col gap-1 rounded-2xl border border-line bg-cloud p-5 transition-[transform,background-color,border-color] duration-(--duration-quick) ease-(--ease-spring) hover:border-line-strong active:scale-[0.985] has-checked:border-blue has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
                 >
                   <input
                     type="radio"
@@ -126,14 +126,14 @@ export function SetupClient() {
 
         <div className="mx-auto w-full max-w-2xl">
           <fieldset>
-            <legend className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-muted">
+            <legend className="text-sm font-bold text-navy-muted">
               Conditions outside
             </legend>
-            <div className="mt-3 flex flex-col gap-2.5">
+            <div className="mt-3 flex flex-col border-t border-line">
               {CONDITIONS.map((option) => (
                 <label
                   key={option.value}
-                  className="relative flex cursor-pointer items-center justify-between gap-3 rounded-xl bg-white px-4 py-3.5 shadow-(--shadow-lift) transition-colors duration-(--duration-quick) has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-focus"
+                  className="group relative flex min-h-14 cursor-pointer items-center justify-between gap-3 border-b border-line py-3 transition-colors duration-(--duration-quick) has-checked:text-blue has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:-outline-offset-2 has-focus-visible:outline-focus"
                 >
                   <input
                     type="radio"
@@ -147,7 +147,9 @@ export function SetupClient() {
                     <span className="block font-extrabold tracking-[-0.01em]">{option.label}</span>
                     <span className="mt-0.5 block text-sm leading-snug opacity-75">{option.hint}</span>
                   </span>
-                  <span className="grid size-5 shrink-0 place-items-center rounded-full border-2 border-line-strong has-[:checked]:border-white" />
+                  <span className="grid size-[22px] shrink-0 place-items-center rounded-full border-2 border-line-strong transition-colors duration-(--duration-quick) group-has-checked:border-blue">
+                      <span className="size-[11px] rounded-full bg-blue opacity-0 transition-opacity duration-(--duration-quick) group-has-checked:opacity-100" />
+                    </span>
                 </label>
               ))}
             </div>
@@ -155,7 +157,7 @@ export function SetupClient() {
         </div>
       </section>
 
-      <section className="mt-auto border-t border-line bg-white/60 px-5 py-6 sm:px-8">
+      <section className="mt-auto border-t border-line bg-cloud px-5 py-6 sm:px-8">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-3">
           <p aria-live="polite" className="text-center text-sm font-semibold text-navy-muted">
             {venueBlind

@@ -4,23 +4,25 @@ import type { ComponentProps, ReactNode } from 'react';
 /**
  * The primary action.
  *
- * A full-width pill on a phone, because that is where a thumb is. The fill is
- * the reference blue itself — white on it measures 5.29:1, so it carries a
- * label at any size without reaching for a darker step.
+ * One geometry across MoveHere: a large capsule, fully rounded, a vivid blue
+ * fill and a white high-weight label, with essentially no elevation. Depth in
+ * Daylight comes from colour and hairlines; a raised pill on a white canvas is
+ * the web-button look this identity removes.
  *
- * It presses. Small physical feedback matters more in a product used mid-effort
- * than any amount of polish elsewhere.
+ * 60px tall, matching the native client exactly — it is pressed outdoors,
+ * one-handed, sometimes mid-effort.
  */
 type Variant = 'primary' | 'soft' | 'quiet';
 
 const base =
-  'inline-flex min-h-14 items-center justify-center gap-2 rounded-full px-7 text-base font-extrabold ' +
-  'tracking-[-0.01em] transition-[transform,background-color,box-shadow] duration-(--duration-quick) ' +
-  'ease-(--ease-spring) active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45';
+  'inline-flex min-h-[60px] items-center justify-center gap-2 rounded-full px-8 text-base font-extrabold ' +
+  'tracking-[-0.01em] transition-[transform,background-color,border-color] duration-(--duration-quick) ' +
+  'ease-(--ease-spring) active:scale-[0.985] disabled:pointer-events-none disabled:opacity-100 ' +
+  'disabled:bg-pale disabled:text-navy-faint';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-blue text-white shadow-(--shadow-lift) hover:bg-blue-deep hover:shadow-(--shadow-raise)',
-  soft: 'bg-pale text-blue-ink hover:bg-line',
+  primary: 'bg-blue text-white hover:bg-blue-deep',
+  soft: 'border border-line-strong bg-cloud text-blue hover:border-blue',
   quiet: 'text-navy-muted hover:text-navy',
 };
 

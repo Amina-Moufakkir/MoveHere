@@ -52,6 +52,7 @@ import { findSupportedFeature } from '../../src/domain/feature-registry.ts';
 import { exerciseCues, exerciseName } from '../../src/programming/session-builder.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '../../src/presentation/session-copy.ts';
 import {
+  countingNote,
   doseParts,
   doseText,
   isSingleEffort,
@@ -314,6 +315,11 @@ export default function WorkoutScreen() {
                 </Text>
               </View>
 
+              {countingNote(current.item.prescription) !== null && (
+                <Text style={{ ...type.subtitle, color: t.color.navy, marginTop: space.xs }}>
+                  {countingNote(current.item.prescription)}
+                </Text>
+              )}
               <Text style={{ ...type.label, color: t.color.navyMuted, marginTop: space.sm }}>
                 {current.block}
               </Text>

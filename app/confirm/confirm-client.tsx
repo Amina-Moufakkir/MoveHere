@@ -105,21 +105,17 @@ export function ConfirmClient() {
             return (
               <fieldset
                 key={candidate.featureId}
-                className={`rounded-xl border p-4 transition-colors duration-(--duration-quick) sm:p-5 ${
-                  isTrusted ? 'border-green/40 bg-white' : 'border-line bg-white/50'
-                }`}
+                className="border-t border-line py-5"
               >
                 <legend className="sr-only">{feature?.label ?? candidate.featureId}</legend>
 
                 <div className="flex items-start gap-3.5">
                   <span
-                    className={`grid size-11 shrink-0 place-items-center rounded-lg transition-colors duration-(--duration-quick) ${
-                      isTrusted ? 'bg-pale-green' : 'bg-cloud-deep'
-                    }`}
+                    className="contents"
                   >
                     <FeatureGlyph
                       id={candidate.featureId}
-                      className={`size-6 ${isTrusted ? 'text-green-ink' : 'text-navy-faint'}`}
+                      className={`size-10 shrink-0 transition-colors duration-(--duration-quick) ${isTrusted ? 'text-green' : 'text-navy-faint'}`}
                     />
                   </span>
 
@@ -135,7 +131,7 @@ export function ConfirmClient() {
                     {consequence !== null && (
                       <p
                         className={`mt-2 text-sm leading-snug transition-colors duration-(--duration-quick) ${
-                          isTrusted ? 'text-green-ink' : 'text-navy-faint'
+                          isTrusted ? 'font-bold text-green-ink' : 'text-navy-faint'
                         }`}
                       >
                         {consequence}
@@ -144,11 +140,11 @@ export function ConfirmClient() {
                   </div>
                 </div>
 
-                <div className="mt-3.5 grid grid-cols-3 gap-2">
+                <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-full border border-line-strong">
                   {DECISIONS.map((option) => (
                     <label
                       key={option.value}
-                      className="relative flex cursor-pointer items-center justify-center rounded-full border border-line bg-cloud px-2 py-2.5 text-sm font-bold transition-colors duration-(--duration-quick) hover:border-line-strong has-checked:border-transparent has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-focus"
+                      className="relative flex min-h-11 cursor-pointer items-center justify-center px-2 text-sm font-bold text-navy-muted transition-colors duration-(--duration-quick) hover:text-navy has-checked:bg-blue has-checked:text-white has-focus-visible:outline has-focus-visible:outline-3 has-focus-visible:-outline-offset-3 has-focus-visible:outline-focus"
                     >
                       <input
                         type="radio"
@@ -174,7 +170,7 @@ export function ConfirmClient() {
         </div>
       </section>
 
-      <section className="mt-auto border-t border-line bg-white/60 px-5 py-6 sm:px-8">
+      <section className="mt-auto border-t border-line bg-cloud px-5 py-6 sm:px-8">
         <div className="mx-auto flex w-full max-w-2xl flex-col gap-3">
           <p aria-live="polite" className="text-center text-sm font-semibold text-navy-muted">
             {trusted.length === 0
