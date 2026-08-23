@@ -62,11 +62,19 @@ interface VisualEntry {
  * information, and their near-square ratio letterboxed while pushing the cues
  * below the fold.
  *
- * **Bench Step-up is the approved style specimen.** The composition rules the
- * rest of the set is produced against — ratio, cast, how the daylight and dark
- * masters relate, the phase convention, what may be in frame — are written once
- * as the production brief in `docs/exercise-media-manifest.md`. They are not
- * restated here, because a second copy of them is the copy nobody updates.
+ * **The shipped Bench Step-up asset is a superseded style draft.** It carries
+ * phase labels, a direction arrow, and branded footwear, none of which the
+ * production brief permits. Its mapping and its authority are untouched — it is
+ * still this exercise on this structure, still project content, still the thing
+ * the workout screen shows for that pairing — but it is not the reference the
+ * rest of the set is produced against, and the specimen slot stays vacant until
+ * a corrected asset is approved.
+ *
+ * The composition rules that reference must satisfy — ratio, cast, what may be
+ * in frame, the phase convention, how the dark master derives from the daylight
+ * one — are written once as the production brief in
+ * `docs/exercise-media-manifest.md`. They are not restated here, because a
+ * second copy of them is the copy nobody updates.
  *
  * What that brief does not relax is this index. Where a movement is identical
  * across contexts the approved pose may be reused between assets, but the

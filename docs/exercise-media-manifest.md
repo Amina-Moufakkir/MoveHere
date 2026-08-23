@@ -13,27 +13,44 @@ the matrix holds; commissioning anything not on this list will fail `check:exerc
 
 ## Production brief
 
-Derived from the approved Bench Step-up specimen (`step-up@park-bench`), which is the style reference for everything else on this list.
+These rules are the authority for every asset on this list. They were derived from the
+first Bench Step-up asset, but they are no longer subordinate to it. That asset carries
+phase labels, a direction arrow, and third-party footwear branding, all of which the rules
+below forbid, so it is a **superseded style draft** rather than the canonical specimen. It
+still ships, still maps to `step-up@park-bench`, and carries exactly the authority it
+always did; it is simply not the thing the rest of the set is drawn to match. The specimen
+slot stays vacant until a corrected Bench Step-up asset is approved.
 
 - **3:2 landscape.** The slot sizes itself from the asset, so one ratio across the set is
   what keeps the movement frame the same size on every screen of a session.
 - **One cast, one style.** The same model, clothing, and rendering style throughout. A
   session shows several of these in a row, and a change of cast reads as a change of
   subject.
-- **Daylight master first.** The dark counterpart is *derived from the approved daylight
-  composition*, never independently reimagined: same pose, same framing, same structure,
-  palette only. Two independently drawn versions of one movement are two depictions, and
-  a theme switch mid-session would silently swap which one the user is being shown.
+- **Logo-free and generic.** Plain athletic clothing and footwear carrying no brand mark,
+  logo, or wordmark anywhere in frame. A trademark reproduced across the whole set is a
+  liability the project has no reason to take on, and it is not something the app can
+  review as content.
+- **Nothing written inside the frame.** No phase labels, no numbered badges, no exercise
+  name, no cue text, no prescriptions, no muscles-worked claims, no provenance, no safety
+  claims, no watermark or signature. All of that already exists in the app, where it is
+  versioned, reviewed as content, rendered at a size a person can read, and reachable by a
+  screen reader. Text baked into an image is none of those things.
+- **No arrows or motion graphics.** No direction arrows, motion lines, trails, highlights,
+  or overlays of any kind.
 - **Dynamic movements: two phases, left to right.** Start on the left, finish on the
-  right, in that reading order.
+  right. The ordering of the two poses is the only thing that carries direction — by the
+  two rules above there is nothing else in frame to carry it, and nothing else is needed.
 - **Static holds: a single centred pose.** A held position has no second phase, and
   inventing one would depict movement the prescription does not ask for.
 - **The cited structure or surface, and nothing else.** Environment-independent visuals
-  contain no equipment and no invented environmental structure of any kind.
-- **Nothing written inside the frame.** No exercise title, cues, prescriptions,
-  muscles-worked claims, provenance, or safety claims. All of that already exists in the
-  app, where it is versioned, reviewed as content, and rendered at a size a person can
-  read.
+  contain no equipment and no invented environmental structure of any kind, background
+  included.
+- **Daylight master first, dark derived from it.** The dark counterpart reproduces the
+  approved daylight composition exactly — same cast, same pose, same phase framing, same
+  structure, same crop — and changes the palette, nothing else. It is a re-render of one
+  composition, never a second interpretation of the movement: two independent drawings are
+  two depictions, and a theme switch mid-session would swap which one the user is looking
+  at.
 
 **Every depiction encodes judgement.** Framing, joint angles, how far a phase travels,
 and where the movement is cut into phases are all choices, and a simple movement does not
