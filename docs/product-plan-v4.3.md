@@ -657,6 +657,31 @@ outstanding   not yet written
 
 Instructions carry their own authority, separately from the exercise they describe. They are new content on a different authoring schedule, and inheriting an exercise's tier would let an instruction acquire authority it never earned. Until independently reviewed they are project content (§8) and are labeled as such.
 
+**Instructions resolve against the context the session actually cited.** Some movements begin from a different position depending on the structure they use. A split squat with the rear foot on the ground and one with it raised on a bench start differently; a knee raise hanging from a bar and one supported on parallel bars, more so. One set of steps cannot construct both without describing neither.
+
+Duplicating a whole instruction per context is the wrong repair. The action and the return are identical in both examples, and two copies of a paragraph are two paragraphs that drift. So an authored instruction declares the context it was written for, and may carry phase overrides for the others:
+
+```text
+AUTHORED INSTRUCTION
+├── default context  which basis the steps below construct
+├── steps            setup / action / return, in phase order
+└── overrides        per other context, replacing one phase wholesale
+```
+
+**The default context is declared, never inferred.** Where the matrix holds an environment-independent declaration for the movement, that is the default context: the form performable anywhere is the one a baseline description should describe. Where it does not, the default names the single supported feature its steps were written for. Prose whose intended basis is unknown is prose nobody can review — a reader cannot otherwise tell whether "place your whole foot on the step" was written for a bench or for a stair.
+
+**The invariant is about resolution, not about the default.** The default must completely construct *its own declared context*. Every supported generation context must **resolve** to a complete instruction, either from the default alone or through valid phase overrides. The unmodified default is not required to be valid in every context, and requiring that would push the prose back toward describing nothing in particular.
+
+**Overrides replace a phase, never a step and never a whole instruction.** A phase is the smallest unit that is both meaningful and unambiguous to replace, which is also why steps must appear in phase order: a phase is then a contiguous run, and replacement preserves order without re-sorting. Because a phase may only be replaced by a non-empty set of steps of the same kind, a resolved instruction cannot lose the setup or the action the authored one guaranteed.
+
+**An override may only describe a context the matrix already holds** — the rule exercise visuals already obey. Instruction content must never become a second way to assert that a movement can be performed on a structure. A cited context that differs from the default and carries no override is inheriting prose authored for somewhere else; that is a legitimate authoring decision and is reported, so it stays a decision rather than an oversight.
+
+**Overrides carry their own authority, and a resolved instruction reports the weakest that was applied.** An override added after a review would otherwise ride on the reviewed tier without having been reviewed — the same laundering that giving instructions their own authority exists to prevent, one level further down.
+
+**Only `authored` resolves.** `outstanding` and `not-required` are facts about the movement, not about where it is performed. A movement authored for a bench and outstanding for stairs would be a fourth state wearing a disguise, and the three states stay three.
+
+**Context decides where a person puts their foot; the prescription decides how many and which side.** Resolution changes which steps are read and nothing else. Side-switching still derives from the prescription at render time, from the same place, for the same reason.
+
 ### Unresolved domain questions
 
 The following are recorded so they are not quietly resolved by an implementation. **No further design should be built around them until reviewed fitness-domain input exists.**
@@ -667,6 +692,8 @@ The following are recorded so they are not quietly resolved by an implementation
 - **Minimum viable program.** What the smallest program that still counts as a given goal at a given duration consists of.
 - **Specific-exercise requirements.** Whether a policy may ever mandate a particular movement rather than a movement pattern. The current model selects exercises to fill pattern-based slots; mandating a specific exercise would require a different structure. Prescription variants sit next to this question without answering it: a variant describes a dosing shape and may never name a movement.
 - **Venue-richness policy.** Whether a better-equipped venue should be programmed differently, or merely substituted into. The current model is venue-agnostic policy plus mechanism substitution.
+- **Thoracic rotation starting position.** The movement is commonly taught side-lying, quadruped, and seated, and the catalog's cues do not say which. Choosing one is a programming decision rather than a description of an existing claim, so its instruction stays unwritten until reviewed input exists.
+- **Shuttle run distance.** How far out the movement runs before turning is stated nowhere in the product, and the distance materially changes what is being prescribed. It is not to be invented to complete an instruction.
 
 ### Differentiation risk
 
@@ -984,6 +1011,7 @@ Recorded so it is not lost between passes. Not implemented:
 Recorded so it is not lost between passes:
 
 - **Laterality and rep counting.** **Closed.** **Laterality is an intrinsic property of an exercise** — `bilateral | unilateral` — because whether a movement works one side at a time is a fact about the movement, not a policy choice. **Rep counting is a property of a prescription** — `total | per-side` — because it states what a prescribed number means. What was missing for both passes was the proof that the two agree: counting was authored per slot, slots select by movement pattern, and nothing checked the result. An audit found 1,335 of 6,540 generated items carrying a count their movement did not accept; the evidence is preserved in `docs/counting-compatibility-audit.md`. Counting compatibility (§8) closes it — `countingModes` authored per movement, proved when policy loads — and the figure is now zero.
+- **Movement instruction content.** The contract exists — typed steps, the three-valued state, declared default context and phase overrides, all validated when the matrix loads. No instruction is authored: coverage is 0 authored, 0 not-required, 22 outstanding, and `check:instructions` reports it on every build. Two movements have a decided outcome waiting to be written (`brisk-walk` and `easy-run` become `not-required`: ordinary locomotor action has no construction step, and pace stays cue content). Two are blocked on the domain questions in §8 above, `thoracic-rotation` and `shuttle-run`. Outstanding.
 - **Slot variety debt from counting compatibility.** Enforcing counting compatibility narrowed twenty-nine slots and left nine able to produce only one movement each, because a slot carries one prescription and its eligible movements are dosed differently. Every movement remains reachable and no session states work it is not asking for, so this is a valid state rather than a defect — but it is not the intended programming outcome, and it is deliberately visible: `counting-narrows-slot-to-one` names each affected slot when policy loads. Slot prescription variants (§8) is the resolution. Outstanding.
 - **Test-fixture authority.** If generation accepts only reviewed policy, test fixtures must be shaped as reviewed, which would mean fabricating a reviewer reference to make tests compile — reintroducing fabricated authority one layer above the venue brands. This is an open design question for the goal-policy contract pass, deliberately not yet solved.
 
