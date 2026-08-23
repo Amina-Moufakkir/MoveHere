@@ -112,6 +112,22 @@ export interface Exercise {
   readonly laterality: Laterality;
   /** Ways this movement can be dosed. Policy may not prescribe reps for a hold. */
   readonly prescriptionKinds: NonEmpty<PrescriptionKind>;
+  /**
+   * How a prescribed number may legitimately be counted for this movement.
+   *
+   * A fact about the movement, in the same way `prescriptionKinds` is. A split
+   * squat accepts only `per-side`; a plank accepts only `total`; a step-up
+   * accepts either, because alternating legs and completing one side then the
+   * other are both real ways to perform it.
+   *
+   * **Not derivable from `laterality`.** Laterality carries two meanings that
+   * come apart here: trained one side at a time (split squat) and limbs
+   * alternate as part of the gait (walking). Both are `unilateral`, and only
+   * the first accepts `per-side` — "walk two minutes per side" is not a thing
+   * a person can do. So this is authored per movement and proved against
+   * policy (§8), never inferred.
+   */
+  readonly countingModes: NonEmpty<RepCounting>;
   /** Plain execution cues shown to the user. Not safety assurance (§9). */
   readonly cues: NonEmpty<string>;
 }

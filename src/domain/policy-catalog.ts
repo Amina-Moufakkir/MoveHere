@@ -58,6 +58,19 @@ const perSide = (sets: number, count: number): Prescription => ({
   counting: 'per-side',
 });
 
+/**
+ * A held effort.
+ *
+ * `counting` is not decoration. A per-side hold is twice the work of a total
+ * hold at the same duration, so a slot that changes it must change
+ * `estimatedSeconds` with it — counting, dose and time are one decision (§8).
+ *
+ * Two core holds are per-side — `s30-core` and `c45-core-2` — and both are
+ * there so a side plank has somewhere to be prescribed unambiguously. Before
+ * counting compatibility existed, every core hold was nominally `total` and
+ * side planks filled them anyway, which is how "3 × 30s" came to mean either
+ * 30 seconds or 60 depending on which movement landed in the slot.
+ */
 const hold = (sets: number, seconds: number, counting: 'total' | 'per-side' = 'total'): Prescription => ({
   kind: 'time',
   sets,
@@ -140,7 +153,7 @@ const strength30 = program(
     block('Accessory', [
       slot({ id: 's30-pull', patterns: ['pull'], prescription: reps(3, 5), venueAware: 'optional', substitute: 'optional', estimatedSeconds: 150 }),
       slot({ id: 's30-squat-2', patterns: ['squat'], prescription: perSide(3, 8), venueAware: 'required', substitute: 'required', estimatedSeconds: 150 }),
-      slot({ id: 's30-core', patterns: ['core'], prescription: hold(3, 30), venueAware: 'required', substitute: 'required', estimatedSeconds: 120 }),
+      slot({ id: 's30-core', patterns: ['core'], prescription: hold(3, 30, 'per-side'), venueAware: 'required', substitute: 'required', estimatedSeconds: 210 }),
     ]),
     block('Finish', [
       slot({ id: 's30-core-2', patterns: ['core'], prescription: reps(2, 10), venueAware: 'optional', substitute: 'required', estimatedSeconds: 120 }),
@@ -253,7 +266,7 @@ const conditioning45 = program(
       slot({ id: 'c45-push-2', patterns: ['push'], prescription: reps(3, 10), venueAware: 'optional', substitute: 'required', estimatedSeconds: 180 }),
     ]),
     block('Finish', [
-      slot({ id: 'c45-core-2', patterns: ['core'], prescription: hold(3, 30), venueAware: 'required', substitute: 'required', estimatedSeconds: 150 }),
+      slot({ id: 'c45-core-2', patterns: ['core'], prescription: hold(3, 30, 'per-side'), venueAware: 'required', substitute: 'required', estimatedSeconds: 240 }),
       slot({ id: 'c45-mobility', patterns: ['mobility'], prescription: hold(1, 45, 'per-side'), venueAware: 'optional', substitute: 'required', estimatedSeconds: 120 }),
     ]),
   ],

@@ -18,6 +18,7 @@ import type { GenerationContextKind, SlotTemplate } from './policy.ts';
 import type { Exercise, ExerciseId, MovementPattern } from './exercise.ts';
 import type { SessionGoal, SessionDuration } from './session.ts';
 import { SESSION_DURATIONS } from './session.ts';
+import { canFill, canFillIgnoringCounting } from './slot-eligibility.ts';
 
 type NonEmpty<T> = readonly [T, ...T[]];
 
@@ -66,6 +67,24 @@ export type FeasibilityAdvisory =
   | { readonly kind: 'program-underfills-duration'; readonly goal: SessionGoal; readonly duration: SessionDuration; readonly estimatedSeconds: number; readonly fillRatio: number }
   | { readonly kind: 'optional-slot-never-satisfiable'; readonly at: FeasibilityLocation }
   | { readonly kind: 'exercise-unreachable-by-policy'; readonly exerciseId: ExerciseId }
+  | {
+      /**
+       * Counting reduced this slot to a single possible movement.
+       *
+       * Not a defect: a slot prescribing `per-side` should not be fillable by
+       * a movement with no sides. It is reported because narrowing is how a
+       * structurally correct slot becomes a slot that always produces the same
+       * exercise, and that is a variety loss worth seeing rather than
+       * discovering in a session.
+       *
+       * Only raised where counting is the cause — a slot that was already
+       * single-option on pattern and dose alone is not this.
+       */
+      readonly kind: 'counting-narrows-slot-to-one';
+      readonly at: FeasibilityLocation;
+      readonly counting: string;
+      readonly excluded: readonly ExerciseId[];
+    }
   | { readonly kind: 'venue-features-do-not-differentiate'; readonly goal: SessionGoal; readonly duration: SessionDuration };
 
 declare const feasibleWitness: unique symbol;
@@ -104,12 +123,6 @@ export type SelectPolicy = (
 export const selectPolicy: SelectPolicy = (programming, goal) =>
   programming.policies.byGoal[goal];
 
-// Local helper kept explicit rather than clever: a slot is satisfiable by an
-// exercise when the pattern matches AND the movement can be dosed the way the
-// policy prescribes. Prescribing reps for a hold is not a near miss.
-const canFill = (exercise: Exercise, slot: SlotTemplate): boolean =>
-  slot.eligiblePatterns.includes(exercise.pattern) &&
-  exercise.prescriptionKinds.includes(slot.prescription.kind);
 
 /**
  * Estimated seconds for the slots that survive `keep`.
@@ -196,6 +209,29 @@ export const checkFeasibility: CheckFeasibility = (matrix, policies) => {
       for (const slot of slots) {
         for (const exercise of allExercises) {
           if (canFill(exercise, slot)) usedExerciseIds.add(exercise.id);
+        }
+
+        // Attribute a single-option slot to counting only when counting is
+        // what caused it, so a slot with one movement to begin with is not
+        // reported as though the constraint had narrowed it.
+        const eligible = allExercises.filter((e) => canFill(e, slot));
+        const eligibleIgnoringCounting = allExercises.filter((e) =>
+          canFillIgnoringCounting(e, slot),
+        );
+        if (eligible.length < 2 && eligibleIgnoringCounting.length >= 2) {
+          const keep = new Set(eligible.map((e) => e.id as string));
+          advisories.push({
+            kind: 'counting-narrows-slot-to-one',
+            at: { goal, duration, context: 'venue-aware', slotId: slot.id },
+            counting: 'counting' in slot.prescription ? slot.prescription.counting : 'n/a',
+            excluded: [
+              ...new Set(
+                eligibleIgnoringCounting
+                  .filter((e) => !keep.has(e.id as string))
+                  .map((e) => e.id),
+              ),
+            ].sort(),
+          });
         }
 
         for (const context of GENERATION_CONTEXTS) {

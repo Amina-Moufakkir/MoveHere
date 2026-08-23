@@ -32,6 +32,7 @@ import type { Exercise, PresentableAuthority } from './exercise.ts';
 import type { SupportedFeatureId } from './feature.ts';
 import type { SessionDuration } from './session.ts';
 import type { SlotTemplate, GenerationContextKind, DurationProgram } from './policy.ts';
+import { canFill } from './slot-eligibility.ts';
 import { createRng } from './prng.ts';
 import type { Rng } from './prng.ts';
 
@@ -64,9 +65,6 @@ const authorityOf = (
 /** Codepoint comparison. Never localeCompare: locale would leak into output. */
 const cmp = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 
-const canFill = (exercise: Exercise, slot: SlotTemplate): boolean =>
-  slot.eligiblePatterns.includes(exercise.pattern) &&
-  exercise.prescriptionKinds.includes(slot.prescription.kind);
 
 /**
  * Every movement available in this context, canonically ordered.

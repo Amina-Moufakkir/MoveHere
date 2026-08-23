@@ -120,6 +120,26 @@ export const loadMatrix: LoadMatrix = (authored: AuthoredMatrix) => {
     if (exercise.cues.length === 0) {
       failures.push({ kind: 'empty-collection', at: `exercise ${exercise.id} cues` });
     }
+    // Authored content is untrusted here, so a field the type promises may
+    // still be missing at runtime. Report that rather than throwing: a loader
+    // that crashes on malformed content cannot report on malformed content.
+    if (!Array.isArray(exercise.prescriptionKinds) || exercise.prescriptionKinds.length === 0) {
+      failures.push({ kind: 'empty-collection', at: `exercise ${exercise.id} prescriptionKinds` });
+    }
+    // A movement with no acceptable counting can fill no slot that prescribes
+    // one, which is a content defect rather than a very narrow movement.
+    if (!Array.isArray(exercise.countingModes) || exercise.countingModes.length === 0) {
+      failures.push({ kind: 'empty-collection', at: `exercise ${exercise.id} countingModes` });
+    } else {
+      for (const mode of exercise.countingModes) {
+        if (mode !== 'total' && mode !== 'per-side') {
+          failures.push({
+            kind: 'malformed',
+            detail: `exercise ${exercise.id} countingModes contains ${String(mode)}`,
+          });
+        }
+      }
+    }
   }
 
   const entryIds = new Set<string>();

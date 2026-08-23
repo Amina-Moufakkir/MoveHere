@@ -168,6 +168,7 @@ test('an exercise reachable by no route is rejected', () => {
         pattern: 'core',
         laterality: 'bilateral',
         prescriptionKinds: ['reps'],
+        countingModes: ['total'],
         cues: ['nothing'],
       },
     ],

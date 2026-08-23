@@ -36,6 +36,23 @@ const PROJECT: ContentAuthority = {
 
 const ex = (id: string): ExerciseId => id as ExerciseId;
 
+/**
+ * `countingModes` — how a prescribed number may be read for each movement.
+ *
+ * Authored per movement rather than inferred, because the obvious inference is
+ * wrong. `laterality` means two different things in this catalog: trained one
+ * side at a time (split squat, side plank) and limbs alternate as part of the
+ * gait (walk, run, march, shuttle). Both are `unilateral`; only the first
+ * accepts `per-side`. Deriving counting from laterality prescribes "walk two
+ * minutes per side".
+ *
+ * Three movements accept both, and the reason is the same each time: doing all
+ * the reps on one side and then the other, or alternating sides throughout,
+ * are both real ways to perform them. `step-up` and `reverse-lunge` alternate
+ * or not; `dead-bug` alternates diagonals within a set or works one at a time.
+ * `thoracic-rotation` likewise. Nothing else in the catalog is genuinely
+ * ambiguous, and a mode is not added to widen a slot.
+ */
 export const EXERCISES: readonly Exercise[] = [
   // --- squat ---------------------------------------------------------------
   {
@@ -44,6 +61,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'squat',
     laterality: 'bilateral',
     prescriptionKinds: ['reps', 'time'],
+    countingModes: ['total'],
     cues: ['Feet about shoulder width', 'Sit back and down', 'Stand tall at the top'],
   },
   {
@@ -52,6 +70,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'squat',
     laterality: 'unilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total', 'per-side'],
     cues: ['Step back, not down', 'Keep the front shin upright', 'Push through the front foot'],
   },
   {
@@ -60,6 +79,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'squat',
     laterality: 'unilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['per-side'],
     cues: ['Stagger your stance', 'Lower straight down', 'Keep your weight on the front leg'],
   },
   {
@@ -68,6 +88,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'squat',
     laterality: 'unilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total', 'per-side'],
     cues: ['Place the whole foot on the step', 'Drive through the top leg', 'Step down under control'],
   },
 
@@ -78,6 +99,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'hinge',
     laterality: 'bilateral',
     prescriptionKinds: ['reps', 'time'],
+    countingModes: ['total'],
     cues: ['Heels close to your hips', 'Push the floor away', 'Ribs down at the top'],
   },
   {
@@ -86,6 +108,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'hinge',
     laterality: 'bilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total'],
     cues: ['Soft knees', 'Push your hips back', 'Flat back throughout'],
   },
   {
@@ -94,6 +117,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'hinge',
     laterality: 'unilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['per-side'],
     cues: ['Hinge at the hip', 'Back leg and torso move together', 'Move slowly for balance'],
   },
 
@@ -104,6 +128,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'push',
     laterality: 'bilateral',
     prescriptionKinds: ['reps', 'time'],
+    countingModes: ['total'],
     cues: ['Hands under your shoulders', 'Body in one line', 'Elbows back, not flared'],
   },
   {
@@ -112,6 +137,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'push',
     laterality: 'bilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total'],
     cues: ['Hands on the surface, feet back', 'Body in one line', 'Lower your chest to your hands'],
   },
   {
@@ -120,6 +146,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'push',
     laterality: 'bilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total'],
     cues: ['Hips high', 'Lower the top of your head toward the ground', 'Press back up'],
   },
 
@@ -130,6 +157,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'pull',
     laterality: 'bilateral',
     prescriptionKinds: ['time'],
+    countingModes: ['total'],
     cues: ['Full grip on the bar', 'Shoulders active, not shrugged', 'Breathe steadily'],
   },
   {
@@ -138,6 +166,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'pull',
     laterality: 'bilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total'],
     cues: ['Start from a full hang', 'Pull your chest toward the bar', 'Lower under control'],
   },
 
@@ -148,6 +177,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'core',
     laterality: 'bilateral',
     prescriptionKinds: ['time'],
+    countingModes: ['total'],
     cues: ['Forearms under your shoulders', 'Body in one line', 'Breathe, do not hold your breath'],
   },
   {
@@ -156,6 +186,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'core',
     laterality: 'unilateral',
     prescriptionKinds: ['time'],
+    countingModes: ['per-side'],
     cues: ['Elbow under your shoulder', 'Hips stacked and lifted', 'Keep your neck long'],
   },
   {
@@ -164,6 +195,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'core',
     laterality: 'unilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total', 'per-side'],
     cues: ['Lower back stays down', 'Extend opposite arm and leg', 'Move slowly'],
   },
   {
@@ -172,6 +204,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'core',
     laterality: 'bilateral',
     prescriptionKinds: ['reps'],
+    countingModes: ['total'],
     cues: ['Hang with active shoulders', 'Raise your knees toward your chest', 'Lower without swinging'],
   },
 
@@ -182,6 +215,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'locomotion',
     laterality: 'unilateral',
     prescriptionKinds: ['time'],
+    countingModes: ['total'],
     cues: ['Lift your knees to hip height', 'Stay tall', 'Land softly'],
   },
   {
@@ -190,6 +224,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'locomotion',
     laterality: 'unilateral',
     prescriptionKinds: ['time', 'distance'],
+    countingModes: ['total'],
     cues: ['Steady, purposeful pace', 'Relaxed shoulders', 'Breathe through your nose if you can'],
   },
   {
@@ -198,6 +233,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'locomotion',
     laterality: 'unilateral',
     prescriptionKinds: ['time', 'distance'],
+    countingModes: ['total'],
     cues: ['Conversational pace', 'Short, quick steps', 'Stay relaxed'],
   },
   {
@@ -206,6 +242,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'locomotion',
     laterality: 'unilateral',
     prescriptionKinds: ['time'],
+    countingModes: ['total'],
     cues: ['Run out, touch down, run back', 'Decelerate before you turn', 'Keep your turns tidy'],
   },
 
@@ -216,6 +253,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'mobility',
     laterality: 'unilateral',
     prescriptionKinds: ['time'],
+    countingModes: ['per-side'],
     cues: ['Half-kneeling position', 'Tuck your hips under', 'Breathe and hold'],
   },
   {
@@ -224,6 +262,7 @@ export const EXERCISES: readonly Exercise[] = [
     pattern: 'mobility',
     laterality: 'unilateral',
     prescriptionKinds: ['reps', 'time'],
+    countingModes: ['total', 'per-side'],
     cues: ['Open one arm toward the sky', 'Follow your hand with your eyes', 'Move slowly'],
   },
 ];
