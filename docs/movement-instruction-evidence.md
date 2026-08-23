@@ -49,7 +49,8 @@ question, which is the failure mode this register exists to prevent.
 | [ACE 319 Reverse Lunge](https://www.acefitness.org/resources/everyone/exercise-library/319/reverse-lunge/) | **verified 2026-08-23**, with loaded-source caveat | Standing with feet about hip-width apart; one leg steps backward; after the rear foot contacts the ground the rear knee lowers toward the floor; the chest remains raised during the descent; the return presses the front foot into the ground and the rear leg moves forward to standing. **The source is a barbell-loaded reverse lunge** — see the loaded-source note |
 | [ACE 28 Step-Up](https://www.acefitness.org/resources/everyone/exercise-library/28/step-up/) | **verified 2026-08-23**, with loaded-source caveat | Starts standing, feet approximately hip-width apart; one foot is placed firmly on the platform; the torso remains upright through the upward phase; the body rises onto the platform and the trailing foot comes alongside the lead foot; on the descent the trailing foot steps backward to the floor first, then the lead foot leaves the platform. **ACE instructs pushing off with the trailing leg during the ascent.** The source uses dumbbells; **it does not specify a platform height** |
 | [ACE 49 Glute Bridge](https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/) | **verified 2026-08-23** | Starts lying on the back, knees bent, feet flat on the floor approximately hip-width apart, toes facing forward and away from the body; the upward phase raises the hips from the floor with the heels pressing into it; the lowering returns toward the starting position |
-| [ACE 329](https://www.acefitness.org/resources/everyone/exercise-library/329/single-leg-romanian-deadlift/) / [350](https://www.acefitness.org/resources/everyone/exercise-library/350/single-leg-romanian-dead-lift/) Single-leg RDL | pending | **Which page matches MoveHere's unloaded movement** |
+| [ACE 329 Single-leg Romanian Deadlift](https://www.acefitness.org/resources/everyone/exercise-library/329/single-leg-romanian-deadlift/) | **verified 2026-08-23**, designated basis | Starts standing, feet approximately hip-width apart, knees slightly bent; the hips move backward; one foot leaves the ground and the free leg extends behind the body while the torso leans forward; the return brings the body upright and the free leg back toward the floor. **The equipment-free version**, and ACE's name for it differs from MoveHere's — see the name-mismatch note |
+| [ACE 350 Single Leg Romanian Dead Lift](https://www.acefitness.org/resources/everyone/exercise-library/350/single-leg-romanian-dead-lift/) | **not used** | The cable-machine version. **Not rejected and not classified as wrong** — simply less applicable, and unnecessary once ACE supplies a directly equipment-free page. Recorded so a later reader does not re-open the question |
 | [ACE 32 Front Plank](https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/) | pending | Elbow position, head-to-heel line. Ignore mat and hold duration |
 | [ACE 147 Supine Dead Bug](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/147/supine-dead-bug/) | pending | Start position and reciprocal limb pattern — bears on cue finding 3 |
 | [ACE 191 Pull-ups](https://www.acefitness.org/resources/everyone/exercise-library/191/pull-ups/) | pending | Grip, hang, pull, lower — and whether it supports the dead-hang setup independently |
@@ -80,7 +81,7 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `step-up` | `ACE-LIB` 28 — **human-verified**, loaded source | S | Standing, feet approximately hip-width apart; one foot placed **firmly** on the platform; torso upright through the upward phase; the body rises onto the platform and the trailing foot comes alongside the lead foot; on the descent the trailing foot steps back to the floor first, then the lead foot leaves the platform | **Corrects earlier summariser text.** Whole-foot placement is *not* established, only firm placement. ACE instructs pushing off with the **trailing** leg — see cue finding 9. **No platform height is stated in the source**, so none was excluded and none exists to carry |
 | `glute-bridge` | `ACE-LIB` 49 — **human-verified** | S | Lying on the back, knees bent, feet flat on the floor approximately hip-width apart, toes facing forward and away; the upward phase raises the hips from the floor while the heels press into it; the lowering returns toward the start | **No heel-to-hip distance is stated.** Endpoint and hip-height limits excluded, as are the abdominal and low-back materials that a cue might otherwise be read against — see cue finding 10 |
 | `hip-hinge` | `ACE-LIB` 33 — **human-verified** | S | Feet shoulder-width, toes forward or slightly outward; weight shifts toward the heels and the hips push backward; the torso hinges forward at the hips; only slight knee bending; return moves the hips forward to upright standing | **Torso endpoint discarded.** The source teaches the movement with a light bar held at three points and **does not establish that the bar is optional** — see the provenance note below. MoveHere's is unloaded and must not import it |
-| `single-leg-deadlift` | `ACE-LIB` 329 / 350 | S | Stand on one leg, supporting knee slightly bent; hips push back as the free leg straightens behind; return by pressing the standing foot down and lowering the free leg | Descent depth described as comfort-limited, not a target |
+| `single-leg-deadlift` | `ACE-LIB` 329 — **human-verified**, equipment-free | S | Standing, feet approximately hip-width apart, knees slightly bent; the hips move backward; one foot leaves the ground and the free leg extends behind while the torso leans forward; the return brings the body upright and the free leg back toward the floor | **Name mismatch** — ACE calls it a Romanian deadlift. Range endpoint excluded. `ACE-LIB` 350, the cable version, is not the basis and is not rejected |
 | `push-up` | `ACE-LIB` 41 — **human-verified** | S | Hands approximately shoulder-width; shoulders directly over hands; body extended with no hip or knee bend; lower with a rigid torso; press back to full elbow extension | Elbow path is not settled by this source — see cue finding 1 |
 | `incline-push-up` | `ACE-LIB` 41 + `NHS-STR` | C | Hands on the raised surface, feet back, body in one line; lower the chest toward the hands; press back | **Composite, not directly sourced.** No single source describes this movement |
 | `pike-push-up` | — | **X** | none | **No institutional source located.** Every search returned suspension-trainer or stability-ball pike variants, which are different exercises using equipment the matrix does not cite |
@@ -115,19 +116,19 @@ says *not here*, not *not true*.
 | Equipment dimensions (bench/box height) | `ACE-LIB` 366 Bulgarian split squat — **verified present in the source and deliberately not carried across** |
 | Minimum joint angles at the bottom of a lunge | `NSCA-LUNGE` |
 | Joint-alignment and segment-relationship prescriptions | `NSCA-LUNGE` (knee over ankle); `ACE-LIB` 135 (knee over second toe, tibial translation, tibia/torso parallel), 28 (knee over second toe, tibia angle, forward lean) |
-| Equipment, held implements and balance support | `NSCA-LUNGE`; `ACE-LIB` 366 (dumbbells, dumbbell position, and the elbow position associated with holding one — unrelated to the push-up elbow finding), 319 (barbell), 28 (dumbbells, hand position) |
+| Equipment, held implements and balance support | `NSCA-LUNGE`; `ACE-LIB` 366 (dumbbells, dumbbell position, and the elbow position associated with holding one — unrelated to the push-up elbow finding), 319 (barbell), 28 (dumbbells, hand position), 329 (hand position for balance) |
 | Loaded set-up procedure (racking, unracking, bar placement, grip width, rack clearance) | `ACE-LIB` 319 reverse lunge |
-| Source-specific coaching cues | `ACE-LIB` 319 (pulling the front knee backwards; pushing back into the hip) |
+| Source-specific coaching cues | `ACE-LIB` 319 (pulling the front knee backwards; pushing back into the hip), 329 (hip tilting) |
 | Muscles worked, agonists, activation percentages | `ACE-LIB` throughout including 49 glute bridge, `MCGILL-AC` |
 | Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout, 28 and 49 (single-leg progressions) |
 | Functional and daily-life transfer claims | `ACE-LIB` 28 step-up |
 | Prerequisite, teaching-sequence and related-exercise recommendations | `ACE-LIB` 33 hip hinge, 135 squat |
 | Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge, 135 squat, 49 glute bridge |
-| Counting, side-switching, and source-specific left/right wording | `ACE-LIB` 28 step-up (incl. opposite-side language), 142 hip-flexor stretch, 101 side plank, 366 split squat, 319 reverse lunge; `NSCA-LUNGE` |
-| Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat (thigh-parallel), 33 hip hinge, 366 split squat (depth and floor-contact endpoint), 49 glute bridge (hip-height limit) |
+| Counting, side-switching, and source-specific left/right wording | `ACE-LIB` 28 step-up (incl. opposite-side language), 142 hip-flexor stretch, 101 side plank, 366 split squat, 319 reverse lunge, 329 single-leg deadlift (completing one side before switching); `NSCA-LUNGE` |
+| Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat (thigh-parallel), 33 hip hinge, 366 split squat (depth and floor-contact endpoint), 49 glute bridge (hip-height limit), 329 single-leg deadlift (comfortable-distance endpoint) |
 | Muscle-emphasis claims | `ACE-LIB` 41 push-up |
 | Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank; `NSCA-LUNGE` |
-| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge, 135 squat (abdominal), 49 glute bridge (abdominal, glute); `NSCA-LUNGE` (abdominal, scapular) |
+| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge, 135 squat (abdominal), 49 glute bridge (abdominal, glute), 329 single-leg deadlift (glute); `NSCA-LUNGE` (abdominal, scapular) |
 | Postural set-up detail (scapular, chest, head, hand and palm position) | `ACE-LIB` 135 squat, 28 step-up (scapular), 49 glute bridge (flattening the lower back into the floor) |
 | Weight-distribution instructions | `ACE-LIB` 135 squat (deliberate shift into the heels) |
 | Fault checks and corrections | `ACE-LIB` 135 squat (ankle collapse), 28 step-up (foot and ankle monitoring), 49 glute bridge (excessive arching) |
@@ -350,6 +351,31 @@ artifact has explicitly declined to collect. The cue remains unestablished.
 
 All three are unchanged and stay project content.
 
+**11 · `single-leg-deadlift` — a tempo prescription inside a cue. Human-verified 2026-08-23.**
+
+*"Hinge at the hip"* — **directly supported.** `ACE-LIB` 329 establishes the
+hips moving backward as the initiating action.
+
+*"Back leg and torso move together"* — **broadly consistent, coordination not
+established.** The source describes the free leg extending behind while the
+torso leans forward. That the two move *together*, as a synchronised pair, is a
+stronger coordination claim and is MoveHere's.
+
+*"Move slowly for balance"* — **not established, and a different kind of
+problem.** The source acknowledges balance; it does not prescribe slow tempo as
+the answer to it. This cue states a tempo, which is a programming judgment
+rather than a description of the movement, and it arrives inside a cue where
+nothing reviews it as one.
+
+**Flagged for trainer review specifically as an embedded tempo prescription.**
+The Pass 2A inspection noted the same shape in `dead-bug` and
+`thoracic-rotation` — both still unverified — so this may be a family rather
+than an instance.
+
+Instruction prose is unaffected either way: tempo is outside the
+movement-construction scope, so an instruction would not state one regardless of
+how the cue is resolved. All three cues are unchanged and stay project content.
+
 ### Confirmation of the instruction-model premise
 
 The instruction work began from an inspection finding: cues are corrective and
@@ -382,7 +408,7 @@ echoed the cue would inherit a choice nobody has reviewed.
 
 ### Notes on individual sources
 
-### Applicability note — the split squat has no name in its source
+### Applicability note — name mismatches
 
 `NSCA-LUNGE` is directly human-verified primary evidence, and it never says
 "split squat". It discusses the lunge family, and the movement MoveHere calls a
@@ -399,6 +425,16 @@ Recorded because the two failure modes look identical from a distance. Citing a
 source that describes a different movement would be wrong. Citing a source that
 describes the same movement under another name is fine, provided the artifact
 says so rather than letting a later reader assume the names matched.
+
+**A second, milder instance.** MoveHere's `single-leg-deadlift` is verified
+against `ACE-LIB` 329, which calls the movement a **Single-leg Romanian
+Deadlift**. Here the source does name the movement; it names it differently. The
+construction facts apply directly and the naming does not, which is the same
+distinction as above with less distance to travel.
+
+Two of the ten verified movements are grounded in a source that does not use
+MoveHere's name for them. That is not a problem to fix — MoveHere's names are
+its own — but it is a fact a reader should not have to rediscover.
 
 ### Split squat context coverage — two of two
 
@@ -560,10 +596,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly human-verified | **9 of 14** (`ACE-LIB` 28, 33, 41, 49, 101, 135, 319, 366; `NSCA-LUNGE`) |
-| Entries still second-hand by construction | **all but nine** |
+| Pages directly human-verified | **10 of 15** (`ACE-LIB` 28, 33, 41, 49, 101, 135, 319, 329, 366; `NSCA-LUNGE`); 1 read and set aside (`ACE-LIB` 350) |
+| Entries still second-hand by construction | **all but ten** |
 | Out-of-scope fact categories discarded | 22 |
-| Cue findings raised, none actioned | 10 (8 human-verified), 2 constraining authoring |
+| Cue findings raised, none actioned | 11 (9 human-verified), 2 constraining authoring |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
