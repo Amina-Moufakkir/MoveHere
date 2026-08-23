@@ -32,7 +32,7 @@ Ordered by priority. `verified` means a person read the page itself.
 | Page | Status | Verified facts / what to confirm |
 |---|---|---|
 | [ACE 41 Push-Up](https://www.acefitness.org/resources/everyone/exercise-library/41/push-up/) | **verified 2026-08-23** | Hands approximately shoulder-width; shoulders directly over hands; body extended with no hip or knee bend; the downward phase lowers the body with a rigid torso; the upward phase presses back to full elbow extension. **The default explicitly allows the elbows to flare outward during lowering, and elbows-close-to-sides is presented separately as an alternative position.** |
-| [ACE 101 Side Plank with Straight Leg](https://www.acefitness.org/resources/everyone/exercise-library/101/side-plank-with-straight-leg/) | pending | Floor setup, elbow and foot stacking — and confirm [ACE 303](https://www.acefitness.org/resources/everyone/exercise-library/303/side-plank/) is a BOSU exercise and the wrong page |
+| [ACE 101 Side Plank with Straight Leg](https://www.acefitness.org/resources/everyone/exercise-library/101/side-plank-with-straight-leg/) | **verified 2026-08-23** | Starts lying on one side; legs extended and stacked; supporting elbow directly beneath the shoulder; the upward action lifts the hips and knees from the floor; the held position keeps the supporting elbow beneath the shoulder; lowering returns to the start. **This straight-leg floor variation is MoveHere's designated basis.** [ACE 303](https://www.acefitness.org/resources/everyone/exercise-library/303/side-plank/) was not read and is not the basis |
 | [ACE 33 Hip Hinge](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/33/hip-hinge/) | pending | That the bar held along the spine is a feedback device, not part of the movement |
 | [ACE 366 Bulgarian Split Squat](https://www.acefitness.org/resources/everyone/exercise-library/366/bulgarian-split-squat/) | pending | Rear-foot-on-bench setup, descent, return. **Do not record box height** |
 | [NSCA *The Undervalued Lunge*](https://www.nsca.com/contentassets/24dd7222ed1b4caeb8a0a46b81bd11f3/ptq-4.4.9-the-undervalued-lunge.pdf) | pending | Grounded split stance, rear heel raised. **Do not record joint angles** |
@@ -78,7 +78,7 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `dead-hang` | `ACE-LIB` 191 (start position) | C | Reach the bar overhead, palms facing away, full grip, shoulders drawn down and back, feet clear of the ground | **Derived** from the pull-up start position; no dedicated source. MoveHere's cue *"Shoulders active, not shrugged"* has no direct positional source |
 | `pull-up` | `ACE-LIB` 191 | S | Stand under the bar, reach overhead with palms away, take a full grip; pull by driving the elbows down toward the sides; lower to a full hang | — |
 | `plank` | `ACE-LIB` 32 | S | Face down; elbows directly under the shoulders, palms down; straight line from head to heels | Mat is incidental to the position |
-| `side-plank` | `ACE-LIB` 101 | S | Lie on one side, legs extended, feet stacked; supporting elbow directly under the shoulder; lift hips and knees clear | **`ACE-LIB` 303 is a BOSU exercise and is the wrong page for this movement.** 101 is the floor version |
+| `side-plank` | `ACE-LIB` 101 — **human-verified** | S | Starts lying on one side; legs extended and stacked; supporting elbow directly beneath the shoulder; the upward action lifts the hips and knees from the floor; the hold keeps that elbow beneath the shoulder; lowering returns to the start | Head position — the source establishes the head aligned with the spine, not MoveHere's phrasing. See cue finding 5 |
 | `dead-bug` | `ACE-LIB` 147 | S | Supine start; limbs raised so knees are over the hips and elbows over the shoulders; one hand and the opposite heel move together, then return; reciprocal | Framing differs from MoveHere's cue — see cue finding 3 |
 | `hanging-knee-raise` | thin secondary only | **X** | Knees raise toward the chest and lower again — the action only | **No institutional page.** Setup and hang position unsupported |
 | `supported-knee-raise` | `DIP-KIN` (position only) | **X** | Bodyweight supported through the upper limbs on parallel bars, elbows extended | **No source describes a support-hold knee raise at all.** Its structural metadata and cues are new project content |
@@ -95,16 +95,19 @@ reaches the catalog, and none may be reintroduced during authoring.
 
 | Discarded | Where it appeared |
 |---|---|
-| Hold durations and repetition counts | `ACE-LIB` 142 hip-flexor stretch |
+| Hold durations and repetition counts | `ACE-LIB` 142 hip-flexor stretch, 101 side plank |
 | Equipment dimensions (bench/box height) | `ACE-LIB` 366 Bulgarian split squat |
 | Minimum joint angles at the bottom of a lunge | `NSCA-LUNGE` |
 | Muscles worked, agonists, activation percentages | `ACE-LIB` throughout, `MCGILL-AC` |
 | Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout |
-| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout |
-| Counting and side-switching phrasing | `ACE-LIB` 28 step-up, 142 hip-flexor stretch |
+| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank |
+| Counting and side-switching phrasing | `ACE-LIB` 28 step-up, 142 hip-flexor stretch, 101 side plank |
 | Depth and range targets | `ACE-LIB` 135 squat |
 | Muscle-emphasis claims | `ACE-LIB` 41 push-up |
-| Shoulder-stress claims | `ACE-LIB` 41 push-up |
+| Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank |
+| Core-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug |
+| Alternative and modified variations (knee-supported, BOSU) | `ACE-LIB` 101 side plank |
+| Equipment incidental to a position (mats) | `ACE-LIB` 32 plank, 101 side plank |
 
 The last two matter most. Counting phrasing is forbidden in MoveHere
 instruction text by §8 and is caught by the loader; range targets are a
@@ -152,6 +155,31 @@ MoveHere: *"Extend opposite arm and leg."* `ACE-LIB` 147 describes the opposite
 hand and heel *lowering toward the floor* from a knees-over-hips start. The same
 motion, described from opposite ends. Authoring must not adopt one framing as
 though it had settled the other.
+
+**5 · `side-plank` — two cues, two different gaps. Human-verified 2026-08-23.**
+
+A person read `ACE-LIB` 101 directly. The three cues do not sit at the same
+distance from it.
+
+*"Elbow under your shoulder"* — **directly supported.** The source establishes
+the supporting elbow beneath the shoulder both at setup and through the hold.
+
+*"Hips stacked and lifted"* — **consistent, with wording drift.** The source
+directly establishes the *lift* of the hips and knees from the floor. It does
+not establish "stacked" as the description of the hips; what it stacks is the
+legs. The cue is not contradicted, but half of it is MoveHere's phrasing rather
+than the source's fact.
+
+*"Keep your neck long"* — **not directly established.** The source describes the
+head aligned with the spine. That is a different formulation, and "long" is a
+qualitative instruction the source does not give. It remains existing
+project content and is **not to be silently rewritten** into the source's
+phrasing while authoring — an instruction that quietly adopted "head aligned
+with the spine" would settle a cue nobody has reviewed.
+
+Side-plank instruction prose can be constructed entirely from verified facts —
+the start position, the lift, the elbow, and the return are all directly
+supported — without depending on either contested cue.
 
 **4 · `brisk-walk` — unsourced physiological claim. Carried forward.**
 *"Breathe through your nose if you can."* Out of scope for this pass — the
@@ -229,10 +257,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly human-verified | **1 of 14** (`ACE-LIB` 41) |
-| Entries still second-hand by construction | **all but one** |
-| Out-of-scope fact categories discarded | 10 |
-| Cue findings raised, none actioned | 4 (1 human-verified as a real discrepancy) |
+| Pages directly human-verified | **2 of 14** (`ACE-LIB` 41, 101) |
+| Entries still second-hand by construction | **all but two** |
+| Out-of-scope fact categories discarded | 13 |
+| Cue findings raised, none actioned | 5 (2 human-verified) |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
