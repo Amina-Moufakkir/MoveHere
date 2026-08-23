@@ -51,7 +51,7 @@ question, which is the failure mode this register exists to prevent.
 | [ACE 49 Glute Bridge](https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/) | **verified 2026-08-23** | Starts lying on the back, knees bent, feet flat on the floor approximately hip-width apart, toes facing forward and away from the body; the upward phase raises the hips from the floor with the heels pressing into it; the lowering returns toward the starting position |
 | [ACE 329 Single-leg Romanian Deadlift](https://www.acefitness.org/resources/everyone/exercise-library/329/single-leg-romanian-deadlift/) | **verified 2026-08-23**, designated basis | Starts standing, feet approximately hip-width apart, knees slightly bent; the hips move backward; one foot leaves the ground and the free leg extends behind the body while the torso leans forward; the return brings the body upright and the free leg back toward the floor. **The equipment-free version**, and ACE's name for it differs from MoveHere's — see the name-mismatch note |
 | [ACE 350 Single Leg Romanian Dead Lift](https://www.acefitness.org/resources/everyone/exercise-library/350/single-leg-romanian-dead-lift/) | **not used** | The cable-machine version. **Not rejected and not classified as wrong** — simply less applicable, and unnecessary once ACE supplies a directly equipment-free page. Recorded so a later reader does not re-open the question |
-| [ACE 32 Front Plank](https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/) | pending | Elbow position, head-to-heel line. Ignore mat and hold duration |
+| [ACE 32 Front Plank](https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/) | **verified 2026-08-23** | Starts lying prone on the floor; elbows directly beneath the shoulders; legs extended; the upward phase lifts the body from the floor; through the hold the torso and legs remain stiff and the shoulders stay over the elbows; the downward phase lowers the body back toward the floor. **Contains pain and medical guidance, excluded** |
 | [ACE 147 Supine Dead Bug](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/147/supine-dead-bug/) | pending | Start position and reciprocal limb pattern — bears on cue finding 3 |
 | [ACE 191 Pull-ups](https://www.acefitness.org/resources/everyone/exercise-library/191/pull-ups/) | pending | Grip, hang, pull, lower — and whether it supports the dead-hang setup independently |
 | [NHS Strength exercises](https://www.nhs.uk/live-well/exercise/strength-exercises/) | pending | The wall press-up description used for incline push-up, and its applicability limits |
@@ -87,7 +87,7 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `pike-push-up` | — | **X** | none | **No institutional source located.** Every search returned suspension-trainer or stability-ball pike variants, which are different exercises using equipment the matrix does not cite |
 | `dead-hang` | `ACE-LIB` 191 (start position) | C | Reach the bar overhead, palms facing away, full grip, shoulders drawn down and back, feet clear of the ground | **Derived** from the pull-up start position; no dedicated source. MoveHere's cue *"Shoulders active, not shrugged"* has no direct positional source |
 | `pull-up` | `ACE-LIB` 191 | S | Stand under the bar, reach overhead with palms away, take a full grip; pull by driving the elbows down toward the sides; lower to a full hang | — |
-| `plank` | `ACE-LIB` 32 | S | Face down; elbows directly under the shoulders, palms down; straight line from head to heels | Mat is incidental to the position |
+| `plank` | `ACE-LIB` 32 — **human-verified** | S | Starts lying prone on the floor, elbows directly beneath the shoulders, legs extended; the upward phase lifts the body from the floor; the hold keeps the torso and legs stiff with the shoulders over the elbows; the downward phase lowers the body back toward the floor | The source describes an exit phase — see the note on static holds. Its four fault corrections are excluded and **must not be read back as support** for a cue (finding 12) |
 | `side-plank` | `ACE-LIB` 101 — **human-verified** | S | Starts lying on one side; legs extended and stacked; supporting elbow directly beneath the shoulder; the upward action lifts the hips and knees from the floor; the hold keeps that elbow beneath the shoulder; lowering returns to the start | Head position — the source establishes the head aligned with the spine, not MoveHere's phrasing. See cue finding 5 |
 | `dead-bug` | `ACE-LIB` 147 | S | Supine start; limbs raised so knees are over the hips and elbows over the shoulders; one hand and the opposite heel move together, then return; reciprocal | Framing differs from MoveHere's cue — see cue finding 3 |
 | `hanging-knee-raise` | thin secondary only | **X** | Knees raise toward the chest and lower again — the action only | **No institutional page.** Setup and hang position unsupported |
@@ -112,10 +112,10 @@ says *not here*, not *not true*.
 
 | Discarded | Where it appeared |
 |---|---|
-| Hold durations and repetition counts | `ACE-LIB` 142 hip-flexor stretch, 101 side plank |
+| Hold durations and repetition counts | `ACE-LIB` 142 hip-flexor stretch, 101 side plank, 32 plank |
 | Equipment dimensions (bench/box height) | `ACE-LIB` 366 Bulgarian split squat — **verified present in the source and deliberately not carried across** |
 | Minimum joint angles at the bottom of a lunge | `NSCA-LUNGE` |
-| Joint-alignment and segment-relationship prescriptions | `NSCA-LUNGE` (knee over ankle); `ACE-LIB` 135 (knee over second toe, tibial translation, tibia/torso parallel), 28 (knee over second toe, tibia angle, forward lean) |
+| Joint-alignment and segment-relationship prescriptions | `NSCA-LUNGE` (knee over ankle); `ACE-LIB` 135 (knee over second toe, tibial translation, tibia/torso parallel), 28 (knee over second toe, tibia angle, forward lean), 32 (ankle dorsiflexion) |
 | Equipment, held implements and balance support | `NSCA-LUNGE`; `ACE-LIB` 366 (dumbbells, dumbbell position, and the elbow position associated with holding one — unrelated to the push-up elbow finding), 319 (barbell), 28 (dumbbells, hand position), 329 (hand position for balance) |
 | Loaded set-up procedure (racking, unracking, bar placement, grip width, rack clearance) | `ACE-LIB` 319 reverse lunge |
 | Source-specific coaching cues | `ACE-LIB` 319 (pulling the front knee backwards; pushing back into the hip), 329 (hip tilting) |
@@ -123,17 +123,18 @@ says *not here*, not *not true*.
 | Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout, 28 and 49 (single-leg progressions) |
 | Functional and daily-life transfer claims | `ACE-LIB` 28 step-up |
 | Prerequisite, teaching-sequence and related-exercise recommendations | `ACE-LIB` 33 hip hinge, 135 squat |
-| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge, 135 squat, 49 glute bridge |
+| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge, 135 squat, 49 glute bridge, 32 plank |
 | Counting, side-switching, and source-specific left/right wording | `ACE-LIB` 28 step-up (incl. opposite-side language), 142 hip-flexor stretch, 101 side plank, 366 split squat, 319 reverse lunge, 329 single-leg deadlift (completing one side before switching); `NSCA-LUNGE` |
 | Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat (thigh-parallel), 33 hip hinge, 366 split squat (depth and floor-contact endpoint), 49 glute bridge (hip-height limit), 329 single-leg deadlift (comfortable-distance endpoint) |
 | Muscle-emphasis claims | `ACE-LIB` 41 push-up |
 | Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank; `NSCA-LUNGE` |
-| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge, 135 squat (abdominal), 49 glute bridge (abdominal, glute), 329 single-leg deadlift (glute); `NSCA-LUNGE` (abdominal, scapular) |
-| Postural set-up detail (scapular, chest, head, hand and palm position) | `ACE-LIB` 135 squat, 28 step-up (scapular), 49 glute bridge (flattening the lower back into the floor) |
+| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge, 135 squat (abdominal), 49 glute bridge (abdominal, glute), 329 single-leg deadlift (glute), 32 plank (abdominal, quadriceps); `NSCA-LUNGE` (abdominal, scapular) |
+| Postural set-up detail (scapular, chest, head, hand and palm position) | `ACE-LIB` 135 squat, 28 step-up (scapular), 49 glute bridge (flattening the lower back into the floor), 32 plank (palm and hand direction) |
 | Weight-distribution instructions | `ACE-LIB` 135 squat (deliberate shift into the heels) |
-| Fault checks and corrections | `ACE-LIB` 135 squat (ankle collapse), 28 step-up (foot and ankle monitoring), 49 glute bridge (excessive arching) |
+| Fault checks and corrections | `ACE-LIB` 135 squat (ankle collapse), 28 step-up (foot and ankle monitoring), 49 glute bridge (excessive arching), 32 plank (low-back sagging, hip hiking, knee bending, shoulder shrugging) |
 | Alternative and modified variations (knee-supported, BOSU) | `ACE-LIB` 101 side plank |
 | Equipment incidental to a position (mats) | `ACE-LIB` 32 plank, 101 side plank, 49 glute bridge |
+| Pain, medical and referral guidance | `ACE-LIB` 32 plank — **out of scope under §10 as well as here** |
 
 The last two matter most. Counting phrasing is forbidden in MoveHere
 instruction text by §8 and is caught by the loader; range targets are a
@@ -376,6 +377,58 @@ Instruction prose is unaffected either way: tempo is outside the
 movement-construction scope, so an instruction would not state one regardless of
 how the cue is resolved. All three cues are unchanged and stay project content.
 
+**12 · `plank` — where the no-laundering rule applies, and where it does not. Human-verified 2026-08-23.**
+
+*"Forearms under your shoulders"* — **supported in substance, worded by
+MoveHere.** `ACE-LIB` 32 establishes the *elbows* directly beneath the
+shoulders. Forearms and elbows are not the same referent, and the setup they
+describe is.
+
+*"Body in one line"* — **strongly consistent, not directly stated.** The verified
+hold keeps the torso and legs stiff with the shoulders over the elbows, which is
+consistent with the cue. The source also carries four fault corrections — low-back
+sagging, hip hiking, knee bending, shoulder shrugging — all excluded, and **none
+of them may be read back as support for this cue.** Together they describe the
+same body position from the outside, which is exactly what makes the inference
+tempting and exactly why finding 10 forbids it.
+
+*"Breathe, do not hold your breath"* — **half directly established.** The source
+establishes continuing to breathe through the hold. The corrective half is
+MoveHere's framing, the same shape as *"Step back, not down"*: the source says
+what to do, the cue adds the mistake it is being distinguished from.
+
+**A clarification the artifact needs, arising here.** Breathing is an excluded
+category, and the breathing fact is nonetheless cited as supporting this cue.
+That is not a contradiction, because the exclusions and the no-laundering rule
+run on different axes. **Scope exclusion** decides what may appear in instruction
+prose; breathing may not, and will not. **The no-laundering rule** forbids
+manufacturing support for a cue out of material that does not directly state it.
+ACE saying *continue to breathe* directly states what the cue's first half says,
+so citing it is quotation, not inference. Inferring *"ribs down"* from an
+abdominal-contraction passage, or *"body in one line"* from a list of sagging
+faults, is inference. **The test is whether the source says the thing, not
+whether the thing is in scope.**
+
+All three cues are unchanged and stay project content.
+
+### Static holds describe an exit the instruction model does not
+
+`ACE-LIB` 32 structures the plank as an upward phase, a hold, and a downward
+phase that lowers the body back toward the floor. `ACE-LIB` 101 does the same for
+the side plank.
+
+The Pass 2A manifest classified both as needing **no `return` step**, on the
+grounds that a held position has no repetition to complete. That reasoning still
+holds — `return` means *how a repetition completes*, and a timed hold has none —
+but the verified sources do describe getting out of the position, and the same
+question was already noted for `dead-hang`, where leaving the bar is described
+by no step kind at all.
+
+Recorded, not resolved. The authoring pass should decide deliberately whether a
+static hold's exit is an `action` step, an unstated part of the hold, or content
+the app does not carry — rather than discovering the question halfway through
+writing one.
+
 ### Confirmation of the instruction-model premise
 
 The instruction work began from an inspection finding: cues are corrective and
@@ -383,12 +436,19 @@ attentional, and eleven of the movements that needed instructions failed on a
 missing start position. Glute bridge was among the clearest — its three cues
 never say to lie down.
 
-Reading the source directly confirms that, now against something rather than by
-inspection alone. `ACE-LIB` 49 constructs exactly what the cues do not: lying on
-the back, knees bent, feet flat and approximately hip-width apart, toes forward.
-The cues carry what to attend to once you are there. **Neither set is deficient
-at its own job**, and the gap between them is the reason ordered instructions are
-a separate content type rather than a rewrite of the cues.
+Reading the sources directly confirms that, now against something rather than by
+inspection alone.
+
+`ACE-LIB` 49 constructs exactly what the glute-bridge cues do not: lying on the
+back, knees bent, feet flat and approximately hip-width apart, toes forward.
+`ACE-LIB` 32 does the same for the plank — lying prone, elbows beneath the
+shoulders, legs extended, then lifting — where the three cues describe only what
+to attend to once the position is held.
+
+**Neither set is deficient at its own job**, and the gap between them is the
+reason ordered instructions are a separate content type rather than a rewrite of
+the cues. Two verified confirmations now, both on movements whose cues never say
+how to get to the floor.
 
 ### Authoring constraints carried by unresolved findings
 
@@ -596,10 +656,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly human-verified | **10 of 15** (`ACE-LIB` 28, 33, 41, 49, 101, 135, 319, 329, 366; `NSCA-LUNGE`); 1 read and set aside (`ACE-LIB` 350) |
-| Entries still second-hand by construction | **all but ten** |
-| Out-of-scope fact categories discarded | 22 |
-| Cue findings raised, none actioned | 11 (9 human-verified), 2 constraining authoring |
+| Pages directly human-verified | **11 of 15** (`ACE-LIB` 28, 32, 33, 41, 49, 101, 135, 319, 329, 366; `NSCA-LUNGE`); 1 read and set aside (`ACE-LIB` 350) |
+| Entries still second-hand by construction | **all but eleven** |
+| Out-of-scope fact categories discarded | 23 |
+| Cue findings raised, none actioned | 12 (10 human-verified), 2 constraining authoring |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
