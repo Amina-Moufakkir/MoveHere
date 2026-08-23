@@ -13,21 +13,39 @@ position, and context-specific setup. Nothing else was collected, and what was
 collected incidentally and discarded is listed below so the omission is visible
 rather than assumed.
 
-## Standing limitation on every citation here
+## Provenance and verification status
 
-**All page content reached this document through an automated summariser.** The
-fetch mechanism available to this project runs a small model over a page and
-returns its answer; it does not return raw source text. Every entry below is
-therefore **second-hand by construction**, and none of it is verified
-primary-source evidence.
+**Unless a page appears as verified in the register below, its content reached
+this document through an automated summariser.** The fetch mechanism available
+to this project runs a small model over a page and returns its answer; it does
+not return raw source text. Summariser-mediated entries are **second-hand by
+construction** and are not verified primary-source evidence.
 
-One entry — the push-up elbow path — was re-fetched with an extraction-only
-prompt requesting verbatim text rather than description. That is the strongest
-form available here and is still model-mediated. It is marked accordingly.
+Reading a cited page directly is the only thing that converts an entry from
+second-hand to verified, and **no instruction prose may be committed from an
+unverified entry.**
 
-**Before any of this becomes authored content, a person should read the cited
-pages directly.** That is a cheap step and it is the only thing that converts
-these entries from second-hand to verified.
+### Verification register
+
+Ordered by priority. `verified` means a person read the page itself.
+
+| Page | Status | Verified facts / what to confirm |
+|---|---|---|
+| [ACE 41 Push-Up](https://www.acefitness.org/resources/everyone/exercise-library/41/push-up/) | **verified 2026-08-23** | Hands approximately shoulder-width; shoulders directly over hands; body extended with no hip or knee bend; the downward phase lowers the body with a rigid torso; the upward phase presses back to full elbow extension. **The default explicitly allows the elbows to flare outward during lowering, and elbows-close-to-sides is presented separately as an alternative position.** |
+| [ACE 101 Side Plank with Straight Leg](https://www.acefitness.org/resources/everyone/exercise-library/101/side-plank-with-straight-leg/) | pending | Floor setup, elbow and foot stacking — and confirm [ACE 303](https://www.acefitness.org/resources/everyone/exercise-library/303/side-plank/) is a BOSU exercise and the wrong page |
+| [ACE 33 Hip Hinge](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/33/hip-hinge/) | pending | That the bar held along the spine is a feedback device, not part of the movement |
+| [ACE 366 Bulgarian Split Squat](https://www.acefitness.org/resources/everyone/exercise-library/366/bulgarian-split-squat/) | pending | Rear-foot-on-bench setup, descent, return. **Do not record box height** |
+| [NSCA *The Undervalued Lunge*](https://www.nsca.com/contentassets/24dd7222ed1b4caeb8a0a46b81bd11f3/ptq-4.4.9-the-undervalued-lunge.pdf) | pending | Grounded split stance, rear heel raised. **Do not record joint angles** |
+| [ACE 135 Bodyweight Squat](https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/) | pending | Stance width; hips back then down; return. **Do not record a depth target** |
+| [ACE 319 Reverse Lunge](https://www.acefitness.org/resources/everyone/exercise-library/319/reverse-lunge/) | pending | Backward step, rear knee path, return. Ignore barbell loading |
+| [ACE 28 Step-Up](https://www.acefitness.org/resources/everyone/exercise-library/28/step-up/) | pending | Foot placement, torso, step-down. **Do not record platform height**; the page's own side-switching phrasing must not transfer |
+| [ACE 49 Glute Bridge](https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/) | pending | Supine setup, press up, lower. Ignore breathing cues |
+| [ACE 329](https://www.acefitness.org/resources/everyone/exercise-library/329/single-leg-romanian-deadlift/) / [350](https://www.acefitness.org/resources/everyone/exercise-library/350/single-leg-romanian-dead-lift/) Single-leg RDL | pending | **Which page matches MoveHere's unloaded movement** |
+| [ACE 32 Front Plank](https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/) | pending | Elbow position, head-to-heel line. Ignore mat and hold duration |
+| [ACE 147 Supine Dead Bug](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/147/supine-dead-bug/) | pending | Start position and reciprocal limb pattern — bears on cue finding 3 |
+| [ACE 191 Pull-ups](https://www.acefitness.org/resources/everyone/exercise-library/191/pull-ups/) | pending | Grip, hang, pull, lower — and whether it supports the dead-hang setup independently |
+| [NHS Strength exercises](https://www.nhs.uk/live-well/exercise/strength-exercises/) | pending | The wall press-up description used for incline push-up, and its applicability limits |
+| `pike-push-up`, `hanging-knee-raise`, `supported-knee-raise`, `march-in-place` | **no page** | These need a source found, not a source checked |
 
 ## Admitted sources
 
@@ -54,7 +72,7 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `glute-bridge` | `ACE-LIB` 49 | S | Supine, knees bent, feet flat and hip-width; hips press up; lower under control | Heel-to-hip distance not specified by the source |
 | `hip-hinge` | `ACE-LIB` 33 | S | Feet shoulder-width; weight to the heels, hips travel backward, torso ends between vertical and parallel, minimal knee bend; return by driving the hips forward | Source uses a bar held along the spine as feedback — a teaching device, not the movement. MoveHere's is unloaded |
 | `single-leg-deadlift` | `ACE-LIB` 329 / 350 | S | Stand on one leg, supporting knee slightly bent; hips push back as the free leg straightens behind; return by pressing the standing foot down and lowering the free leg | Descent depth described as comfort-limited, not a target |
-| `push-up` | `ACE-LIB` 41 | S | Hands about shoulder-width, shoulders over hands, rigid torso; lower toward the floor; press back to full extension | Elbow path — see cue finding 1 |
+| `push-up` | `ACE-LIB` 41 — **human-verified** | S | Hands approximately shoulder-width; shoulders directly over hands; body extended with no hip or knee bend; lower with a rigid torso; press back to full elbow extension | Elbow path is not settled by this source — see cue finding 1 |
 | `incline-push-up` | `ACE-LIB` 41 + `NHS-STR` | C | Hands on the raised surface, feet back, body in one line; lower the chest toward the hands; press back | **Composite, not directly sourced.** No single source describes this movement |
 | `pike-push-up` | — | **X** | none | **No institutional source located.** Every search returned suspension-trainer or stability-ball pike variants, which are different exercises using equipment the matrix does not cite |
 | `dead-hang` | `ACE-LIB` 191 (start position) | C | Reach the bar overhead, palms facing away, full grip, shoulders drawn down and back, feet clear of the ground | **Derived** from the pull-up start position; no dedicated source. MoveHere's cue *"Shoulders active, not shrugged"* has no direct positional source |
@@ -85,6 +103,8 @@ reaches the catalog, and none may be reintroduced during authoring.
 | Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout |
 | Counting and side-switching phrasing | `ACE-LIB` 28 step-up, 142 hip-flexor stretch |
 | Depth and range targets | `ACE-LIB` 135 squat |
+| Muscle-emphasis claims | `ACE-LIB` 41 push-up |
+| Shoulder-stress claims | `ACE-LIB` 41 push-up |
 
 The last two matter most. Counting phrasing is forbidden in MoveHere
 instruction text by §8 and is caught by the loader; range targets are a
@@ -96,18 +116,31 @@ The cues are existing project content and remain independently auditable.
 **Nothing here was changed, and none of it may be silently corrected while
 authoring instructions.** These belong to a cue audit.
 
-**1 · `push-up` — elbow path. Substantive.**
-MoveHere cues *"Elbows back, not flared."* `ACE-LIB` 41 states as its default:
-"Allow your elbows to flare outwards during the lowering phase." It then offers
-an alternative in which the hands are turned to face forwards and the elbows
-stay close to the sides.
+**1 · `push-up` — elbow path. Substantive. Human-verified 2026-08-23.**
 
-So MoveHere is not contradicting the source outright — it states as its only
-instruction what the source presents as an *alternative*, and pairs it with the
-hand position the source associates with the default. The result is a composite
-no single source describes. **This is the only finding retrieved by verbatim
-extraction rather than description, and it still warrants a direct read of the
-page before anyone acts on it.**
+A person read `ACE-LIB` 41 directly. The source presents two elbow paths: its
+**default allows the elbows to flare outward during the lowering phase**, and it
+**separately offers elbows-close-to-the-sides as an alternative position**,
+paired with turning the hands to face forwards.
+
+MoveHere cues *"Elbows back, not flared."* Two of the three push-up cues are
+confirmed consistent with the source — *"Hands under your shoulders"* matches
+shoulders directly over hands, and *"Body in one line"* matches a body extended
+with no hip or knee bend and a rigid torso through the descent. The third is not.
+
+**The finding stands, and verification sharpened rather than dissolved it.**
+MoveHere states as its only instruction what the source presents as an
+alternative, and pairs it with the hand position the source associates with its
+default. That is **a specific technique choice, unreviewed, not a neutral
+definition of the movement** — and nothing in this source supports presenting it
+as the way a push-up is done.
+
+The cue is unchanged. Resolving it is a cue-audit decision, not an instruction
+one: an instruction that quietly adopted the source's default would overrule a
+cue nobody has revisited, and an instruction that echoed the cue would inherit a
+choice nobody has reviewed. Until it is resolved, push-up instruction prose
+should construct the movement without settling the elbow path in either
+direction.
 
 **2 · `bodyweight-squat` — stance width. Minor.**
 MoveHere: *"Feet about shoulder width."* `ACE-LIB` 135: slightly wider than
@@ -196,10 +229,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Entries that are second-hand by construction | **all** |
-| Entries retrieved by verbatim extraction | 1 (push-up elbow path) |
-| Out-of-scope fact categories discarded | 8 |
-| Cue findings raised, none actioned | 4 |
+| Pages directly human-verified | **1 of 14** (`ACE-LIB` 41) |
+| Entries still second-hand by construction | **all but one** |
+| Out-of-scope fact categories discarded | 10 |
+| Cue findings raised, none actioned | 4 (1 human-verified as a real discrepancy) |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
