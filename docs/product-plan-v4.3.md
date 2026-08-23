@@ -522,6 +522,27 @@ Goal programming policy is therefore **reviewed data, not generator code**. It l
 
 Policy carries its own goal. Generation is given one reviewed policy rather than a goal plus a policy, so the two cannot disagree.
 
+### Counting compatibility
+
+Laterality and rep counting are separate concepts (§15), and separating them is not enough on its own. A prescription states a number; counting states what that number means. If nothing proves the two agree, a slot can hand a unilateral movement a total count, or a bilateral movement a per-side count, and the session states work the user is not actually being asked to do.
+
+**Which counting values are meaningful is a fact about a movement**, in the same way that whether it can be dosed by reps or by time is a fact about a movement. A split squat accepts only per-side. A plank accepts only total. A step-up accepts either. A brisk walk accepts only total — walking alternates legs, but nobody walks for two minutes per side, and treating gait as unilateral for counting purposes produces exactly that sentence.
+
+So this is a compatibility constraint, and it belongs beside the others:
+
+```text
+EXERCISE
+├── which patterns it covers
+├── how it may be dosed        (reps | time | distance)
+└── how a dose may be counted  (total | per-side)
+```
+
+**Policy keeps owning counting, dose, and estimated time.** These are one decision, not three: "3 × 8 per side" is twice the work of "3 × 8", and the time a slot is budgeted for follows from the volume it prescribes. Deriving counting at generation time — from laterality or from anything else — would let volume float free of the estimate its author wrote, and a session's predicted duration would depend on which exercise happened to fill a slot.
+
+**Feasibility proves the agreement.** A policy is already validated against the compatibility matrix before use, so that a policy the matrix cannot satisfy is caught when it loads rather than when a user asks for a workout. Counting joins that proof: for every slot, every exercise eligible to fill it must accept the counting that slot prescribes. A slot whose eligibility spans movements that disagree is not repaired at generation time — it is narrowed by its author until the proof passes.
+
+**Counting is never derived mechanically from laterality.** Laterality says whether a movement works one side at a time. Counting says how a prescribed number is read. The two are related and not equivalent, and gait is where the difference becomes visible.
+
 ### Policy authority boundaries
 
 Four rules govern how policy reaches production generation. All four are standing decisions.
@@ -563,6 +584,43 @@ A goal programming policy may be treated as authoritative only when reviewed by 
 This standard is **provisional**. What counts as a recognized credential has not been defined, and defining it is an open decision. A policy with no cited basis is an opinion and must not be structurally indistinguishable from reviewed content.
 
 This review authorizes **general fitness programming only**. It does not authorize medical, rehabilitation, diagnostic, or injury-specific programming, which remain excluded under §10.
+
+### Movement instructions and execution cues
+
+The catalog carries execution cues. Cues are corrective and attentional: addressed to someone already performing the movement, unordered, and deliberately partial because attention mid-effort is scarce. "Elbows back, not flared" is a correction, and a correction presupposes the thing being corrected.
+
+That makes cues unsuitable as instructions for an unfamiliar movement, and they must not be presented as though they were. **Ordered movement instructions are a separate content type**, addressed to someone who has never performed the movement:
+
+```text
+EXECUTION CUES         unordered, corrective, read during the set
+MOVEMENT INSTRUCTIONS  ordered, constructive, read before the set
+```
+
+Instructions are complete in a way cues are not: followed from a standing start, they produce the movement. Cues are complete in a way instructions are not: they name the errors that matter. Neither replaces the other, and adding instructions does not license shortening cues.
+
+**Steps are typed**, because the defect is predictable:
+
+```text
+setup   where the movement begins
+action  what happens
+return  how a repetition completes
+```
+
+The commonest defect in an instruction is a missing start position: a set of steps that begins mid-movement reads as complete and is not. An authored instruction must therefore carry at least one `setup` step and at least one `action` step. A `return` step is optional, because a static hold has none.
+
+**Instruction state is three-valued**, not present-or-absent:
+
+```text
+authored      steps exist, carrying their own recorded authority
+not-required  deliberately none — walking needs no instruction
+outstanding   not yet written
+```
+
+"We decided none is needed" and "we have not written one yet" are different facts, and a model that collapses them into absence loses the distinction permanently. This is the discipline §7 already applies to venue features: the states stay distinct in the types, not only in someone's memory.
+
+**Side-switching is derived from the prescription, never written into a step.** Authored text cannot know which counting a slot will use, so a step that says "then switch sides" is either wrong or accidentally right. What a prescribed number means is stated once, by the prescription, and the instruction surface renders that rather than restating it.
+
+Instructions carry their own authority, separately from the exercise they describe. They are new content on a different authoring schedule, and inheriting an exercise's tier would let an instruction acquire authority it never earned. Until independently reviewed they are project content (§8) and are labeled as such.
 
 ### Unresolved domain questions
 
@@ -614,6 +672,30 @@ None of these means:
 > **“MoveHere guarantees this object is safe.”**
 
 MoveHere should avoid structures whose suitability cannot reasonably be established within its authority.
+
+### Feature-use checks
+
+A movement that depends on a structure raises a question a movement on open ground does not: is this particular bar, bench, or step one this person wants to use? MoveHere cannot answer it. It has no access to the object, no load rating, no inspection history, and no authority to assess any of them.
+
+It can stop leaving the question abstract. "Nothing here assesses whether it is safe to use" is honest and gives a user nothing to act on. **A feature-use check names what a person might look at, and stops there.**
+
+```text
+NAMES WHAT TO LOOK AT     ✓
+STATES WHAT TO CONCLUDE   ✗
+RECORDS THAT IT WAS DONE  ✗
+```
+
+Four constraints, all standing decisions.
+
+**A check never states a conclusion.** It may draw attention to movement in a fixing, to rust, to a wet surface. It may not say a structure is safe, sound, secure, suitable, or inspected, and it may not imply that looking makes it so.
+
+**A check is not completable.** No checkbox, no confirmation, no state the player or the generator waits on. A completion record is a verdict record: it lets a user — and later, a reader of the data — treat "the check was done" as "the structure was cleared". The decision to use a structure is the user's, before and after.
+
+**A check never gates generation.** Confirmed inventory is the only thing that drives generation (§6). A second gate that looked like a safety gate would make the confirmation contract mean something it does not.
+
+**A check is content, carrying its own authority.** It is the content type closest to the boundary this section draws, and therefore the one most in need of professional review. Until independently reviewed it is project content (§8), labeled alongside everything else.
+
+If a check cannot be written for a feature without stating a conclusion, it is not written. An absent check costs a user nothing they had. A check that reads as clearance costs them the boundary this entire section exists to hold.
 
 ---
 
@@ -864,9 +946,9 @@ Recorded so it is not lost between passes. Not implemented:
 
 ### Carried-forward contract work
 
-Recorded so it is not lost between passes. Neither is implemented:
+Recorded so it is not lost between passes:
 
-- **Laterality and rep counting.** Two separate concepts, decided but not implemented. **Laterality is an intrinsic property of an exercise** — `bilateral | unilateral` — because whether a movement works one side at a time is a fact about the movement, not a policy choice. **Rep counting is a property of a prescription** — `total | per-side` — because it states what a prescribed number means. Neither concept exists in the contracts yet, and no exercise has been assigned a laterality value.
+- **Laterality and rep counting.** Both contracts now exist, and every exercise carries a laterality value. **Laterality is an intrinsic property of an exercise** — `bilateral | unilateral` — because whether a movement works one side at a time is a fact about the movement, not a policy choice. **Rep counting is a property of a prescription** — `total | per-side` — because it states what a prescribed number means. What was never implemented is the proof that the two agree. Counting is authored per slot, slots select by movement pattern, and nothing checks the result, so a slot can hand a unilateral movement a total count or a bilateral movement a per-side one. An audit of 3,480 generated items found 1,315 of them — 38% — in that state, in both directions; the evidence is preserved in `docs/counting-compatibility-audit.md`. The constraint that closes it is counting compatibility (§8), proved when policy loads. Outstanding.
 - **Test-fixture authority.** If generation accepts only reviewed policy, test fixtures must be shaped as reviewed, which would mean fabricating a reviewer reference to make tests compile — reintroducing fabricated authority one layer above the venue brands. This is an open design question for the goal-policy contract pass, deliberately not yet solved.
 
 ### ORM
