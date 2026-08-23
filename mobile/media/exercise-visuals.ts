@@ -62,9 +62,16 @@ interface VisualEntry {
  * information, and their near-square ratio letterboxed while pushing the cues
  * below the fold.
  *
- * **Bench Step-up is the approved style specimen.** The remaining school-project
- * assets are generated to match it: a wide movement frame, the two phases of the
- * movement, the structure it is performed on, and nothing else.
+ * **Bench Step-up is the approved style specimen.** The composition rules the
+ * rest of the set is produced against — ratio, cast, how the daylight and dark
+ * masters relate, the phase convention, what may be in frame — are written once
+ * as the production brief in `docs/exercise-media-manifest.md`. They are not
+ * restated here, because a second copy of them is the copy nobody updates.
+ *
+ * What that brief does not relax is this index. Where a movement is identical
+ * across contexts the approved pose may be reused between assets, but the
+ * entries never merge: each key keeps its own file and its own row, because the
+ * key is what ties a depiction to the basis the screen actually cited.
  *
  * Entries are keyed by the movement *as performed on a specific structure*, and
  * `aspectRatio` is the asset's true ratio: the slot sizes itself from the asset

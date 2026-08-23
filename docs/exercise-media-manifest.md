@@ -11,6 +11,43 @@ The visuals are project-created and have not been reviewed by a qualified fitnes
 **A visual may only illustrate a claim the matrix already holds.** Every key below is one
 the matrix holds; commissioning anything not on this list will fail `check:exercise-media`.
 
+## Production brief
+
+Derived from the approved Bench Step-up specimen (`step-up@park-bench`), which is the style reference for everything else on this list.
+
+- **3:2 landscape.** The slot sizes itself from the asset, so one ratio across the set is
+  what keeps the movement frame the same size on every screen of a session.
+- **One cast, one style.** The same model, clothing, and rendering style throughout. A
+  session shows several of these in a row, and a change of cast reads as a change of
+  subject.
+- **Daylight master first.** The dark counterpart is *derived from the approved daylight
+  composition*, never independently reimagined: same pose, same framing, same structure,
+  palette only. Two independently drawn versions of one movement are two depictions, and
+  a theme switch mid-session would silently swap which one the user is being shown.
+- **Dynamic movements: two phases, left to right.** Start on the left, finish on the
+  right, in that reading order.
+- **Static holds: a single centred pose.** A held position has no second phase, and
+  inventing one would depict movement the prescription does not ask for.
+- **The cited structure or surface, and nothing else.** Environment-independent visuals
+  contain no equipment and no invented environmental structure of any kind.
+- **Nothing written inside the frame.** No exercise title, cues, prescriptions,
+  muscles-worked claims, provenance, or safety claims. All of that already exists in the
+  app, where it is versioned, reviewed as content, and rendered at a size a person can
+  read.
+
+**Every depiction encodes judgement.** Framing, joint angles, how far a phase travels,
+and where the movement is cut into phases are all choices, and a simple movement does not
+make them neutral. A low-complexity asset is cheaper to produce and a smaller thing to get
+wrong; it is not a checked one. Nothing on this list, at any complexity, is more than a
+project-created demonstration pending professional review.
+
+**Mapping identity is not composition identity.** Every key below stays distinct: its own
+asset file, its own registry entry, its own lookup. Where the movement itself is identical
+across contexts, the approved human pose and composition may be reused between those
+assets, changing only the accurately cited environment. Reuse the person, never the claim
+— what makes two pairings two assets is the structure the screen cited for each, so
+that is exactly the part that must be redrawn.
+
 ## Pairings
 
 ### Bodyweight squat
