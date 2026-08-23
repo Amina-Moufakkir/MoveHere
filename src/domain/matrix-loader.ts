@@ -11,6 +11,8 @@
 
 import type {
   AuthoredMatrix,
+  InstructionState,
+  MovementStepKind,
   ContentAuthority,
   ExerciseCompatibility,
   ExerciseId,
@@ -67,7 +69,33 @@ export type MatrixValidationFailure =
   | { readonly kind: 'unsourced-content'; readonly id: string }
   | { readonly kind: 'empty-collection'; readonly at: string }
   | { readonly kind: 'orphan-exercise'; readonly exerciseId: ExerciseId }
-  | { readonly kind: 'pattern-unreachable'; readonly pattern: MovementPattern };
+  | { readonly kind: 'pattern-unreachable'; readonly pattern: MovementPattern }
+  | {
+      /**
+       * An authored instruction that does not describe a whole movement.
+       *
+       * A set of steps beginning mid-movement reads as complete and is not, so
+       * setup and action are both required. `return` stays optional: a static
+       * hold has no repetition to complete.
+       */
+      readonly kind: 'instruction-missing-required-step';
+      readonly exerciseId: ExerciseId;
+      readonly missing: readonly MovementStepKind[];
+    }
+  | {
+      /**
+       * Instruction text stating how a prescribed number is counted.
+       *
+       * What a number means comes from the prescription (§8), and authored text
+       * cannot know which counting a slot will use — so a step saying "then
+       * switch sides" is either wrong or accidentally right. The check is
+       * deliberately narrow: it catches counting phrasing, not anatomy, so
+       * "step back with your other leg" stays legal.
+       */
+      readonly kind: 'instruction-states-counting';
+      readonly exerciseId: ExerciseId;
+      readonly text: string;
+    };
 
 /**
  * Things worth knowing about a matrix that is nonetheless valid.
@@ -140,6 +168,7 @@ export const loadMatrix: LoadMatrix = (authored: AuthoredMatrix) => {
         }
       }
     }
+    checkInstructions(exercise.id, exercise.instructions, failures);
   }
 
   const entryIds = new Set<string>();
@@ -258,6 +287,83 @@ export const loadMatrix: LoadMatrix = (authored: AuthoredMatrix) => {
     dropped,
     advisories,
   };
+};
+
+/**
+ * Counting phrasing an instruction may not carry.
+ *
+ * Narrow on purpose. These are the ways text states what a prescribed number
+ * means; anatomical references like "your other leg" describe the movement and
+ * are untouched.
+ */
+const COUNTING_PHRASING = /\bper side\b|\bswitch sides\b|\beach side\b|\brepeat on the (other|opposite) side\b/i;
+
+/**
+ * Validates one movement's instruction state.
+ *
+ * `outstanding` needs nothing: it is the absence of a claim. The other two are
+ * claims, and each has to hold up.
+ */
+const checkInstructions = (
+  exerciseId: ExerciseId,
+  state: InstructionState,
+  failures: MatrixValidationFailure[],
+): void => {
+  // Authored content is untrusted at this boundary; a state the type promises
+  // may still be missing or malformed at runtime.
+  if (state === null || typeof state !== 'object' || !('kind' in state)) {
+    failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} instructions` });
+    return;
+  }
+
+  if (state.kind === 'outstanding') return;
+
+  if (state.kind === 'not-required') {
+    // A reason is what separates a decision from an omission.
+    if (typeof state.reason !== 'string' || state.reason.trim().length === 0) {
+      failures.push({ kind: 'empty-collection', at: `exercise ${exerciseId} not-required reason` });
+    }
+    return;
+  }
+
+  if (state.kind !== 'authored') {
+    failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} instructions kind` });
+    return;
+  }
+
+  if (!Array.isArray(state.steps) || state.steps.length === 0) {
+    failures.push({ kind: 'empty-collection', at: `exercise ${exerciseId} instruction steps` });
+    return;
+  }
+
+  const kinds = new Set<MovementStepKind>();
+  for (const step of state.steps) {
+    if (step === null || typeof step !== 'object' || typeof step.text !== 'string') {
+      failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} instruction step` });
+      continue;
+    }
+    if (step.text.trim().length === 0) {
+      failures.push({ kind: 'empty-collection', at: `exercise ${exerciseId} instruction step text` });
+    }
+    if (step.kind !== 'setup' && step.kind !== 'action' && step.kind !== 'return') {
+      failures.push({
+        kind: 'malformed',
+        detail: `exercise ${exerciseId} instruction step kind ${String(step.kind)}`,
+      });
+      continue;
+    }
+    if (COUNTING_PHRASING.test(step.text)) {
+      failures.push({ kind: 'instruction-states-counting', exerciseId, text: step.text });
+    }
+    kinds.add(step.kind);
+  }
+
+  const missing = (['setup', 'action'] as const).filter((k) => !kinds.has(k));
+  if (missing.length > 0) {
+    failures.push({ kind: 'instruction-missing-required-step', exerciseId, missing });
+  }
+
+  checkSources(state.authority, String(exerciseId), failures);
 };
 
 /** Project content and reviewed content both have to say what they rest on. */

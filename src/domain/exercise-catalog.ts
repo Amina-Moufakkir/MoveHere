@@ -53,6 +53,19 @@ const ex = (id: string): ExerciseId => id as ExerciseId;
  * `thoracic-rotation` likewise. Nothing else in the catalog is genuinely
  * ambiguous, and a mode is not added to widen a slot.
  */
+/**
+ * Every movement is `outstanding`. None is `not-required`.
+ *
+ * `not-required` is a content decision — a claim that a movement genuinely
+ * needs no written instruction — and the canonical plan establishes it for
+ * nothing. Marking walking or running `not-required` here because it seems
+ * obvious would be exactly the silent classification the three-state model
+ * exists to prevent: it would record a decision nobody made, and it would be
+ * indistinguishable afterwards from one that was.
+ *
+ * Pass 1 adds the contract. The content, and the per-movement judgment of which
+ * state each belongs in, is a separate authoring pass.
+ */
 export const EXERCISES: readonly Exercise[] = [
   // --- squat ---------------------------------------------------------------
   {
@@ -63,6 +76,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps', 'time'],
     countingModes: ['total'],
     cues: ['Feet about shoulder width', 'Sit back and down', 'Stand tall at the top'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('reverse-lunge'),
@@ -72,6 +86,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total', 'per-side'],
     cues: ['Step back, not down', 'Keep the front shin upright', 'Push through the front foot'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('split-squat'),
@@ -81,6 +96,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['per-side'],
     cues: ['Stagger your stance', 'Lower straight down', 'Keep your weight on the front leg'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('step-up'),
@@ -90,6 +106,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total', 'per-side'],
     cues: ['Place the whole foot on the step', 'Drive through the top leg', 'Step down under control'],
+    instructions: { kind: 'outstanding' },
   },
 
   // --- hinge ---------------------------------------------------------------
@@ -101,6 +118,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps', 'time'],
     countingModes: ['total'],
     cues: ['Heels close to your hips', 'Push the floor away', 'Ribs down at the top'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('hip-hinge'),
@@ -110,6 +128,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total'],
     cues: ['Soft knees', 'Push your hips back', 'Flat back throughout'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('single-leg-deadlift'),
@@ -119,6 +138,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['per-side'],
     cues: ['Hinge at the hip', 'Back leg and torso move together', 'Move slowly for balance'],
+    instructions: { kind: 'outstanding' },
   },
 
   // --- push ----------------------------------------------------------------
@@ -130,6 +150,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps', 'time'],
     countingModes: ['total'],
     cues: ['Hands under your shoulders', 'Body in one line', 'Elbows back, not flared'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('incline-push-up'),
@@ -139,6 +160,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total'],
     cues: ['Hands on the surface, feet back', 'Body in one line', 'Lower your chest to your hands'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('pike-push-up'),
@@ -148,6 +170,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total'],
     cues: ['Hips high', 'Lower the top of your head toward the ground', 'Press back up'],
+    instructions: { kind: 'outstanding' },
   },
 
   // --- pull ----------------------------------------------------------------
@@ -159,6 +182,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['total'],
     cues: ['Full grip on the bar', 'Shoulders active, not shrugged', 'Breathe steadily'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('pull-up'),
@@ -168,6 +192,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total'],
     cues: ['Start from a full hang', 'Pull your chest toward the bar', 'Lower under control'],
+    instructions: { kind: 'outstanding' },
   },
 
   // --- core ----------------------------------------------------------------
@@ -179,6 +204,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['total'],
     cues: ['Forearms under your shoulders', 'Body in one line', 'Breathe, do not hold your breath'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('side-plank'),
@@ -188,6 +214,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['per-side'],
     cues: ['Elbow under your shoulder', 'Hips stacked and lifted', 'Keep your neck long'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('dead-bug'),
@@ -197,6 +224,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total', 'per-side'],
     cues: ['Lower back stays down', 'Extend opposite arm and leg', 'Move slowly'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('hanging-knee-raise'),
@@ -206,6 +234,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total'],
     cues: ['Hang with active shoulders', 'Raise your knees toward your chest', 'Lower without swinging'],
+    instructions: { kind: 'outstanding' },
   },
 
   // --- locomotion ----------------------------------------------------------
@@ -217,6 +246,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['total'],
     cues: ['Lift your knees to hip height', 'Stay tall', 'Land softly'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('brisk-walk'),
@@ -226,6 +256,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time', 'distance'],
     countingModes: ['total'],
     cues: ['Steady, purposeful pace', 'Relaxed shoulders', 'Breathe through your nose if you can'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('easy-run'),
@@ -235,6 +266,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time', 'distance'],
     countingModes: ['total'],
     cues: ['Conversational pace', 'Short, quick steps', 'Stay relaxed'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('shuttle-run'),
@@ -244,6 +276,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['total'],
     cues: ['Run out, touch down, run back', 'Decelerate before you turn', 'Keep your turns tidy'],
+    instructions: { kind: 'outstanding' },
   },
 
   // --- mobility ------------------------------------------------------------
@@ -255,6 +288,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['per-side'],
     cues: ['Half-kneeling position', 'Tuck your hips under', 'Breathe and hold'],
+    instructions: { kind: 'outstanding' },
   },
   {
     id: ex('thoracic-rotation'),
@@ -264,6 +298,7 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps', 'time'],
     countingModes: ['total', 'per-side'],
     cues: ['Open one arm toward the sky', 'Follow your hand with your eyes', 'Move slowly'],
+    instructions: { kind: 'outstanding' },
   },
 ];
 

@@ -99,6 +99,57 @@ export type PresentableAuthority = Extract<
 type NonEmpty<T> = readonly [T, ...T[]];
 
 /**
+ * Where a step sits in the movement (§8).
+ *
+ * Typed rather than a flat list because the defect is predictable: the
+ * commonest fault in an instruction is a missing start position, and a set of
+ * steps that begins mid-movement reads as complete when it is not. Typing the
+ * setup step lets the loader require one.
+ */
+export type MovementStepKind = 'setup' | 'action' | 'return';
+
+/** One ordered step. Step N presumes the steps before it have been done. */
+export interface MovementStep {
+  readonly kind: MovementStepKind;
+  readonly text: string;
+}
+
+/**
+ * Whether a movement has written instructions, and why not when it does not (§8).
+ *
+ * Three states, deliberately distinct. "We decided none is needed" and "we have
+ * not written one yet" are different facts about the content, and a model that
+ * collapses them into absence loses the distinction permanently — the same
+ * discipline §7 applies to venue features.
+ *
+ * `authored` carries `PresentableAuthority` rather than `ContentAuthority`, so
+ * a draft instruction is unrepresentable. It has nowhere it needs to live:
+ * `outstanding` already says "not ready", and admitting a draft here would let
+ * half-written instructions sit in the catalog looking like content.
+ *
+ * Authority is the instruction's own, never the exercise's. Instructions are
+ * separate content on a separate authoring schedule, and inheriting an
+ * exercise's tier would let an instruction acquire authority it never earned.
+ *
+ * **Ordered instructions are not execution cues.** Cues are corrective and
+ * unordered, addressed to someone already performing the movement; steps are
+ * constructive and ordered, addressed to someone who has never performed it.
+ * Neither replaces the other, and `cues` is untouched by any of this.
+ */
+export type InstructionState =
+  | {
+      readonly kind: 'authored';
+      readonly steps: NonEmpty<MovementStep>;
+      readonly authority: PresentableAuthority;
+    }
+  | {
+      /** Deliberately none. The reason is required: "obvious" is not one. */
+      readonly kind: 'not-required';
+      readonly reason: string;
+    }
+  | { readonly kind: 'outstanding' };
+
+/**
  * A movement definition.
  *
  * Carries no injury, condition, or contraindication metadata (§10), and no
@@ -130,6 +181,14 @@ export interface Exercise {
   readonly countingModes: NonEmpty<RepCounting>;
   /** Plain execution cues shown to the user. Not safety assurance (§9). */
   readonly cues: NonEmpty<string>;
+  /**
+   * Ordered instructions for someone who has not done this movement before.
+   *
+   * Required, and three-valued, so every movement states which it is. An
+   * optional field would make "not yet written" and "deliberately none"
+   * indistinguishable from each other and from an authoring oversight.
+   */
+  readonly instructions: InstructionState;
 }
 
 /**

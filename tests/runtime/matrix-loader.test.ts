@@ -170,6 +170,7 @@ test('an exercise reachable by no route is rejected', () => {
         prescriptionKinds: ['reps'],
         countingModes: ['total'],
         cues: ['nothing'],
+        instructions: { kind: 'outstanding' },
       },
     ],
   });

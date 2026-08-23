@@ -12,10 +12,11 @@
     "test:contracts": "node scripts/check-contracts.mjs",
     "test:runtime": "node --experimental-strip-types --test tests/runtime/*.test.ts",
     "check:feasibility": "node scripts/check-feasibility.mjs",
-    "verify": "npm run typecheck:domain && npm run typecheck && npm run test:contracts && npm run test:runtime && npm run check:feasibility && npm run check:palette && npm run check:mobile-coverage && npm run check:exercise-media && npm run check:media-manifest",
+    "verify": "npm run typecheck:domain && npm run typecheck && npm run test:contracts && npm run test:runtime && npm run check:feasibility && npm run check:palette && npm run check:mobile-coverage && npm run check:exercise-media && npm run check:media-manifest && npm run check:instructions",
     "check:palette": "node scripts/check-palette.mjs",
     "check:mobile-coverage": "node scripts/check-mobile-coverage.mjs",
     "check:exercise-media": "node --experimental-strip-types scripts/check-exercise-media.mjs",
+    "check:instructions": "node scripts/check-instruction-coverage.mjs",
     "media:manifest": "node --experimental-strip-types scripts/exercise-media-manifest.mjs > docs/exercise-media-manifest.md",
     "check:media-manifest": "node --experimental-strip-types scripts/exercise-media-manifest.mjs | diff -u docs/exercise-media-manifest.md - > /dev/null && echo \"  manifest matches the matrix\" || (echo \"  docs/exercise-media-manifest.md is stale \u2014 run npm run media:manifest\" && exit 1)"
   },
