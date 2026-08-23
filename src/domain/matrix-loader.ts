@@ -12,6 +12,7 @@
 import type {
   AuthoredMatrix,
   InstructionState,
+  MovementStep,
   MovementStepKind,
   ContentAuthority,
   ExerciseCompatibility,
@@ -23,6 +24,7 @@ import type {
   Exercise,
 } from './exercise.ts';
 import { isSupportedFeatureId, FEATURE_REGISTRY } from './feature-registry.ts';
+import { PHASE_ORDER, instructionContextsFor } from './instruction-resolution.ts';
 
 type NonEmpty<T> = readonly [T, ...T[]];
 
@@ -83,6 +85,58 @@ export type MatrixValidationFailure =
       readonly missing: readonly MovementStepKind[];
     }
   | {
+      /** Steps out of phase order: an action before a setup, a return before an action. */
+      readonly kind: 'instruction-steps-out-of-phase-order';
+      readonly exerciseId: ExerciseId;
+    }
+  | {
+      /**
+       * A declared context the matrix does not hold for this movement.
+       *
+       * Applies to the default context and to every override. Instruction
+       * content must never become a second way to assert that a movement can be
+       * performed on a structure — the rule exercise visuals already obey.
+       */
+      readonly kind: 'instruction-context-uncited';
+      readonly exerciseId: ExerciseId;
+      readonly context: string;
+    }
+  | {
+      /**
+       * A default context that is not the movement's baseline.
+       *
+       * Where an environment-independent declaration exists, the form
+       * performable anywhere is the one a baseline description should describe.
+       */
+      readonly kind: 'instruction-default-context-not-baseline';
+      readonly exerciseId: ExerciseId;
+    }
+  | {
+      /** An override that can never be selected: it repeats the default context or another override. */
+      readonly kind: 'instruction-override-unreachable';
+      readonly exerciseId: ExerciseId;
+      readonly context: string;
+    }
+  | {
+      /** An override whose steps are not all of the phase it replaces. */
+      readonly kind: 'instruction-override-phase-mismatch';
+      readonly exerciseId: ExerciseId;
+      readonly replaces: MovementStepKind;
+    }
+  | {
+      /**
+       * A context that does not resolve to a complete instruction.
+       *
+       * Provable from phase replacement, and checked anyway: it is the
+       * invariant §8 states, and a future change to the override model would
+       * break it silently otherwise.
+       */
+      readonly kind: 'instruction-context-incomplete';
+      readonly exerciseId: ExerciseId;
+      readonly context: string;
+      readonly missing: readonly MovementStepKind[];
+    }
+  | {
       /**
        * Instruction text stating how a prescribed number is counted.
        *
@@ -106,6 +160,18 @@ export type MatrixValidationFailure =
  * environment-independent option will produce repetitive substitute sessions.
  */
 export type MatrixAdvisory =
+  | {
+      /**
+       * A cited context reading prose authored for somewhere else.
+       *
+       * Legitimate — it is what stops every context duplicating an identical
+       * action and return — but reported, so inheriting stays a decision
+       * someone made rather than a context nobody thought about.
+       */
+      readonly kind: 'instruction-context-inherits-default';
+      readonly exerciseId: ExerciseId;
+      readonly featureId: string;
+    }
   | { readonly kind: 'feature-without-movements'; readonly featureId: string }
   | { readonly kind: 'feature-with-single-movement'; readonly featureId: string }
   | {
@@ -140,6 +206,10 @@ const weakestTier = (
 export const loadMatrix: LoadMatrix = (authored: AuthoredMatrix) => {
   const failures: MatrixValidationFailure[] = [];
   const dropped: DroppedEntry[] = [];
+  // Declared up here because instruction checks run before the failure gate and
+  // can report an advisory. Advisories are discarded if the load fails, which
+  // is correct: nothing loaded, so there is nothing to advise about.
+  const advisories: MatrixAdvisory[] = [];
 
   const exerciseIds = new Set<string>();
   for (const exercise of authored.exercises) {
@@ -168,7 +238,7 @@ export const loadMatrix: LoadMatrix = (authored: AuthoredMatrix) => {
         }
       }
     }
-    checkInstructions(exercise.id, exercise.instructions, failures);
+
   }
 
   const entryIds = new Set<string>();
@@ -215,6 +285,28 @@ export const loadMatrix: LoadMatrix = (authored: AuthoredMatrix) => {
     environmentIndependent.push(entry as UsableEnvironmentIndependentMovement);
   }
 
+  // Instructions are checked here rather than with the other per-exercise
+  // fields: a declared context has to be checked against the claims the matrix
+  // actually holds, and those are not known until now.
+  const eiFor = new Set(environmentIndependent.map((e) => String(e.exerciseId)));
+  const featuresFor = new Map<string, Set<string>>();
+  for (const c of compatibilities) {
+    const key = String(c.exerciseId);
+    const set = featuresFor.get(key) ?? new Set<string>();
+    set.add(String(c.featureId));
+    featuresFor.set(key, set);
+  }
+  for (const exercise of authored.exercises) {
+    checkInstructions(
+      exercise.id,
+      exercise.instructions,
+      eiFor.has(String(exercise.id)),
+      featuresFor.get(String(exercise.id)) ?? new Set<string>(),
+      failures,
+      advisories,
+    );
+  }
+
   // An exercise reachable by no route is dead weight in a catalog whose whole
   // point is being small enough to read.
   const reachable = new Set<string>([
@@ -248,8 +340,6 @@ export const loadMatrix: LoadMatrix = (authored: AuthoredMatrix) => {
 
   const [first, ...rest] = failures;
   if (first !== undefined) return { ok: false, failures: [first, ...rest] };
-
-  const advisories: MatrixAdvisory[] = [];
 
   for (const feature of FEATURE_REGISTRY.supported) {
     const count = compatibilities.filter((c) => c.featureId === feature.id).length;
@@ -304,10 +394,63 @@ const COUNTING_PHRASING = /\bper side\b|\bswitch sides\b|\beach side\b|\brepeat 
  * `outstanding` needs nothing: it is the absence of a claim. The other two are
  * claims, and each has to hold up.
  */
+const contextLabel = (c: { kind: string; featureId?: unknown }): string =>
+  c.kind === 'confirmed-feature' ? `feature:${String(c.featureId)}` : 'environment-independent';
+
+/** Steps must run setup* action* return*, so a phase is a contiguous run. */
+const inPhaseOrder = (steps: readonly MovementStep[]): boolean => {
+  let highest = -1;
+  for (const step of steps) {
+    const rank = PHASE_ORDER.indexOf(step.kind);
+    if (rank < highest) return false;
+    highest = Math.max(highest, rank);
+  }
+  return true;
+};
+
+/** Validates one ordered run of steps. Shared by the default and every override. */
+const checkSteps = (
+  exerciseId: ExerciseId,
+  steps: readonly MovementStep[],
+  failures: MatrixValidationFailure[],
+): ReadonlySet<MovementStepKind> => {
+  const kinds = new Set<MovementStepKind>();
+  for (const step of steps) {
+    if (step === null || typeof step !== 'object' || typeof step.text !== 'string') {
+      failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} instruction step` });
+      continue;
+    }
+    if (step.text.trim().length === 0) {
+      failures.push({ kind: 'empty-collection', at: `exercise ${exerciseId} instruction step text` });
+    }
+    if (!PHASE_ORDER.includes(step.kind)) {
+      failures.push({
+        kind: 'malformed',
+        detail: `exercise ${exerciseId} instruction step kind ${String(step.kind)}`,
+      });
+      continue;
+    }
+    if (COUNTING_PHRASING.test(step.text)) {
+      failures.push({ kind: 'instruction-states-counting', exerciseId, text: step.text });
+    }
+    kinds.add(step.kind);
+  }
+  return kinds;
+};
+
+/**
+ * Validates one movement's instruction state against the claims the matrix holds.
+ *
+ * `outstanding` needs nothing: it is the absence of a claim. The other two are
+ * claims, and each has to hold up.
+ */
 const checkInstructions = (
   exerciseId: ExerciseId,
   state: InstructionState,
+  isEnvironmentIndependent: boolean,
+  citedFeatures: ReadonlySet<string>,
   failures: MatrixValidationFailure[],
+  advisories: MatrixAdvisory[],
 ): void => {
   // Authored content is untrusted at this boundary; a state the type promises
   // may still be missing or malformed at runtime.
@@ -336,34 +479,138 @@ const checkInstructions = (
     return;
   }
 
-  const kinds = new Set<MovementStepKind>();
-  for (const step of state.steps) {
-    if (step === null || typeof step !== 'object' || typeof step.text !== 'string') {
-      failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} instruction step` });
-      continue;
-    }
-    if (step.text.trim().length === 0) {
-      failures.push({ kind: 'empty-collection', at: `exercise ${exerciseId} instruction step text` });
-    }
-    if (step.kind !== 'setup' && step.kind !== 'action' && step.kind !== 'return') {
-      failures.push({
-        kind: 'malformed',
-        detail: `exercise ${exerciseId} instruction step kind ${String(step.kind)}`,
-      });
-      continue;
-    }
-    if (COUNTING_PHRASING.test(step.text)) {
-      failures.push({ kind: 'instruction-states-counting', exerciseId, text: step.text });
-    }
-    kinds.add(step.kind);
+  const defaultKinds = checkSteps(exerciseId, state.steps, failures);
+  if (!inPhaseOrder(state.steps)) {
+    failures.push({ kind: 'instruction-steps-out-of-phase-order', exerciseId });
   }
 
-  const missing = (['setup', 'action'] as const).filter((k) => !kinds.has(k));
+  const missing = (['setup', 'action'] as const).filter((k) => !defaultKinds.has(k));
   if (missing.length > 0) {
     failures.push({ kind: 'instruction-missing-required-step', exerciseId, missing });
   }
 
   checkSources(state.authority, String(exerciseId), failures);
+
+  /* ------------------------------------------------------- default context */
+
+  const declared = state.defaultContext;
+  if (declared === null || typeof declared !== 'object' || !('kind' in declared)) {
+    failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} defaultContext` });
+    return;
+  }
+
+  if (declared.kind === 'environment-independent') {
+    if (!isEnvironmentIndependent) {
+      failures.push({
+        kind: 'instruction-context-uncited',
+        exerciseId,
+        context: 'environment-independent',
+      });
+    }
+  } else if (declared.kind === 'confirmed-feature') {
+    if (!citedFeatures.has(String(declared.featureId))) {
+      failures.push({
+        kind: 'instruction-context-uncited',
+        exerciseId,
+        context: contextLabel(declared),
+      });
+    }
+    // Where the movement can be performed with nothing, that is its baseline.
+    if (isEnvironmentIndependent) {
+      failures.push({ kind: 'instruction-default-context-not-baseline', exerciseId });
+    }
+  } else {
+    failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} defaultContext kind` });
+    return;
+  }
+
+  /* ------------------------------------------------------------ overrides */
+
+  const overrides = state.overrides ?? [];
+  if (!Array.isArray(overrides)) {
+    failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} instruction overrides` });
+    return;
+  }
+
+  const seen = new Set<string>();
+  const overriddenBy = new Map<string, Set<MovementStepKind>>();
+
+  for (const override of overrides) {
+    if (override === null || typeof override !== 'object') {
+      failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} instruction override` });
+      continue;
+    }
+    const featureId = String(override.featureId);
+
+    if (!isSupportedFeatureId(override.featureId)) {
+      failures.push({ kind: 'excluded-feature-referenced', found: override.featureId, at: `exercise ${exerciseId} instruction override` });
+      continue;
+    }
+    if (!citedFeatures.has(featureId)) {
+      failures.push({ kind: 'instruction-context-uncited', exerciseId, context: `feature:${featureId}` });
+      continue;
+    }
+    // An override for the default context, or a second one for the same phase,
+    // can never be selected.
+    const isDefaultContext =
+      declared.kind === 'confirmed-feature' && String(declared.featureId) === featureId;
+    const key = `${featureId}::${String(override.replaces)}`;
+    if (isDefaultContext || seen.has(key)) {
+      failures.push({ kind: 'instruction-override-unreachable', exerciseId, context: key });
+      continue;
+    }
+    seen.add(key);
+
+    if (!PHASE_ORDER.includes(override.replaces)) {
+      failures.push({ kind: 'malformed', detail: `exercise ${exerciseId} override replaces ${String(override.replaces)}` });
+      continue;
+    }
+    if (!Array.isArray(override.steps) || override.steps.length === 0) {
+      failures.push({ kind: 'empty-collection', at: `exercise ${exerciseId} override steps` });
+      continue;
+    }
+    const kinds = checkSteps(exerciseId, override.steps, failures);
+    if (kinds.size !== 1 || !kinds.has(override.replaces)) {
+      failures.push({ kind: 'instruction-override-phase-mismatch', exerciseId, replaces: override.replaces });
+    }
+    checkSources(override.authority, String(exerciseId), failures);
+
+    const phases = overriddenBy.get(featureId) ?? new Set<MovementStepKind>();
+    phases.add(override.replaces);
+    overriddenBy.set(featureId, phases);
+  }
+
+  /* ------------------------------------------- every context resolves whole */
+
+  for (const context of instructionContextsFor(isEnvironmentIndependent, [...citedFeatures].sort())) {
+    const applied = context.kind === 'confirmed-feature' ? overriddenBy.get(context.featureId) : undefined;
+    const resolved = new Set<MovementStepKind>(defaultKinds);
+    for (const phase of applied ?? []) resolved.add(phase);
+
+    const gaps = (['setup', 'action'] as const).filter((k) => !resolved.has(k));
+    if (gaps.length > 0) {
+      failures.push({
+        kind: 'instruction-context-incomplete',
+        exerciseId,
+        context: contextLabel(context),
+        missing: gaps,
+      });
+    }
+
+    // Reading prose authored for elsewhere is legitimate and is reported.
+    const isDefault =
+      (context.kind === 'environment-independent' && declared.kind === 'environment-independent') ||
+      (context.kind === 'confirmed-feature' &&
+        declared.kind === 'confirmed-feature' &&
+        String(declared.featureId) === context.featureId);
+    if (!isDefault && context.kind === 'confirmed-feature' && applied === undefined) {
+      advisories.push({
+        kind: 'instruction-context-inherits-default',
+        exerciseId,
+        featureId: context.featureId,
+      });
+    }
+  }
 };
 
 /** Project content and reviewed content both have to say what they rest on. */

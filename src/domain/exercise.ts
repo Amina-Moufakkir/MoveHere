@@ -135,11 +135,73 @@ export interface MovementStep {
  * unordered, addressed to someone already performing the movement; steps are
  * constructive and ordered, addressed to someone who has never performed it.
  * Neither replaces the other, and `cues` is untouched by any of this.
+ *
+ * **The resolution invariant.** The default completely constructs *its own
+ * declared context*. Every supported generation context must **resolve** to a
+ * complete instruction, from the default alone or through valid phase
+ * overrides. The unmodified default is not required to be valid in every
+ * context — requiring that would push the prose back toward describing nothing
+ * in particular.
+ *
+ * Only `authored` resolves. `outstanding` and `not-required` are facts about a
+ * movement, not about where it is performed; a movement authored for a bench
+ * and outstanding for stairs would be a fourth state wearing a disguise.
  */
+/**
+ * Which basis an authored instruction's steps construct (§8).
+ *
+ * Declared, never inferred. Prose whose intended basis is unknown is prose
+ * nobody can review: a reader cannot otherwise tell whether "place your whole
+ * foot on the step" was written for a bench or for a stair.
+ *
+ * Deliberately the same shape as `SelectionBasis`, because that is what it is
+ * resolved against — the context the generated item actually cited.
+ */
+export type InstructionContext =
+  | { readonly kind: 'environment-independent' }
+  | { readonly kind: 'confirmed-feature'; readonly featureId: SupportedFeatureId };
+
+/**
+ * One phase of a default instruction, rewritten for one other context.
+ *
+ * The unit is a phase, never a step and never a whole instruction. A whole
+ * instruction would duplicate the action and the return, which are identical
+ * across contexts, and two copies of a paragraph are two paragraphs that drift.
+ * A step would need identities and make splicing ambiguous. A phase is the
+ * smallest unit that is both meaningful and unambiguous to replace.
+ *
+ * Because a phase may only be replaced by a non-empty set of steps of the same
+ * kind, a resolved instruction cannot lose the setup or the action its default
+ * guaranteed.
+ *
+ * Its own authority, for the same reason the instruction has one: an override
+ * added after a review would otherwise ride on the reviewed tier without having
+ * been reviewed.
+ */
+export interface InstructionOverride {
+  readonly featureId: SupportedFeatureId;
+  /** Which phase this replaces. Every step must be of this kind. */
+  readonly replaces: MovementStepKind;
+  readonly steps: NonEmpty<MovementStep>;
+  readonly authority: PresentableAuthority;
+}
+
 export type InstructionState =
   | {
       readonly kind: 'authored';
+      /** The context `steps` completely constructs. */
+      readonly defaultContext: InstructionContext;
+      /** Ordered, and in phase order: every setup, then every action, then every return. */
       readonly steps: NonEmpty<MovementStep>;
+      /**
+       * Other cited contexts whose setup, action or return differs.
+       *
+       * Optional, unlike `instructions` itself. Absence here genuinely means
+       * "the default covers every cited context", which carries no ambiguity —
+       * unlike an absent instruction, where "none needed" and "not written" are
+       * different facts.
+       */
+      readonly overrides?: readonly InstructionOverride[];
       readonly authority: PresentableAuthority;
     }
   | {

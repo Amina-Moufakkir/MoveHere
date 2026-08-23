@@ -89,6 +89,7 @@ test('an authored instruction needs a setup step', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [step('action', 'Lower your chest to the ground'), step('return', 'Press back up')],
       authority: PROJECT,
     }),
@@ -105,6 +106,7 @@ test('an authored instruction needs an action step', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [step('setup', 'Stand with your feet about shoulder width apart')],
       authority: PROJECT,
     }),
@@ -117,6 +119,7 @@ test('a static hold needs no return step', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [
         step('setup', 'Lie face down and place your forearms under your shoulders'),
         step('action', 'Lift your hips until your body is in one line, and hold'),
@@ -131,6 +134,7 @@ test('an authored instruction with all three kinds loads', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [
         step('setup', 'Stand with your feet about shoulder width apart'),
         step('action', 'Sit back and down until your thighs are near parallel'),
@@ -146,6 +150,7 @@ test('a step may not be blank', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [step('setup', '   '), step('action', 'Sit back and down')],
       authority: PROJECT,
     }),
@@ -160,6 +165,7 @@ test('an authored instruction carries its own sourced authority', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [step('setup', 'Stand tall'), step('action', 'Sit back and down')],
       authority: { status: 'project-content', authoredAt: '2026-08-23', basisRefs: [] as never },
     }),
@@ -183,6 +189,7 @@ test('instruction text may not state how a prescribed number is counted', () => 
     const result = loadMatrix(
       withInstructions({
         kind: 'authored',
+        defaultContext: { kind: 'environment-independent' },
         steps: [step('setup', 'Stagger your stance'), step('action', text)],
         authority: PROJECT,
       }),
@@ -199,6 +206,7 @@ test('describing the body is not stating a count', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [
         step('setup', 'Stand tall with your weight on one leg'),
         step('action', 'Step back with your other leg and lower your hips'),
@@ -229,6 +237,7 @@ test('a malformed step is reported, not thrown on', () => {
   const result = loadMatrix(
     withInstructions({
       kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
       steps: [
         step('setup', 'Stand tall'),
         { kind: 'cue', text: 'Elbows back' } as unknown as MovementStep,

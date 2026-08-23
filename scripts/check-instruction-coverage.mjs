@@ -39,10 +39,28 @@ for (const kind of ['authored', 'not-required', 'outstanding']) {
   for (const id of ids) console.log('        ' + id);
 }
 
+// Context coverage. An authored instruction declares the context it constructs;
+// every other cited context either overrides a phase or inherits the default,
+// and inheriting is a decision worth seeing rather than a silence.
+let overrides = 0;
+const inherited = m.advisories.filter((a) => a.kind === 'instruction-context-inherits-default');
+for (const e of m.matrix.exercises) {
+  if (e.instructions.kind !== 'authored') continue;
+  const list = e.instructions.overrides ?? [];
+  overrides += list.length;
+  const ctx = e.instructions.defaultContext;
+  const label = ctx.kind === 'confirmed-feature' ? String(ctx.featureId) : 'environment-independent';
+  console.log('        ' + String(e.id) + '  default=' + label + '  overrides=' + list.length);
+}
+for (const a of inherited) {
+  console.log('  inherit  ' + String(a.exerciseId) + ' @ ' + a.featureId + ' reads the default instruction');
+}
+
 console.log(
   '\\n  ' + buckets.authored.length + '/' + total + ' movements have authored instructions, ' +
   buckets['not-required'].length + ' need none by decision, ' +
-  buckets.outstanding.length + ' outstanding'
+  buckets.outstanding.length + ' outstanding; ' +
+  overrides + ' context overrides, ' + inherited.length + ' contexts inheriting the default'
 );
 `;
 
