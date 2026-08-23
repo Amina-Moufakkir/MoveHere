@@ -29,11 +29,18 @@ unverified entry.**
 
 Ordered by priority. `verified` means a person read the page itself.
 
+**A register row asks what a page says. It must not ask for confirmation of what
+the page is assumed to say.** Two rows here were written the wrong way round and
+had to be corrected on contact: one asserted that ACE 303 is a BOSU exercise,
+and one asked to confirm the hip-hinge bar is "a feedback device, not part of
+the movement". Both smuggled a summariser's conclusion into the question, which
+is the failure mode this register exists to prevent.
+
 | Page | Status | Verified facts / what to confirm |
 |---|---|---|
 | [ACE 41 Push-Up](https://www.acefitness.org/resources/everyone/exercise-library/41/push-up/) | **verified 2026-08-23** | Hands approximately shoulder-width; shoulders directly over hands; body extended with no hip or knee bend; the downward phase lowers the body with a rigid torso; the upward phase presses back to full elbow extension. **The default explicitly allows the elbows to flare outward during lowering, and elbows-close-to-sides is presented separately as an alternative position.** |
 | [ACE 101 Side Plank with Straight Leg](https://www.acefitness.org/resources/everyone/exercise-library/101/side-plank-with-straight-leg/) | **verified 2026-08-23** | Starts lying on one side; legs extended and stacked; supporting elbow directly beneath the shoulder; the upward action lifts the hips and knees from the floor; the held position keeps the supporting elbow beneath the shoulder; lowering returns to the start. **This straight-leg floor variation is MoveHere's designated basis.** [ACE 303](https://www.acefitness.org/resources/everyone/exercise-library/303/side-plank/) was not read and is not the basis |
-| [ACE 33 Hip Hinge](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/33/hip-hinge/) | pending | That the bar held along the spine is a feedback device, not part of the movement |
+| [ACE 33 Hip Hinge](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/33/hip-hinge/) | **verified 2026-08-23** | Standing setup, feet shoulder-width, toes forward or slightly outward; movement begins by shifting weight toward the heels and pushing the hips backward; the torso hinges forward at the hips; only slight knee bending occurs; the return moves the hips forward to upright standing. **ACE teaches this version using a light bar maintained against the head, thoracic spine and sacrum, and does not state that the bar is optional** |
 | [ACE 366 Bulgarian Split Squat](https://www.acefitness.org/resources/everyone/exercise-library/366/bulgarian-split-squat/) | pending | Rear-foot-on-bench setup, descent, return. **Do not record box height** |
 | [NSCA *The Undervalued Lunge*](https://www.nsca.com/contentassets/24dd7222ed1b4caeb8a0a46b81bd11f3/ptq-4.4.9-the-undervalued-lunge.pdf) | pending | Grounded split stance, rear heel raised. **Do not record joint angles** |
 | [ACE 135 Bodyweight Squat](https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/) | pending | Stance width; hips back then down; return. **Do not record a depth target** |
@@ -70,7 +77,7 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `split-squat` @ `park-bench` | `ACE-LIB` 366 | S | Rear foot placed behind on a bench; rear knee lowers toward the floor; return by pressing the front foot and the top of the rear foot | Bench height **discarded** as an equipment dimension |
 | `step-up` | `ACE-LIB` 28 | S | Stand facing the platform; whole lead foot placed on it, torso upright; push off the trailing leg; step down under control | Page is dumbbell-loaded. **No step height may be carried across** |
 | `glute-bridge` | `ACE-LIB` 49 | S | Supine, knees bent, feet flat and hip-width; hips press up; lower under control | Heel-to-hip distance not specified by the source |
-| `hip-hinge` | `ACE-LIB` 33 | S | Feet shoulder-width; weight to the heels, hips travel backward, torso ends between vertical and parallel, minimal knee bend; return by driving the hips forward | Source uses a bar held along the spine as feedback — a teaching device, not the movement. MoveHere's is unloaded |
+| `hip-hinge` | `ACE-LIB` 33 — **human-verified** | S | Feet shoulder-width, toes forward or slightly outward; weight shifts toward the heels and the hips push backward; the torso hinges forward at the hips; only slight knee bending; return moves the hips forward to upright standing | **Torso endpoint discarded.** The source teaches the movement with a light bar held at three points and **does not establish that the bar is optional** — see the provenance note below. MoveHere's is unloaded and must not import it |
 | `single-leg-deadlift` | `ACE-LIB` 329 / 350 | S | Stand on one leg, supporting knee slightly bent; hips push back as the free leg straightens behind; return by pressing the standing foot down and lowering the free leg | Descent depth described as comfort-limited, not a target |
 | `push-up` | `ACE-LIB` 41 — **human-verified** | S | Hands approximately shoulder-width; shoulders directly over hands; body extended with no hip or knee bend; lower with a rigid torso; press back to full elbow extension | Elbow path is not settled by this source — see cue finding 1 |
 | `incline-push-up` | `ACE-LIB` 41 + `NHS-STR` | C | Hands on the raised surface, feet back, body in one line; lower the chest toward the hands; press back | **Composite, not directly sourced.** No single source describes this movement |
@@ -100,12 +107,13 @@ reaches the catalog, and none may be reintroduced during authoring.
 | Minimum joint angles at the bottom of a lunge | `NSCA-LUNGE` |
 | Muscles worked, agonists, activation percentages | `ACE-LIB` throughout, `MCGILL-AC` |
 | Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout |
-| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank |
+| Prerequisite and teaching-sequence claims | `ACE-LIB` 33 hip hinge |
+| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge |
 | Counting and side-switching phrasing | `ACE-LIB` 28 step-up, 142 hip-flexor stretch, 101 side plank |
-| Depth and range targets | `ACE-LIB` 135 squat |
+| Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat, 33 hip hinge |
 | Muscle-emphasis claims | `ACE-LIB` 41 push-up |
 | Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank |
-| Core-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug |
+| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge |
 | Alternative and modified variations (knee-supported, BOSU) | `ACE-LIB` 101 side plank |
 | Equipment incidental to a position (mats) | `ACE-LIB` 32 plank, 101 side plank |
 
@@ -155,6 +163,58 @@ MoveHere: *"Extend opposite arm and leg."* `ACE-LIB` 147 describes the opposite
 hand and heel *lowering toward the floor* from a knees-over-hips start. The same
 motion, described from opposite ends. Authoring must not adopt one framing as
 though it had settled the other.
+
+### Provenance note — the hip-hinge bar
+
+Recorded separately because the distinction is easy to lose and expensive to
+lose.
+
+**What the source establishes:** ACE teaches this version of the hip hinge using
+a light bar maintained in contact with the head, the thoracic spine and the
+sacrum.
+
+**What the source does not establish:** that the bar is optional, or that its
+role is only positional feedback. It says neither.
+
+**Reviewer inference, marked as inference:** the bar's described role *functions*
+as positional feedback. That is a reading of the source, not a claim it makes,
+and it must never be cited as though the source said it.
+
+**Consequence for MoveHere.** The verified body-position facts — the setup, the
+hips travelling backward, the hinge, the slight knee bend, the return — are
+independent of the bar and transfer. The bar itself does not: MoveHere's hip
+hinge is environment-independent and unloaded, and **the bar must not appear in
+its instructions.**
+
+The residual limitation is real and stays open. Strictly, this source describes a
+hip hinge *performed with a bar in place*; that the unloaded movement is the
+same movement is not something it establishes. The body-position facts are
+sufficient to construct the movement, and whether the constraint the bar
+supplies needs replacing by something else is a question for qualified review,
+not for authoring.
+
+**6 · `hip-hinge` — the cue is standing in for a physical device. Human-verified 2026-08-23.**
+
+*"Soft knees"* — **conceptually supported.** The source establishes that only
+slight knee bending occurs.
+
+*"Push your hips back"* — **directly supported.** The source establishes the
+hips pushing backward as the initiating action.
+
+*"Flat back throughout"* — **not directly established in that wording.** The
+source does not phrase a spinal instruction at all; it constrains body position
+physically, through three-point contact with the bar.
+
+That is the substantive part of this finding. **MoveHere's cue is doing the job
+the bar does in the source.** Removing the bar — which the environment-
+independent movement requires — removes the constraint, and "flat back
+throughout" is the unreviewed verbal substitute standing in its place. Whether a
+verbal cue can carry what a physical device carried is exactly the kind of
+question that needs qualified review rather than an authoring decision.
+
+The cue is unchanged and stays project content. Hip-hinge prose can be built
+from the verified facts without settling it, but this movement is a strong
+candidate for the trainer-review list rather than the cue-audit list alone.
 
 **5 · `side-plank` — two cues, two different gaps. Human-verified 2026-08-23.**
 
@@ -257,10 +317,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly human-verified | **2 of 14** (`ACE-LIB` 41, 101) |
-| Entries still second-hand by construction | **all but two** |
-| Out-of-scope fact categories discarded | 13 |
-| Cue findings raised, none actioned | 5 (2 human-verified) |
+| Pages directly human-verified | **3 of 14** (`ACE-LIB` 41, 101, 33) |
+| Entries still second-hand by construction | **all but three** |
+| Out-of-scope fact categories discarded | 14 |
+| Cue findings raised, none actioned | 6 (3 human-verified) |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
