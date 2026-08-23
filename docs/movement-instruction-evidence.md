@@ -43,7 +43,7 @@ is the failure mode this register exists to prevent.
 | [ACE 33 Hip Hinge](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/33/hip-hinge/) | **verified 2026-08-23** | Standing setup, feet shoulder-width, toes forward or slightly outward; movement begins by shifting weight toward the heels and pushing the hips backward; the torso hinges forward at the hips; only slight knee bending occurs; the return moves the hips forward to upright standing. **ACE teaches this version using a light bar maintained against the head, thoracic spine and sacrum, and does not state that the bar is optional** |
 | [ACE 366 Bulgarian Split Squat](https://www.acefitness.org/resources/everyone/exercise-library/366/bulgarian-split-squat/) | **verified 2026-08-23** | Starts in a split stance, one foot forward and the other behind; the rear foot is placed on a bench or box; the back is kept straight during the lowering phase; the rear knee lowers toward the floor; the return presses the front foot into the ground, and ACE also describes pushing through the top of the rear foot. **ACE specifies a bench or box height; that specification is excluded** — see the equipment note |
 | [NSCA *The Undervalued Lunge*](https://www.nsca.com/contentassets/24dd7222ed1b4caeb8a0a46b81bd11f3/ptq-4.4.9-the-undervalued-lunge.pdf) | **verified 2026-08-23**, with applicability caveat | Split stance, one foot forward and one behind; feet approximately hip-width apart; front-to-back distance greater than a walking stride; torso upright; toes and knees forward; rear heel raised; hips move down and up in a straight line; the return uses pressure through the front heel; the **Completely Stationary** modification keeps the feet in place after setup until the repetitions are done. **Discusses the lunge family and does not name a split squat** — see the applicability note |
-| [ACE 135 Bodyweight Squat](https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/) | pending | Stance width; hips back then down; return. **Do not record a depth target** |
+| [ACE 135 Bodyweight Squat](https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/) | **verified 2026-08-23** | Starts standing, feet slightly wider than hip-width, toes turned slightly outward; the descent begins by moving the hips backward then downward, with the hips and knees bending; the heels remain on the floor throughout; the upward phase extends the hips and knees with hips and torso rising together, returning to the starting standing position. **The depth target is excluded** |
 | [ACE 319 Reverse Lunge](https://www.acefitness.org/resources/everyone/exercise-library/319/reverse-lunge/) | pending | Backward step, rear knee path, return. Ignore barbell loading |
 | [ACE 28 Step-Up](https://www.acefitness.org/resources/everyone/exercise-library/28/step-up/) | pending | Foot placement, torso, step-down. **Do not record platform height**; the page's own side-switching phrasing must not transfer |
 | [ACE 49 Glute Bridge](https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/) | pending | Supine setup, press up, lower. Ignore breathing cues |
@@ -71,7 +71,7 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 
 | Movement | Basis ref | Status | Descriptive facts supported | Uncertain / not supported |
 |---|---|---|---|---|
-| `bodyweight-squat` | `ACE-LIB` 135 | S | Stance width and foot direction; hips shift back then down, hip and knee flexing together; return by extending hips and knees | Descent endpoint described by natural limits only — **not** a target and must not be restated as one |
+| `bodyweight-squat` | `ACE-LIB` 135 — **human-verified** | S | Starts standing, feet slightly wider than hip-width, toes turned slightly outward; the descent moves the hips backward then downward as the hips and knees bend; the heels remain on the floor throughout; the return extends the hips and knees with hips and torso rising together, back to standing | **Depth target excluded**, including thigh-parallel. Postural set-up detail, joint-alignment prescriptions and weighting instructions are all out of scope — see the discarded list |
 | `reverse-lunge` | `ACE-LIB` 319 | S | Step backward with one leg; rear knee lowers toward the floor; chest stays raised; return by pressing the front foot and swinging the rear leg forward | Page is barbell-loaded; loading discarded |
 | `split-squat` @ EI | `NSCA-LUNGE` — **human-verified** | S | Split stance, one foot forward and one behind, feet about hip-width apart, front-to-back distance greater than a walking stride; torso upright; toes and knees forward; rear heel raised; hips travel down and up in a straight line; the return presses through the front heel; the feet stay in place after setup | **Name mismatch, not movement mismatch** — see the applicability note. Stance length is relative, never absolute. The unverified `ACE-LIB` 366 beginner note is no longer relied on here |
 | `split-squat` @ `park-bench` | `ACE-LIB` 366 — **human-verified** | S | Split stance, one foot forward and the other behind; the rear foot placed on a bench or box; the back kept straight while lowering; the rear knee lowers toward the floor; the return presses the front foot into the ground, and also pushes through the top of the rear foot | **ACE does not establish that an arbitrary park bench suits this movement** — see the equipment note. Height specification, depth endpoint and held implements all discarded |
@@ -100,22 +100,32 @@ Not researched, by instruction: `brisk-walk` and `easy-run` (decided `not-requir
 Recorded so the omissions are auditable rather than invisible. None of these
 reaches the catalog, and none may be reintroduced during authoring.
 
+**Excluded is not rejected.** Nothing in this list is recorded as wrong, or as
+disputed. These are facts and instructions that fall outside the
+movement-construction scope MoveHere is currently authoring — setup position,
+defining action, return, and context-specific setup. Several would be entirely
+appropriate content for a product making claims this one does not make. The list
+says *not here*, not *not true*.
+
 | Discarded | Where it appeared |
 |---|---|
 | Hold durations and repetition counts | `ACE-LIB` 142 hip-flexor stretch, 101 side plank |
 | Equipment dimensions (bench/box height) | `ACE-LIB` 366 Bulgarian split squat — **verified present in the source and deliberately not carried across** |
 | Minimum joint angles at the bottom of a lunge | `NSCA-LUNGE` |
-| Joint-alignment prescriptions (knee over ankle) | `NSCA-LUNGE` |
+| Joint-alignment and segment-relationship prescriptions | `NSCA-LUNGE` (knee over ankle); `ACE-LIB` 135 (knee over second toe, tibial translation, tibia/torso parallel) |
 | Equipment, held implements and balance support | `NSCA-LUNGE`; `ACE-LIB` 366 (dumbbells, dumbbell position, and the elbow position associated with holding one — unrelated to the push-up elbow finding) |
 | Muscles worked, agonists, activation percentages | `ACE-LIB` throughout, `MCGILL-AC` |
 | Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout |
-| Prerequisite and teaching-sequence claims | `ACE-LIB` 33 hip hinge |
-| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge |
+| Prerequisite, teaching-sequence and related-exercise recommendations | `ACE-LIB` 33 hip hinge, 135 squat |
+| Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge, 135 squat |
 | Counting, side-switching, and source-specific left/right wording | `ACE-LIB` 28 step-up, 142 hip-flexor stretch, 101 side plank, 366 split squat; `NSCA-LUNGE` |
-| Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat, 33 hip hinge, 366 split squat (depth and floor-contact endpoint) |
+| Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat (thigh-parallel), 33 hip hinge, 366 split squat (depth and floor-contact endpoint) |
 | Muscle-emphasis claims | `ACE-LIB` 41 push-up |
 | Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank; `NSCA-LUNGE` |
-| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge; `NSCA-LUNGE` (abdominal, scapular) |
+| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge, 135 squat (abdominal); `NSCA-LUNGE` (abdominal, scapular) |
+| Postural set-up detail (scapular, chest, head, hand and palm position) | `ACE-LIB` 135 squat |
+| Weight-distribution instructions | `ACE-LIB` 135 squat (deliberate shift into the heels) |
+| Fault checks and corrections | `ACE-LIB` 135 squat (ankle collapse) |
 | Alternative and modified variations (knee-supported, BOSU) | `ACE-LIB` 101 side plank |
 | Equipment incidental to a position (mats) | `ACE-LIB` 32 plank, 101 side plank |
 
@@ -155,16 +165,122 @@ choice nobody has reviewed. Until it is resolved, push-up instruction prose
 should construct the movement without settling the elbow path in either
 direction.
 
-**2 · `bodyweight-squat` — stance width. Minor.**
-MoveHere: *"Feet about shoulder width."* `ACE-LIB` 135: slightly wider than
-hip-width. `NHS-STR`: hip-width. Three sources, three widths. No conflict of
-movement identity; MoveHere's is the widest claim and is unsourced.
+**2 · `bodyweight-squat` — one supported, two phrased by MoveHere. Human-verified 2026-08-23.**
+
+*"Feet about shoulder width"* — **broadly compatible, not directly
+established.** `ACE-LIB` 135 establishes feet slightly wider than hip-width.
+Shoulder-width is a wider claim than the source makes, and nothing contradicts
+it. (`NHS-STR` says hip-width, but that page is still unverified and is not
+weighed here.)
+
+*"Sit back and down"* — **directly supported.** The source establishes the
+descent beginning with the hips moving backward and then downward, in that
+sequence.
+
+*"Stand tall at the top"* — **consistent, phrased by MoveHere.** The source
+establishes the return to the starting standing position with the hips and
+torso rising together. "Stand tall" is a qualitative instruction it does not
+give.
+
+An observation, offered as one and not as a rule: across the six pages read so
+far, the cue naming the *action* has tended to be supported, while cues
+describing a *position* or a *quality* have tended to be MoveHere's own wording.
+That is a pattern in what has been read, not a principle about cues, and it
+predicts nothing about the eight pages still unverified. All three cues here are
+unchanged and stay project content.
+
+**ACE's depth target is not imported.** Squat prose describes the descent
+without stating how far it goes.
 
 **3 · `dead-bug` — framing, not conflict. Minor.**
 MoveHere: *"Extend opposite arm and leg."* `ACE-LIB` 147 describes the opposite
 hand and heel *lowering toward the floor* from a knees-over-hips start. The same
 motion, described from opposite ends. Authoring must not adopt one framing as
 though it had settled the other.
+
+**4 · `brisk-walk` — unsourced physiological claim. Carried forward.**
+*"Breathe through your nose if you can."* Out of scope for this pass — the
+movement is `not-required` — and still open as a cue finding.
+
+**5 · `side-plank` — two cues, two different gaps. Human-verified 2026-08-23.**
+
+A person read `ACE-LIB` 101 directly. The three cues do not sit at the same
+distance from it.
+
+*"Elbow under your shoulder"* — **directly supported.** The source establishes
+the supporting elbow beneath the shoulder both at setup and through the hold.
+
+*"Hips stacked and lifted"* — **consistent, with wording drift.** The source
+directly establishes the *lift* of the hips and knees from the floor. It does
+not establish "stacked" as the description of the hips; what it stacks is the
+legs. The cue is not contradicted, but half of it is MoveHere's phrasing rather
+than the source's fact.
+
+*"Keep your neck long"* — **not directly established.** The source describes the
+head aligned with the spine. That is a different formulation, and "long" is a
+qualitative instruction the source does not give. It remains existing
+project content and is **not to be silently rewritten** into the source's
+phrasing while authoring — an instruction that quietly adopted "head aligned
+with the spine" would settle a cue nobody has reviewed.
+
+Side-plank instruction prose can be constructed entirely from verified facts —
+the start position, the lift, the elbow, and the return are all directly
+supported — without depending on either contested cue.
+
+**6 · `hip-hinge` — the cue is standing in for a physical device. Human-verified 2026-08-23.**
+
+*"Soft knees"* — **conceptually supported.** The source establishes that only
+slight knee bending occurs.
+
+*"Push your hips back"* — **directly supported.** The source establishes the
+hips pushing backward as the initiating action.
+
+*"Flat back throughout"* — **not directly established in that wording.** The
+source does not phrase a spinal instruction at all; it constrains body position
+physically, through three-point contact with the bar.
+
+That is the substantive part of this finding. **MoveHere's cue is doing the job
+the bar does in the source.** Removing the bar — which the environment-
+independent movement requires — removes the constraint, and "flat back
+throughout" is the unreviewed verbal substitute standing in its place. Whether a
+verbal cue can carry what a physical device carried is exactly the kind of
+question that needs qualified review rather than an authoring decision.
+
+The cue is unchanged and stays project content. Hip-hinge prose can be built
+from the verified facts without settling it, but this movement is a strong
+candidate for the trainer-review list rather than the cue-audit list alone.
+
+**7 · `split-squat` — read against two verified sources. Human-verified 2026-08-23.**
+
+Both of this movement's contexts have now been read directly, so its cues can be
+checked against two independent sources rather than one.
+
+*"Stagger your stance"* — **directly supported by both.** `NSCA-LUNGE`
+establishes the split stance, its width and its front-to-back distance;
+`ACE-LIB` 366 establishes the split stance with one foot forward and one behind.
+
+*"Lower straight down"* — **supported by one, broadly consistent with the
+other.** `NSCA-LUNGE` establishes the hips moving down and up in a straight line.
+`ACE-LIB` 366 describes the rear knee lowering toward the floor and does not
+explicitly establish a straight vertical hip path. The cue is not contradicted;
+it rests more firmly on one source than the other.
+
+*"Keep your weight on the front leg"* — **not established by either, and the
+second source works against it.** `NSCA-LUNGE` establishes pressure through the
+front heel *on the return*: an action during one phase, not a state held
+throughout, and reading the second from the first is inference. `ACE-LIB` 366
+describes the return as pressing the front foot into the ground **and** pushing
+through the top of the rear foot — a return using both feet, which does not
+support a cue about keeping weight on one of them.
+
+That is the sharpening a second source bought. With one source this cue looked
+unestablished; with two it looks like a description the sources do not share.
+**It is unchanged and stays project content**, and it must not be silently
+rewritten while authoring. Split-squat prose can still be built without settling
+it, because the stance, the descent and the return are directly supported in
+both contexts.
+
+### Notes on individual sources
 
 ### Applicability note — the split squat has no name in its source
 
@@ -250,88 +366,6 @@ sufficient to construct the movement, and whether the constraint the bar
 supplies needs replacing by something else is a question for qualified review,
 not for authoring.
 
-**7 · `split-squat` — read against two verified sources. Human-verified 2026-08-23.**
-
-Both of this movement's contexts have now been read directly, so its cues can be
-checked against two independent sources rather than one.
-
-*"Stagger your stance"* — **directly supported by both.** `NSCA-LUNGE`
-establishes the split stance, its width and its front-to-back distance;
-`ACE-LIB` 366 establishes the split stance with one foot forward and one behind.
-
-*"Lower straight down"* — **supported by one, broadly consistent with the
-other.** `NSCA-LUNGE` establishes the hips moving down and up in a straight line.
-`ACE-LIB` 366 describes the rear knee lowering toward the floor and does not
-explicitly establish a straight vertical hip path. The cue is not contradicted;
-it rests more firmly on one source than the other.
-
-*"Keep your weight on the front leg"* — **not established by either, and the
-second source works against it.** `NSCA-LUNGE` establishes pressure through the
-front heel *on the return*: an action during one phase, not a state held
-throughout, and reading the second from the first is inference. `ACE-LIB` 366
-describes the return as pressing the front foot into the ground **and** pushing
-through the top of the rear foot — a return using both feet, which does not
-support a cue about keeping weight on one of them.
-
-That is the sharpening a second source bought. With one source this cue looked
-unestablished; with two it looks like a description the sources do not share.
-**It is unchanged and stays project content**, and it must not be silently
-rewritten while authoring. Split-squat prose can still be built without settling
-it, because the stance, the descent and the return are directly supported in
-both contexts.
-
-**6 · `hip-hinge` — the cue is standing in for a physical device. Human-verified 2026-08-23.**
-
-*"Soft knees"* — **conceptually supported.** The source establishes that only
-slight knee bending occurs.
-
-*"Push your hips back"* — **directly supported.** The source establishes the
-hips pushing backward as the initiating action.
-
-*"Flat back throughout"* — **not directly established in that wording.** The
-source does not phrase a spinal instruction at all; it constrains body position
-physically, through three-point contact with the bar.
-
-That is the substantive part of this finding. **MoveHere's cue is doing the job
-the bar does in the source.** Removing the bar — which the environment-
-independent movement requires — removes the constraint, and "flat back
-throughout" is the unreviewed verbal substitute standing in its place. Whether a
-verbal cue can carry what a physical device carried is exactly the kind of
-question that needs qualified review rather than an authoring decision.
-
-The cue is unchanged and stays project content. Hip-hinge prose can be built
-from the verified facts without settling it, but this movement is a strong
-candidate for the trainer-review list rather than the cue-audit list alone.
-
-**5 · `side-plank` — two cues, two different gaps. Human-verified 2026-08-23.**
-
-A person read `ACE-LIB` 101 directly. The three cues do not sit at the same
-distance from it.
-
-*"Elbow under your shoulder"* — **directly supported.** The source establishes
-the supporting elbow beneath the shoulder both at setup and through the hold.
-
-*"Hips stacked and lifted"* — **consistent, with wording drift.** The source
-directly establishes the *lift* of the hips and knees from the floor. It does
-not establish "stacked" as the description of the hips; what it stacks is the
-legs. The cue is not contradicted, but half of it is MoveHere's phrasing rather
-than the source's fact.
-
-*"Keep your neck long"* — **not directly established.** The source describes the
-head aligned with the spine. That is a different formulation, and "long" is a
-qualitative instruction the source does not give. It remains existing
-project content and is **not to be silently rewritten** into the source's
-phrasing while authoring — an instruction that quietly adopted "head aligned
-with the spine" would settle a cue nobody has reviewed.
-
-Side-plank instruction prose can be constructed entirely from verified facts —
-the start position, the lift, the elbow, and the return are all directly
-supported — without depending on either contested cue.
-
-**4 · `brisk-walk` — unsourced physiological claim. Carried forward.**
-*"Breathe through your nose if you can."* Out of scope for this pass — the
-movement is `not-required` — and still open as a cue finding.
-
 ## Domain-model finding — `hanging-knee-raise` was two movements (accepted, implemented)
 
 The matrix holds one exercise cited in two contexts, with `parallel-bars`
@@ -404,10 +438,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly human-verified | **5 of 14** (`ACE-LIB` 41, 101, 33, 366; `NSCA-LUNGE`) |
-| Entries still second-hand by construction | **all but five** |
-| Out-of-scope fact categories discarded | 16 |
-| Cue findings raised, none actioned | 7 (4 human-verified) |
+| Pages directly human-verified | **6 of 14** (`ACE-LIB` 41, 101, 33, 135, 366; `NSCA-LUNGE`) |
+| Entries still second-hand by construction | **all but six** |
+| Out-of-scope fact categories discarded | 19 |
+| Cue findings raised, none actioned | 7 (5 human-verified) |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
