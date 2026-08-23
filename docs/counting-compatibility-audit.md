@@ -3,8 +3,24 @@
 Run 2026-08-23 against `feat/mobile-app` at `4753afc`, matrix `1`, policies `project-content`.
 
 This records the evidence that motivated the counting-compatibility constraint in
-§8. It is a finding, not a gate. Once that constraint exists, `check:feasibility`
-proves the same property at policy load and this document becomes history.
+§8. It is a finding, not a gate.
+
+**Closed by `587c6d4`.** `countingModes` is authored per movement, eligibility
+proves it, and `tests/runtime/counting-compatibility.test.ts` sweeps 6,540
+generated items for the same defect on every run. The reproduction below is kept
+so the measurement can be repeated, not because the defect is open.
+
+Measured against the authored `countingModes` the same sweep reports **1,335 of
+6,540 before, 0 after**. The 1,315 of 3,480 figure below predates
+`countingModes` and uses `laterality` as its proxy, which over-counts: gait
+movements and the movements that legitimately accept both modes register as
+mismatches under the proxy and are correct under the real constraint. Both
+numbers describe the same defect; only the second one measures it against the
+answer.
+
+Enforcing the constraint narrowed twenty-nine slots and left nine able to
+produce a single movement each. That is tracked as variety debt in §15, and slot
+prescription variants (§8) is the resolution.
 
 ## What was measured
 

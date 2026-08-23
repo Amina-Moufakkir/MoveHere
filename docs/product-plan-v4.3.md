@@ -539,9 +539,44 @@ EXERCISE
 
 **Policy keeps owning counting, dose, and estimated time.** These are one decision, not three: "3 × 8 per side" is twice the work of "3 × 8", and the time a slot is budgeted for follows from the volume it prescribes. Deriving counting at generation time — from laterality or from anything else — would let volume float free of the estimate its author wrote, and a session's predicted duration would depend on which exercise happened to fill a slot.
 
-**Feasibility proves the agreement.** A policy is already validated against the compatibility matrix before use, so that a policy the matrix cannot satisfy is caught when it loads rather than when a user asks for a workout. Counting joins that proof: for every slot, every exercise eligible to fill it must accept the counting that slot prescribes. A slot whose eligibility spans movements that disagree is not repaired at generation time — it is narrowed by its author until the proof passes.
+**Feasibility proves the agreement.** A policy is already validated against the compatibility matrix before use, so that a policy the matrix cannot satisfy is caught when it loads rather than when a user asks for a workout. Counting joins that proof: for every slot, every exercise eligible to fill it must accept the counting that slot prescribes. A slot whose eligibility spans movements that disagree is not repaired at generation time. Its author either narrows it until the proof passes, or gives it prescription variants that dose each group honestly (below). Both are authored decisions; neither is a mechanism inferring a dose.
 
 **Counting is never derived mechanically from laterality.** Laterality says whether a movement works one side at a time. Counting says how a prescribed number is read. The two are related and not equivalent, and gait is where the difference becomes visible.
+
+### Slot prescription variants
+
+Counting compatibility settles what a prescribed number may mean. It leaves a second problem in plain view: a slot carries one prescription, so a slot whose legitimately eligible movements need different prescription shapes can serve only some of them. In the shipped policy, nine slots narrow to a single possible movement for exactly that reason and twenty-nine lost breadth they should have kept. That is variety debt, not a correct resting state.
+
+**A slot may carry a non-empty ordered set of prescription variants.** Everything that makes a slot one slot stays single-valued:
+
+```text
+SLOT — one training purpose
+├── eligible patterns       one set
+├── obligation per context  one value each
+├── source preference       one value
+├── repeat rule             one value
+└── prescription variants   one or more, ordered
+```
+
+A slot with three variants is still one training purpose with one set of eligibility, source, and repeat semantics. Only the dosing varies, and only because the movements that legitimately belong in that slot are dosed differently.
+
+**Eligibility is existential.** A movement is eligible for a slot when at least one authored variant is compatible with both its `prescriptionKinds` and its `countingModes`. No compatible variant, no eligibility — the movement is excluded, exactly as it is today.
+
+**Variant order is authored policy precedence, and the generator adds no randomness.** The movement is selected first, as now; the variant is then the first authored one that movement accepts. The generator does not construct a prescription, does not rewrite one, and does not draw a second random number. Session-to-session variation already comes from movement selection, and a second source of it would make the same policy mean two different doses for no authored reason.
+
+**Reordering variants is a policy change, not a permutation.** Generation output is invariant under permutation of input *collections* — the matrix's exercises, compatibility claims, and independence declarations — because the order of those carries no meaning. Variant order carries meaning. Permuting it is expected to change sessions, and it is reviewed as a programming decision like any other.
+
+**`estimatedSeconds` belongs to each variant.** Once dosing varies within a slot, time cannot sit on the slot: a per-side hold is twice the work of a total hold at the same duration. Counting, dose, and estimated time remain one decision, made together, one level further down.
+
+**Feasibility proves the bounds from opposite ends.** The upper duration bound is proved against the **longest** valid variant and the minimum-fill expectation against the **shortest**. A session must be impossible to overrun and impossible to under-deliver, whichever variants the movements select. This makes budgets somewhat more conservative, which is the correct direction for a promise about someone's time.
+
+**Counting remains authored policy.** It is never derived from laterality, here or anywhere. Variants change which prescriptions a slot offers; they change nothing about where a prescription comes from.
+
+**A variant describes a prescription shape and must never name an exercise.** This is the line that keeps the mechanism general. The moment a variant names a movement, this stops being slot structure and becomes the *Specific-exercise requirements* question recorded below as unresolved — which must not be answered by an implementation.
+
+**Variants represent legitimate dosing differences, not a variety lever.** A variant is authored because a movement genuinely requires a different prescription shape, never because adding one lets another exercise into a slot. That distinction is not always visible in the data, so two advisories keep it in view: a slot whose variant count approaches its eligible-movement count has begun to approximate per-exercise programming, and a variant no eligible movement can use is dead policy.
+
+**Expected consequence.** All nine single-option slots should be recoverable, and the twenty-nine counting-narrowed slots should regain their legitimate breadth, while counting violations remain at zero. `single-leg-deadlift` shows why this is one change rather than nine local repairs: adding a variant only to `s45-hinge-2`, the single slot it currently occupies alone, would reduce its share rather than restore it.
 
 ### Policy authority boundaries
 
@@ -630,7 +665,7 @@ The following are recorded so they are not quietly resolved by an implementation
 - **Work/rest structures.** The permitted vocabulary of work and rest structures, and which applies to which goal.
 - **Prescription resolution.** How a prescribed range is resolved to a single value. Taking the minimum, the midpoint, or scaling by duration are materially different training decisions, so the rule is domain input rather than a mechanism default.
 - **Minimum viable program.** What the smallest program that still counts as a given goal at a given duration consists of.
-- **Specific-exercise requirements.** Whether a policy may ever mandate a particular movement rather than a movement pattern. The current model selects exercises to fill pattern-based slots; mandating a specific exercise would require a different structure.
+- **Specific-exercise requirements.** Whether a policy may ever mandate a particular movement rather than a movement pattern. The current model selects exercises to fill pattern-based slots; mandating a specific exercise would require a different structure. Prescription variants sit next to this question without answering it: a variant describes a dosing shape and may never name a movement.
 - **Venue-richness policy.** Whether a better-equipped venue should be programmed differently, or merely substituted into. The current model is venue-agnostic policy plus mechanism substitution.
 
 ### Differentiation risk
@@ -948,7 +983,8 @@ Recorded so it is not lost between passes. Not implemented:
 
 Recorded so it is not lost between passes:
 
-- **Laterality and rep counting.** Both contracts now exist, and every exercise carries a laterality value. **Laterality is an intrinsic property of an exercise** — `bilateral | unilateral` — because whether a movement works one side at a time is a fact about the movement, not a policy choice. **Rep counting is a property of a prescription** — `total | per-side` — because it states what a prescribed number means. What was never implemented is the proof that the two agree. Counting is authored per slot, slots select by movement pattern, and nothing checks the result, so a slot can hand a unilateral movement a total count or a bilateral movement a per-side one. An audit of 3,480 generated items found 1,315 of them — 38% — in that state, in both directions; the evidence is preserved in `docs/counting-compatibility-audit.md`. The constraint that closes it is counting compatibility (§8), proved when policy loads. Outstanding.
+- **Laterality and rep counting.** **Closed.** **Laterality is an intrinsic property of an exercise** — `bilateral | unilateral` — because whether a movement works one side at a time is a fact about the movement, not a policy choice. **Rep counting is a property of a prescription** — `total | per-side` — because it states what a prescribed number means. What was missing for both passes was the proof that the two agree: counting was authored per slot, slots select by movement pattern, and nothing checked the result. An audit found 1,335 of 6,540 generated items carrying a count their movement did not accept; the evidence is preserved in `docs/counting-compatibility-audit.md`. Counting compatibility (§8) closes it — `countingModes` authored per movement, proved when policy loads — and the figure is now zero.
+- **Slot variety debt from counting compatibility.** Enforcing counting compatibility narrowed twenty-nine slots and left nine able to produce only one movement each, because a slot carries one prescription and its eligible movements are dosed differently. Every movement remains reachable and no session states work it is not asking for, so this is a valid state rather than a defect — but it is not the intended programming outcome, and it is deliberately visible: `counting-narrows-slot-to-one` names each affected slot when policy loads. Slot prescription variants (§8) is the resolution. Outstanding.
 - **Test-fixture authority.** If generation accepts only reviewed policy, test fixtures must be shaped as reviewed, which would mean fabricating a reviewer reference to make tests compile — reintroducing fabricated authority one layer above the venue brands. This is an open design question for the goal-policy contract pass, deliberately not yet solved.
 
 ### ORM
@@ -1186,7 +1222,7 @@ This deferral is a sequencing decision, not a finding. The absence of this resea
 
 **Goal programming values require qualified fitness-domain review and may not be invented by the implementation agent.**
 
-The blocked values are the eligible movement patterns per goal and their priority order; block count, roles, and role vocabulary; slot counts and which slots are required; set counts, rep ranges, hold durations, and distance ranges; rest durations at every level; work/rest structure and its vocabulary; volume caps per duration; prescription resolution rules; laterality values; whether an exercise may repeat within a session; the minimum viable program per goal and duration; and the unresolved domain questions in §8.
+The blocked values are the eligible movement patterns per goal and their priority order; block count, roles, and role vocabulary; slot counts and which slots are required; set counts, rep ranges, hold durations, and distance ranges; rest durations at every level; work/rest structure and its vocabulary; volume caps per duration; prescription resolution rules; which dosing variants a slot offers and in what precedence; laterality values and counting modes; whether an exercise may repeat within a session; the minimum viable program per goal and duration; and the unresolved domain questions in §8.
 
 Building the policy contract is not blocked. Populating it **with reviewed production values** is.
 
