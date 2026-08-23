@@ -39,6 +39,10 @@ were read by a person — and it is weaker than verification, because nobody has
 read a source about *this* movement. An entry in that state names what it was
 derived from and why no dedicated source exists.
 
+`incline-push-up` is a compound case: **composite derived**, assembled from two
+verified pages about two other movements, neither of which is it. That is the
+weakest form of derivation in this artifact and it is labelled as such.
+
 ### Verification register
 
 Ordered by priority. `verified` means a person read the page itself.
@@ -68,7 +72,8 @@ question, which is the failure mode this register exists to prevent.
 | [ACE 32 Front Plank](https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/) | **verified 2026-08-23** | Starts lying prone on the floor; elbows directly beneath the shoulders; legs extended; the upward phase lifts the body from the floor; through the hold the torso and legs remain stiff and the shoulders stay over the elbows; the downward phase lowers the body back toward the floor. **Contains pain and medical guidance, excluded** |
 | [ACE 147 Supine Dead Bug](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/147/supine-dead-bug/) | **verified 2026-08-23** | Starts lying on the back; before the moving phase both arms and legs are raised, knees directly over the hips and bent about 90 degrees, arms and elbows over the shoulders; one arm and the opposite leg lower toward the floor together and return to the start; the movement then occurs with the opposite pairing. **ACE explicitly instructs slow lowering and slow return** |
 | [ACE 191 Pull-ups](https://www.acefitness.org/resources/everyone/exercise-library/191/pull-ups/) | **verified 2026-08-23** | Starts beneath the bar with arms reaching overhead; takes a full grip; the body leaves the ground with the arms overhead; the upward action bends the elbows and drives them downward while the trunk stays generally vertical, continuing until the chin is approximately level with the bar; the return extends the arms overhead until fully extended. **Not a dead-hang source** — it verifies a suspended starting position from which dead-hang setup is *derived*, see below |
-| [NHS Strength exercises](https://www.nhs.uk/live-well/exercise/strength-exercises/) | pending | The wall press-up description used for incline push-up, and its applicability limits |
+| [NHS Strength exercises](https://www.nhs.uk/live-well/exercise/strength-exercises/) | **verified 2026-08-23** for its wall press-up section | Starts standing away from a wall; hands placed flat against the wall at chest level; the arms bend to move the body toward the wall; the movement reverses to return to the start. **This verifies a wall press-up, not MoveHere's incline push-up** — see the composite-evidence note. Anything the earlier summariser reported beyond these facts is not carried |
+| NHS *Standing press-up* video transcript | **human-provided, directly read 2026-08-23** | Start approximately arm's length from the support; hands placed on the support, arms initially straight, hands shoulder-width apart; back and legs kept straight; the arms bend to move toward the support and straighten to return; standing farther away increases the lean. **NHS explicitly states the press-up may be performed with the hands on a bench instead of a tree** |
 | `pike-push-up`, `hanging-knee-raise`, `supported-knee-raise`, `march-in-place` | **no page** | These need a source found, not a source checked |
 
 ## Admitted sources
@@ -80,7 +85,8 @@ question, which is the failure mode this register exists to prevent.
 | `NSCA-LUNGE` | NSCA, *The Undervalued Lunge*, PTQ 4.4 | Professional certifying body, practitioner journal | Practitioner guidance — **human-verified** | Lunge family; the movement MoveHere calls a split squat appears as the *Completely Stationary* modification, not under that name | 2026-08-23 |
 | `MCGILL-AC` | *Muscle activity and spine load during anterior chain whole body linkage exercises* (PubMed 25111163) | Peer-reviewed | Primary research | Used **only** for exercise-identity evidence | 2026-08-23 |
 | `DIP-KIN` | *Bench, Bar, and Ring Dips: Do Kinematics and Muscle Activity Differ?* (PMC9603242) | Peer-reviewed | Primary research | Describes the supported position on parallel bars; not a knee-raise description | 2026-08-23 |
-| `NHS-STR` | NHS *Strength exercises* | National health service | Public health guidance | **Low.** Chair-supported, older-adult programming. Used only for the elevated-hands press principle | 2026-08-23 |
+| `NHS-VID` | NHS *Standing press-up* video transcript | National health service | Public health guidance — **human-provided, directly read** | Demonstrated against a tree; **NHS explicitly permits a bench as the hand support instead** | 2026-08-23 |
+| `NHS-STR` | NHS *Strength exercises*, wall press-up section | National health service | Public health guidance — **human-verified** | **Low.** It documents a wall press-up, a different exercise from MoveHere's incline push-up. Used only for the elevated-hands pressing principle | 2026-08-23 |
 
 ## Per-movement basis
 
@@ -97,7 +103,8 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `hip-hinge` | `ACE-LIB` 33 — **human-verified** | S | Feet shoulder-width, toes forward or slightly outward; weight shifts toward the heels and the hips push backward; the torso hinges forward at the hips; only slight knee bending; return moves the hips forward to upright standing | **Torso endpoint discarded.** The source teaches the movement with a light bar held at three points and **does not establish that the bar is optional** — see the provenance note below. MoveHere's is unloaded and must not import it |
 | `single-leg-deadlift` | `ACE-LIB` 329 — **human-verified**, equipment-free | S | Standing, feet approximately hip-width apart, knees slightly bent; the hips move backward; one foot leaves the ground and the free leg extends behind while the torso leans forward; the return brings the body upright and the free leg back toward the floor | **Name mismatch** — ACE calls it a Romanian deadlift. Range endpoint excluded. `ACE-LIB` 350, the cable version, is not the basis and is not rejected |
 | `push-up` | `ACE-LIB` 41 — **human-verified** | S | Hands approximately shoulder-width; shoulders directly over hands; body extended with no hip or knee bend; lower with a rigid torso; press back to full elbow extension | Elbow path is not settled by this source — see cue finding 1 |
-| `incline-push-up` | `ACE-LIB` 41 + `NHS-STR` | C | Hands on the raised surface, feet back, body in one line; lower the chest toward the hands; press back | **Composite, not directly sourced.** No single source describes this movement |
+| `incline-push-up` @ `park-bench` | `NHS-VID` — **directly supported** | S | Start approximately arm's length from the support; hands on it, arms straight, shoulder-width apart; back and legs kept straight; the arms bend to move the body toward the support and straighten to return. **NHS explicitly permits a bench as the support** | NHS does not re-specify every setup detail for the lower bench position, and establishes **no chest-to-hands endpoint** — see finding 16 |
+| `incline-push-up` @ `stairs` | `ACE-LIB` 41 + `NHS-STR` — **composite derived** | C | The elevated-hands pressing principle only | **No source describes this context.** The bench authorisation does not extend to a stair |
 | `pike-push-up` | — | **X** | none | **No institutional source located.** Every search returned suspension-trainer or stability-ball pike variants, which are different exercises using equipment the matrix does not cite |
 | `dead-hang` | `ACE-LIB` 191 — **derived from verified** | C | Full grip on the bar; the body off the ground; arms overhead; the trunk beneath the hands | **Derived, not verified.** ACE 191 is a pull-up page and verifies that suspended position directly; no dedicated dead-hang source exists. The hold itself, and leaving the bar, are established by nothing — see finding 15 and the static-hold note |
 | `pull-up` | `ACE-LIB` 191 — **human-verified** | S | Starts beneath the bar, arms reaching overhead, taking a full grip; the body leaves the ground with the arms overhead; the upward action bends the elbows and drives them downward, trunk generally vertical, until the chin is approximately level with the bar; the return extends the arms overhead until fully extended | **The source's endpoint is the chin at bar level**, which is not MoveHere's cue — see finding 14 |
@@ -127,7 +134,7 @@ says *not here*, not *not true*.
 | Discarded | Where it appeared |
 |---|---|
 | Hold durations and repetition counts | `ACE-LIB` 142 hip-flexor stretch, 101 side plank, 32 plank, 147 dead bug (30-second relaxation period) |
-| Measured set-up distances | `ACE-LIB` 147 dead bug (12–18 inch initial foot distance) |
+| Measured set-up distances | `ACE-LIB` 147 dead bug (12–18 inch initial foot distance), `NHS-VID` (arm's-length start distance) |
 | Approach, mounting and dismounting method | `ACE-LIB` 191 pull-ups (reaching or jumping to the bar) — **bears on the unresolved static-hold exit question** |
 | Tempo and pause prescriptions | `ACE-LIB` 191 pull-ups (pause) |
 | Equipment dimensions (bench/box height) | `ACE-LIB` 366 Bulgarian split squat — **verified present in the source and deliberately not carried across** |
@@ -137,16 +144,16 @@ says *not here*, not *not true*.
 | Loaded set-up procedure (racking, unracking, bar placement, grip width, rack clearance) | `ACE-LIB` 319 reverse lunge |
 | Source-specific coaching cues | `ACE-LIB` 319 (pulling the front knee backwards; pushing back into the hip), 329 (hip tilting) |
 | Muscles worked, agonists, activation percentages, and stabilisation-mechanism claims | `ACE-LIB` throughout including 49 glute bridge and 147 dead bug, `MCGILL-AC` |
-| Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout, 28 and 49 (single-leg progressions), 147 (easier variation), 191 (resistance progression, grip variations) |
+| Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout, 28 and 49 (single-leg progressions), 147 (easier variation), 191 (resistance progression, grip variations), `NHS-VID` (greater-distance progression) |
 | Functional and daily-life transfer claims | `ACE-LIB` 28 step-up |
 | Prerequisite, teaching-sequence and related-exercise recommendations | `ACE-LIB` 33 hip hinge, 135 squat |
 | Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge, 135 squat, 49 glute bridge, 32 plank, 147 dead bug |
 | Counting, side-switching, and source-specific left/right wording | `ACE-LIB` 28 step-up (incl. opposite-side language), 142 hip-flexor stretch, 101 side plank, 366 split squat, 319 reverse lunge, 329 single-leg deadlift (completing one side before switching), 147 dead bug (counting aloud, repetition and time instructions); `NSCA-LUNGE` |
-| Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat (thigh-parallel), 33 hip hinge, 366 split squat (depth and floor-contact endpoint), 49 glute bridge (hip-height limit), 329 single-leg deadlift (comfortable-distance endpoint), 147 dead bug (mandatory hand and heel floor-touch) |
+| Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat (thigh-parallel), 33 hip hinge, 366 split squat (depth and floor-contact endpoint), 49 glute bridge (hip-height limit), 329 single-leg deadlift (comfortable-distance endpoint), 147 dead bug (mandatory hand and heel floor-touch), `NHS-VID` (nose-near-support endpoint) |
 | Muscle-emphasis claims | `ACE-LIB` 41 push-up |
 | Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank, 191 pull-ups (shoulder stress); `NSCA-LUNGE` |
 | Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug (abdominal hollowing, belly-button-to-spine, pelvic-floor contraction), 33 hip hinge, 135 squat (abdominal), 49 glute bridge (abdominal, glute), 329 single-leg deadlift (glute), 32 plank (abdominal, quadriceps); `NSCA-LUNGE` (abdominal, scapular) |
-| Postural set-up detail (scapular, chest, head, hand and palm position) | `ACE-LIB` 135 squat, 28 step-up (scapular), 49 glute bridge (flattening the lower back into the floor), 32 plank (palm and hand direction), 147 dead bug (scapular), 191 pull-ups (scapular, crossed-leg position) |
+| Postural set-up detail (scapular, chest, head, hand and palm position) | `ACE-LIB` 135 squat, 28 step-up (scapular), 49 glute bridge (flattening the lower back into the floor), 32 plank (palm and hand direction), 147 dead bug (scapular), 191 pull-ups (scapular, crossed-leg position), `NHS-VID` (hand orientation) |
 | Weight-distribution instructions | `ACE-LIB` 135 squat (deliberate shift into the heels) |
 | Fault checks and corrections | `ACE-LIB` 135 squat (ankle collapse), 28 step-up (foot and ankle monitoring), 49 glute bridge (excessive arching), 32 plank (low-back sagging, hip hiking, knee bending, shoulder shrugging), 191 pull-ups (anti-swing) |
 | Alternative and modified variations (knee-supported, BOSU) | `ACE-LIB` 101 side plank |
@@ -509,8 +516,64 @@ hold nor leaving the bar is described by anything read so far, and this page doe
 not resolve the static-hold exit question — the approach-to-the-bar material that
 might have spoken to it is excluded as method.
 
-Of the three cues, one is supported and two rest on nothing. `dead-hang` is the
-weakest-grounded movement in the catalog that is not outright blocked.
+Of the three cues, one is supported and two rest on nothing.
+
+`dead-hang` and `incline-push-up` are the two weakest-grounded movements that are
+not outright blocked, and they are weak in opposite places: dead hang has a
+verified setup and no source for its hold, while incline push-up has a derived
+pressing principle and no source for its setup.
+
+**16 · `incline-push-up` — one context sourced, one not. Directly supported at the bench, 2026-08-23.**
+
+The `NHS-VID` transcript changes this movement's standing. It establishes a
+standing press-up performed at roughly arm's length from a support, hands on it
+and shoulder-width apart with the arms straight, the back and legs kept straight,
+the arms bending to move the body toward the support and straightening to return
+— and it **explicitly permits a bench as the support**.
+
+*"Hands on the surface, feet back"* — **substantially supported.** Hands on the
+support is explicit, and the transcript uses greater distance from the support to
+increase the lean, which is the feet-back setup described from the other end.
+The exact wording is MoveHere's.
+
+*"Body in one line"* — **strongly supported in substance.** The transcript
+instructs keeping the back and legs straight.
+
+*"Lower your chest to your hands"* — **not established.** The demonstrated
+version describes a nose-near-support endpoint, and the transcript gives no
+chest-to-hands endpoint for the bench variation.
+
+**The two contexts now differ.** `incline-push-up @ park-bench` has direct
+primary-source support and is no longer composite extrapolation.
+`incline-push-up @ stairs` has none: NHS authorises a bench, and that
+authorisation does not extend to a stair. This is the second movement whose
+contexts are unevenly evidenced, after `split-squat` before its bench context was
+read — and unlike that case, the gap here is not going to close by reading a page
+already in the register.
+
+**Applicability caveat.** NHS permits substituting a bench for the tree; it does
+not separately re-specify every setup detail for the lower bench position. What
+transfers is the movement and the substitution, not a fresh specification of the
+setup at bench height.
+
+All three cues are unchanged and stay project content.
+
+### First evidence bearing on a compatibility claim
+
+This artifact's scope is movement construction. `NHS-VID` is the first entry that
+also bears on something else: the matrix's claim that an incline push-up can be
+performed at a bench. NHS states that the movement may be done with the hands on
+a bench, which is a statement about the pairing rather than about the movement.
+
+**Recorded, and deliberately not acted on.** The compatibility matrix is
+project content authored from researched conventions, and its authority tier is
+a property of how it was authored, not of whether a source happens to agree with
+one of its entries. One external agreement does not promote an entry, and reading
+it as promotion would be the same laundering the cue findings refuse — support
+arriving from material collected for another purpose.
+
+Whether external evidence should ever bear on compatibility authority is a real
+question for §8. It is not answered here, and nothing about the matrix changes.
 
 ### Counting boundary — a source's sequence is not MoveHere's count
 
@@ -664,6 +727,22 @@ is expressly forbidden from stating. The question of whether a given bench suits
 a given movement stays open, and belongs to feature-use and suitability review
 whenever that happens — not to this artifact and not to instruction authoring.
 
+**The same boundary, from the other direction.** `NHS-VID` explicitly permits a
+bench as the hand support for a standing press-up. That is stronger than ACE 366,
+which merely uses one — NHS authorises the substitution. It still authorises
+nothing about a particular bench.
+
+So the rule generalises, and is worth stating once rather than per source:
+
+> **A source authorising a class of object as a movement context is not a source
+> authorising a specific object as suitable for use.**
+
+NHS establishes that a bench can be the support for this movement. Whether *this*
+bench, in *this* park, on *this* day, is one a person should put their weight on
+is a question no source in this artifact addresses and none is being read to
+address. That remains the user's judgment, and MoveHere's copy already says the
+product does not assess it (§9).
+
 ### Loaded sources for unloaded movements
 
 Several verified pages describe a loaded version of a movement MoveHere performs
@@ -787,10 +866,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly human-verified | **13 of 15** (`ACE-LIB` 28, 32, 33, 41, 49, 101, 135, 147, 191, 319, 329, 366; `NSCA-LUNGE`); 1 read and set aside (`ACE-LIB` 350) |
-| Entries still second-hand by construction | **all but thirteen**; 1 movement (`dead-hang`) derived from a verified page |
+| Pages directly read by a person | **15 of 16** — every page in the register (`ACE-LIB` 28, 32, 33, 41, 49, 101, 135, 147, 191, 319, 329, 366; `NSCA-LUNGE`; `NHS-STR`; `NHS-VID`); 1 read and set aside (`ACE-LIB` 350). **The register is complete.** |
+| Entries still second-hand by construction | **none of the register**; 1 movement derived (`dead-hang`), 1 context derived (`incline-push-up` @ `stairs`) |
 | Out-of-scope fact categories discarded | 26 |
-| Cue findings raised, none actioned | 15 — 13 human-verified, 1 derived, 1 unverified; 2 constraining authoring |
+| Cue findings raised, none actioned | 16 — 13 human-verified, 2 derived, 1 unverified; 2 constraining authoring |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
