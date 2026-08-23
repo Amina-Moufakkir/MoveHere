@@ -42,7 +42,7 @@ is the failure mode this register exists to prevent.
 | [ACE 101 Side Plank with Straight Leg](https://www.acefitness.org/resources/everyone/exercise-library/101/side-plank-with-straight-leg/) | **verified 2026-08-23** | Starts lying on one side; legs extended and stacked; supporting elbow directly beneath the shoulder; the upward action lifts the hips and knees from the floor; the held position keeps the supporting elbow beneath the shoulder; lowering returns to the start. **This straight-leg floor variation is MoveHere's designated basis.** [ACE 303](https://www.acefitness.org/resources/everyone/exercise-library/303/side-plank/) was not read and is not the basis |
 | [ACE 33 Hip Hinge](https://www.acefitness.org/education-and-resources/lifestyle/exercise-library/33/hip-hinge/) | **verified 2026-08-23** | Standing setup, feet shoulder-width, toes forward or slightly outward; movement begins by shifting weight toward the heels and pushing the hips backward; the torso hinges forward at the hips; only slight knee bending occurs; the return moves the hips forward to upright standing. **ACE teaches this version using a light bar maintained against the head, thoracic spine and sacrum, and does not state that the bar is optional** |
 | [ACE 366 Bulgarian Split Squat](https://www.acefitness.org/resources/everyone/exercise-library/366/bulgarian-split-squat/) | pending | Rear-foot-on-bench setup, descent, return. **Do not record box height** |
-| [NSCA *The Undervalued Lunge*](https://www.nsca.com/contentassets/24dd7222ed1b4caeb8a0a46b81bd11f3/ptq-4.4.9-the-undervalued-lunge.pdf) | pending | Grounded split stance, rear heel raised. **Do not record joint angles** |
+| [NSCA *The Undervalued Lunge*](https://www.nsca.com/contentassets/24dd7222ed1b4caeb8a0a46b81bd11f3/ptq-4.4.9-the-undervalued-lunge.pdf) | **verified 2026-08-23**, with applicability caveat | Split stance, one foot forward and one behind; feet approximately hip-width apart; front-to-back distance greater than a walking stride; torso upright; toes and knees forward; rear heel raised; hips move down and up in a straight line; the return uses pressure through the front heel; the **Completely Stationary** modification keeps the feet in place after setup until the repetitions are done. **Discusses the lunge family and does not name a split squat** — see the applicability note |
 | [ACE 135 Bodyweight Squat](https://www.acefitness.org/resources/everyone/exercise-library/135/bodyweight-squat/) | pending | Stance width; hips back then down; return. **Do not record a depth target** |
 | [ACE 319 Reverse Lunge](https://www.acefitness.org/resources/everyone/exercise-library/319/reverse-lunge/) | pending | Backward step, rear knee path, return. Ignore barbell loading |
 | [ACE 28 Step-Up](https://www.acefitness.org/resources/everyone/exercise-library/28/step-up/) | pending | Foot placement, torso, step-down. **Do not record platform height**; the page's own side-switching phrasing must not transfer |
@@ -60,7 +60,7 @@ is the failure mode this register exists to prevent.
 |---|---|---|---|---|---|
 | `ACE-LIB` | ACE Exercise Library, individual movement pages | Professional certifying body | Practitioner guidance, not primary research | High for movement description; many pages are loaded or equipment-based and the loading does not transfer | 2026-08-23 |
 | `ACE-RES` | ACE-commissioned exercise comparison research (Univ. of Wisconsin–La Crosse) | Commissioned study, trade publication | Comparative, not a technique description | Used **only** for exercise-identity evidence, not for technique | 2026-08-23 |
-| `NSCA-LUNGE` | NSCA, *The Undervalued Lunge*, PTQ 4.4 | Professional certifying body, practitioner journal | Practitioner guidance | Lunge family only | 2026-08-23 |
+| `NSCA-LUNGE` | NSCA, *The Undervalued Lunge*, PTQ 4.4 | Professional certifying body, practitioner journal | Practitioner guidance — **human-verified** | Lunge family; the movement MoveHere calls a split squat appears as the *Completely Stationary* modification, not under that name | 2026-08-23 |
 | `MCGILL-AC` | *Muscle activity and spine load during anterior chain whole body linkage exercises* (PubMed 25111163) | Peer-reviewed | Primary research | Used **only** for exercise-identity evidence | 2026-08-23 |
 | `DIP-KIN` | *Bench, Bar, and Ring Dips: Do Kinematics and Muscle Activity Differ?* (PMC9603242) | Peer-reviewed | Primary research | Describes the supported position on parallel bars; not a knee-raise description | 2026-08-23 |
 | `NHS-STR` | NHS *Strength exercises* | National health service | Public health guidance | **Low.** Chair-supported, older-adult programming. Used only for the elevated-hands press principle | 2026-08-23 |
@@ -73,7 +73,7 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 |---|---|---|---|---|
 | `bodyweight-squat` | `ACE-LIB` 135 | S | Stance width and foot direction; hips shift back then down, hip and knee flexing together; return by extending hips and knees | Descent endpoint described by natural limits only — **not** a target and must not be restated as one |
 | `reverse-lunge` | `ACE-LIB` 319 | S | Step backward with one leg; rear knee lowers toward the floor; chest stays raised; return by pressing the front foot and swinging the rear leg forward | Page is barbell-loaded; loading discarded |
-| `split-squat` @ EI | `NSCA-LUNGE`; `ACE-LIB` 366 (beginner note) | S | Split stance longer than a walking stride; rear heel raised; hips travel down and up; torso upright | Stance length is relative, never absolute |
+| `split-squat` @ EI | `NSCA-LUNGE` — **human-verified** | S | Split stance, one foot forward and one behind, feet about hip-width apart, front-to-back distance greater than a walking stride; torso upright; toes and knees forward; rear heel raised; hips travel down and up in a straight line; the return presses through the front heel; the feet stay in place after setup | **Name mismatch, not movement mismatch** — see the applicability note. Stance length is relative, never absolute. The unverified `ACE-LIB` 366 beginner note is no longer relied on here |
 | `split-squat` @ `park-bench` | `ACE-LIB` 366 | S | Rear foot placed behind on a bench; rear knee lowers toward the floor; return by pressing the front foot and the top of the rear foot | Bench height **discarded** as an equipment dimension |
 | `step-up` | `ACE-LIB` 28 | S | Stand facing the platform; whole lead foot placed on it, torso upright; push off the trailing leg; step down under control | Page is dumbbell-loaded. **No step height may be carried across** |
 | `glute-bridge` | `ACE-LIB` 49 | S | Supine, knees bent, feet flat and hip-width; hips press up; lower under control | Heel-to-hip distance not specified by the source |
@@ -105,15 +105,17 @@ reaches the catalog, and none may be reintroduced during authoring.
 | Hold durations and repetition counts | `ACE-LIB` 142 hip-flexor stretch, 101 side plank |
 | Equipment dimensions (bench/box height) | `ACE-LIB` 366 Bulgarian split squat |
 | Minimum joint angles at the bottom of a lunge | `NSCA-LUNGE` |
+| Joint-alignment prescriptions (knee over ankle) | `NSCA-LUNGE` |
+| Equipment and balance support | `NSCA-LUNGE` |
 | Muscles worked, agonists, activation percentages | `ACE-LIB` throughout, `MCGILL-AC` |
 | Benefits, difficulty ratings, progression and regression | `ACE-LIB` throughout |
 | Prerequisite and teaching-sequence claims | `ACE-LIB` 33 hip hinge |
 | Breathing prescriptions (inhale/exhale phase cueing) | `ACE-LIB` throughout, 101 side plank, 33 hip hinge |
-| Counting and side-switching phrasing | `ACE-LIB` 28 step-up, 142 hip-flexor stretch, 101 side plank |
+| Counting and side-switching phrasing | `ACE-LIB` 28 step-up, 142 hip-flexor stretch, 101 side plank; `NSCA-LUNGE` |
 | Depth, range and torso-endpoint targets | `ACE-LIB` 135 squat, 33 hip hinge |
 | Muscle-emphasis claims | `ACE-LIB` 41 push-up |
-| Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank |
-| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge |
+| Joint-stress and safety claims | `ACE-LIB` 41 push-up, 101 side plank; `NSCA-LUNGE` |
+| Muscle-contraction and bracing wording | `ACE-LIB` 101 side plank, 147 dead bug, 33 hip hinge; `NSCA-LUNGE` (abdominal, scapular) |
 | Alternative and modified variations (knee-supported, BOSU) | `ACE-LIB` 101 side plank |
 | Equipment incidental to a position (mats) | `ACE-LIB` 32 plank, 101 side plank |
 
@@ -164,6 +166,38 @@ hand and heel *lowering toward the floor* from a knees-over-hips start. The same
 motion, described from opposite ends. Authoring must not adopt one framing as
 though it had settled the other.
 
+### Applicability note — the split squat has no name in its source
+
+`NSCA-LUNGE` is directly human-verified primary evidence, and it never says
+"split squat". It discusses the lunge family, and the movement MoveHere calls a
+split squat appears as its **Completely Stationary** modification: once the
+initial position is established, the feet do not move until the repetitions are
+finished.
+
+**This is a name mismatch, not a movement mismatch.** Every construction fact
+MoveHere needs is directly established — the stance, its width and length, the
+upright torso, the raised rear heel, the straight-line hip path, and the return.
+What is not established is that any source calls it what MoveHere calls it.
+
+Recorded because the two failure modes look identical from a distance. Citing a
+source that describes a different movement would be wrong. Citing a source that
+describes the same movement under another name is fine, provided the artifact
+says so rather than letting a later reader assume the names matched.
+
+### Split squat context coverage — one of two, not two
+
+`split-squat` is the only movement in the catalog requiring a phase override, so
+both of its contexts have to be verified before its instruction can be authored.
+
+- **environment-independent** — verified via `NSCA-LUNGE`.
+- **`park-bench`** — **still pending.** `ACE-LIB` 366 has not been reported as
+  read, and no verified-fact list exists for it. Its entries remain
+  summariser-derived, and its box-height exclusion has not been exercised.
+
+So the override case is **half verified**. Authoring split-squat instructions
+requires the bench context too, because the override is precisely the part the
+environment-independent source cannot supply.
+
 ### Provenance note — the hip-hinge bar
 
 Recorded separately because the distinction is easy to lose and expensive to
@@ -192,6 +226,23 @@ same movement is not something it establishes. The body-position facts are
 sufficient to construct the movement, and whether the constraint the bar
 supplies needs replacing by something else is a question for qualified review,
 not for authoring.
+
+**7 · `split-squat` — a return-phase action read as a whole-movement state. Human-verified 2026-08-23.**
+
+*"Stagger your stance"* — **directly supported.** The source establishes the
+split stance, its width, and its front-to-back distance.
+
+*"Lower straight down"* — **directly supported.** The source establishes the
+hips moving down and up in a straight line.
+
+*"Keep your weight on the front leg"* — **not directly established.** The source
+establishes pressure through the front heel *on the return*. That is an action
+during one phase, not a state maintained throughout the movement, and reading
+the second from the first is an inference rather than a citation.
+
+The cue is unchanged and stays project content. Split-squat prose can be built
+from the verified facts without settling it — the stance, the hip path and the
+return are all directly supported.
 
 **6 · `hip-hinge` — the cue is standing in for a physical device. Human-verified 2026-08-23.**
 
@@ -310,17 +361,17 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | Sourced | **2** | `split-squat` @ environment-independent; `split-squat` @ `park-bench` |
 | Not sourced | **0** | — |
 
-`split-squat` is now the only movement in the catalog needing a phase override.
+`split-squat` is the only movement in the catalog needing a phase override, and **one of its two contexts is verified**. Its bench context is still pending.
 
 **Other**
 
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly human-verified | **3 of 14** (`ACE-LIB` 41, 101, 33) |
-| Entries still second-hand by construction | **all but three** |
-| Out-of-scope fact categories discarded | 14 |
-| Cue findings raised, none actioned | 6 (3 human-verified) |
+| Pages directly human-verified | **4 of 14** (`ACE-LIB` 41, 101, 33; `NSCA-LUNGE`) |
+| Entries still second-hand by construction | **all but four** |
+| Out-of-scope fact categories discarded | 16 |
+| Cue findings raised, none actioned | 7 (4 human-verified) |
 | Domain-model findings raised | 1, accepted and implemented |
 | Movements ready to author on this evidence | **16 of 19** |
 | Instruction prose, UI, visuals, safety copy | unchanged |
