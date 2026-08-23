@@ -42,20 +42,54 @@ export type SlotObligation = 'required' | 'optional';
  */
 export type SourcePreference = 'prefer-venue-feature' | 'no-preference';
 
-export interface SlotTemplate {
-  readonly id: SlotId;
-  readonly eligiblePatterns: NonEmpty<MovementPattern>;
+/**
+ * One way a slot may be dosed (§8).
+ *
+ * A slot whose legitimately eligible movements need different prescription
+ * shapes carries several of these. A side plank is held per side and a plank
+ * is not; both belong in a core hold, and one prescription cannot serve them
+ * without lying about one of them.
+ *
+ * `estimatedSeconds` lives here rather than on the slot because dosing decides
+ * duration: a per-side hold is twice the work of a total hold at the same
+ * seconds. Counting, dose, and time stay one authored decision — they have
+ * simply moved down one level together.
+ *
+ * A variant describes a prescription shape. It may never name an exercise:
+ * that would turn slot structure into the specific-exercise mandate §8 records
+ * as an unresolved domain question.
+ */
+export interface PrescriptionVariant {
   readonly prescription: Prescription;
-  readonly obligation: Record<GenerationContextKind, SlotObligation>;
-  readonly sourcePreference: SourcePreference;
-  readonly allowRepeatExercise: boolean;
   /**
-   * How long this slot is expected to take, including its own working rest.
+   * How long this dosing is expected to take, including its own working rest.
    *
    * Authored, not computed. How long a set takes is a programming judgment, so
    * the policy owns the time model rather than the mechanism inferring one.
    */
   readonly estimatedSeconds: number;
+}
+
+/**
+ * One training purpose, one set of semantics, one or more ways to dose it.
+ *
+ * Everything that makes this one slot is single-valued: the patterns it draws
+ * from, what it owes in each context, whether it prefers a venue movement, and
+ * whether a movement may repeat. Only the dosing varies.
+ *
+ * **`variants` is ordered, and the order is authored precedence.** A movement
+ * is selected first; it then takes the first variant it is compatible with.
+ * Reordering variants is a policy change, not a permutation of a collection —
+ * generation output is invariant under permutation of *matrix* collections,
+ * whose order carries no meaning, and deliberately is not invariant here.
+ */
+export interface SlotTemplate {
+  readonly id: SlotId;
+  readonly eligiblePatterns: NonEmpty<MovementPattern>;
+  readonly variants: NonEmpty<PrescriptionVariant>;
+  readonly obligation: Record<GenerationContextKind, SlotObligation>;
+  readonly sourcePreference: SourcePreference;
+  readonly allowRepeatExercise: boolean;
 }
 
 export interface BlockTemplate {

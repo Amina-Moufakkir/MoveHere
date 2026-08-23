@@ -11,7 +11,7 @@ import type {
   SlotTemplate,
   GenerationContextKind,
 } from './policy.ts';
-import type { ContentAuthority, PresentableAuthority } from './exercise.ts';
+import type { ContentAuthority, PresentableAuthority, Prescription } from './exercise.ts';
 import type { SessionGoal } from './session.ts';
 import { SESSION_DURATIONS, SESSION_GOALS } from './session.ts';
 
@@ -104,11 +104,24 @@ export const loadGoalPolicies: LoadGoalPolicies = (authored) => {
       for (const s of slots) {
         if (slotIds.has(s.id)) failures.push({ kind: 'duplicate-slot-id', slotId: s.id });
         slotIds.add(s.id);
-        if (s.estimatedSeconds <= 0) {
-          failures.push({ kind: 'non-positive-value', at: `${at} slot ${s.id} estimate` });
+        if (s.variants.length === 0) {
+          failures.push({ kind: 'non-positive-value', at: `${at} slot ${s.id} variants` });
         }
-        if (!isPositivePrescription(s)) {
-          failures.push({ kind: 'non-positive-value', at: `${at} slot ${s.id} prescription` });
+        s.variants.forEach((v, i) => {
+          if (v.estimatedSeconds <= 0) {
+            failures.push({ kind: 'non-positive-value', at: `${at} slot ${s.id} variant ${i} estimate` });
+          }
+          if (!isPositivePrescription(v.prescription)) {
+            failures.push({ kind: 'non-positive-value', at: `${at} slot ${s.id} variant ${i} prescription` });
+          }
+        });
+        // Two variants of the same shape cannot both be reachable: the first
+        // always wins, so the second is unreachable by construction rather
+        // than by content. Caught here because it is a policy defect, not a
+        // gap for feasibility to report as an advisory.
+        const shapes = s.variants.map((v) => variantShape(v.prescription));
+        if (new Set(shapes).size !== shapes.length) {
+          failures.push({ kind: 'non-positive-value', at: `${at} slot ${s.id} duplicate variant shape` });
         }
       }
 
@@ -148,9 +161,17 @@ export const loadGoalPolicies: LoadGoalPolicies = (authored) => {
   };
 };
 
-const isPositivePrescription = (s: SlotTemplate): boolean => {
-  const p = s.prescription;
+const isPositivePrescription = (p: Prescription): boolean => {
   if (p.kind === 'reps') return p.sets > 0 && p.reps > 0;
   if (p.kind === 'time') return p.sets > 0 && p.seconds > 0;
   return p.meters > 0;
 };
+
+/**
+ * What a movement matches a variant on: its dose kind and its counting.
+ *
+ * Two variants sharing a shape are indistinguishable to eligibility, so the
+ * later one can never be selected.
+ */
+const variantShape = (p: Prescription): string =>
+  `${p.kind}:${'counting' in p ? p.counting : '-'}`;

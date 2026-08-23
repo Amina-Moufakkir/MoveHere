@@ -103,13 +103,17 @@ test('every prescription the shipped content can produce renders non-empty', () 
     for (const duration of SESSION_DURATIONS) {
       for (const block of p.policies.byGoal[goal].programs[duration].blocks) {
         for (const slot of block.slots) {
-          const text = doseText(slot.prescription);
-          const d = prescriptionDisplay(slot.prescription);
-          assert.ok(text.length > 0, 'a slot with no renderable dose would show the user nothing');
-          const parts = d.kind === 'pair' ? [d.first, d.second] : [d.value, d.unit];
-          assert.ok(parts.every((x) => x.length > 0), `empty display part for: ${text}`);
-          assert.ok(!text.includes('undefined') && !text.includes('NaN'), `malformed dose: ${text}`);
-          checked++;
+          // Every authored dosing, not just the slot's primary one: a variant
+          // a user can be given is a prescription a user can be shown.
+          for (const variant of slot.variants) {
+            const text = doseText(variant.prescription);
+            const d = prescriptionDisplay(variant.prescription);
+            assert.ok(text.length > 0, 'a slot with no renderable dose would show the user nothing');
+            const parts = d.kind === 'pair' ? [d.first, d.second] : [d.value, d.unit];
+            assert.ok(parts.every((x) => x.length > 0), `empty display part for: ${text}`);
+            assert.ok(!text.includes('undefined') && !text.includes('NaN'), `malformed dose: ${text}`);
+            checked++;
+          }
         }
       }
     }

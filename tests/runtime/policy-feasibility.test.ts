@@ -54,12 +54,19 @@ test('every required slot is satisfiable from the environment-independent pool',
           const required =
             slot.obligation['venue-aware'] === 'required' || slot.obligation.substitute === 'required';
           if (!required) continue;
+          // Independent of slot-eligibility on purpose: a check that imports
+          // the rule it is checking proves only that the rule equals itself.
           assert.ok(
             ei.some(
               (e) =>
                 e !== undefined &&
                 slot.eligiblePatterns.includes(e.pattern) &&
-                e.prescriptionKinds.includes(slot.prescription.kind),
+                slot.variants.some(
+                  (variant) =>
+                    e.prescriptionKinds.includes(variant.prescription.kind) &&
+                    (!('counting' in variant.prescription) ||
+                      e.countingModes.includes(variant.prescription.counting)),
+                ),
             ),
             `${goal} ${duration} ${slot.id} is required but not environment-independent`,
           );

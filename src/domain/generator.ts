@@ -32,7 +32,7 @@ import type { Exercise, PresentableAuthority } from './exercise.ts';
 import type { SupportedFeatureId } from './feature.ts';
 import type { SessionDuration } from './session.ts';
 import type { SlotTemplate, GenerationContextKind, DurationProgram } from './policy.ts';
-import { canFill } from './slot-eligibility.ts';
+import { canFill, variantFor } from './slot-eligibility.ts';
 import { createRng } from './prng.ts';
 import type { Rng } from './prng.ts';
 
@@ -139,12 +139,18 @@ const basisKey = (basis: SelectionBasis): string =>
  * movements and none are eligible, the whole pool is used: preference never
  * becomes a mandate to force an incompatible movement in.
  */
+/** A filled slot and what the chosen dosing is budgeted to take. */
+interface Filled {
+  readonly item: SessionItem;
+  readonly seconds: number;
+}
+
 const fillSlot = (
   slot: SlotTemplate,
   pool: readonly Candidate[],
   used: ReadonlySet<string>,
   rng: Rng,
-): SessionItem | null => {
+): Filled | null => {
   const eligible = pool.filter(
     (c) => canFill(c.exercise, slot) && (slot.allowRepeatExercise || !used.has(c.exercise.id)),
   );
@@ -160,10 +166,20 @@ const fillSlot = (
   const chosen = preferred[rng.nextInt(preferred.length)];
   if (chosen === undefined) return null;
 
+  // Movement first, then its dosing. The variant is the first authored one the
+  // movement accepts — precedence is policy's, and there is no second draw:
+  // variation already comes from the movement, and a second source of it would
+  // make one policy mean two doses for no authored reason.
+  const variant = variantFor(chosen.exercise, slot);
+  if (variant === null) return null; // unreachable: canFill filtered the pool
+
   return {
-    exerciseId: chosen.exercise.id,
-    prescription: slot.prescription,
-    basis: chosen.basis,
+    item: {
+      exerciseId: chosen.exercise.id,
+      prescription: variant.prescription,
+      basis: chosen.basis,
+    },
+    seconds: variant.estimatedSeconds,
   };
 };
 
@@ -188,14 +204,15 @@ const fillProgram = (
     let blockSeconds = 0;
 
     for (const slot of template.slots) {
-      const item = fillSlot(slot, pool, used, rng);
-      if (item === null) {
+      const filled = fillSlot(slot, pool, used, rng);
+      if (filled === null) {
         if (slot.obligation[context] === 'required') return null;
         continue;
       }
-      used.add(item.exerciseId as string);
-      items.push(item);
-      blockSeconds += slot.estimatedSeconds;
+      used.add(filled.item.exerciseId as string);
+      items.push(filled.item);
+      // The chosen variant's time, not the slot's: dosing decides duration.
+      blockSeconds += filled.seconds;
     }
 
     const [first, ...rest] = items;

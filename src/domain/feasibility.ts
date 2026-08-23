@@ -18,7 +18,7 @@ import type { GenerationContextKind, SlotTemplate } from './policy.ts';
 import type { Exercise, ExerciseId, MovementPattern } from './exercise.ts';
 import type { SessionGoal, SessionDuration } from './session.ts';
 import { SESSION_DURATIONS } from './session.ts';
-import { canFill, canFillIgnoringCounting } from './slot-eligibility.ts';
+import { canFill, canFillIgnoringCounting, selectableVariants, variantFits, variantFor } from './slot-eligibility.ts';
 
 type NonEmpty<T> = readonly [T, ...T[]];
 
@@ -85,6 +85,33 @@ export type FeasibilityAdvisory =
       readonly counting: string;
       readonly excluded: readonly ExerciseId[];
     }
+  | {
+      /**
+       * An authored dosing no movement will ever receive.
+       *
+       * Either nothing is compatible with it, or an earlier variant already
+       * takes every movement that would be — precedence means a later variant
+       * of an overlapping shape is unreachable by construction.
+       */
+      readonly kind: 'variant-unreachable';
+      readonly at: FeasibilityLocation;
+      readonly variantIndex: number;
+      readonly reason: 'no-compatible-movement' | 'shadowed-by-earlier-variant';
+    }
+  | {
+      /**
+       * Variant structure approaching per-exercise programming.
+       *
+       * Variants represent legitimate dosing differences. When a slot carries
+       * about as many of them as it has movements to fill, it has stopped
+       * describing one training purpose and started prescribing per movement —
+       * which is the specific-exercise question §8 leaves open.
+       */
+      readonly kind: 'variants-approach-per-exercise-programming';
+      readonly at: FeasibilityLocation;
+      readonly variants: number;
+      readonly eligibleExercises: number;
+    }
   | { readonly kind: 'venue-features-do-not-differentiate'; readonly goal: SessionGoal; readonly duration: SessionDuration };
 
 declare const feasibleWitness: unique symbol;
@@ -133,16 +160,22 @@ export const selectPolicy: SelectPolicy = (programming, goal) =>
 const programSeconds = (
   policy: UsableGoalPolicy,
   duration: SessionDuration,
+  pool: readonly Exercise[],
+  bound: 'longest' | 'shortest',
   keep: (slot: SlotTemplate) => boolean = () => true,
 ): number => {
   const program = policy.programs[duration];
   const blocks = program.blocks
     .map((b) => b.slots.filter(keep))
     .filter((slots) => slots.length > 0);
+  const slotSeconds = (slot: SlotTemplate): number => {
+    const seconds = selectableVariants(slot, pool).map((v) => v.estimatedSeconds);
+    return bound === 'longest' ? Math.max(...seconds) : Math.min(...seconds);
+  };
   const work = blocks
     .map(
       (slots) =>
-        slots.reduce((sum, s) => sum + s.estimatedSeconds, 0) +
+        slots.reduce((sum, s) => sum + slotSeconds(s), 0) +
         program.restBetweenItemsSeconds * (slots.length - 1),
     )
     .reduce((a, b) => a + b, 0);
@@ -223,7 +256,13 @@ export const checkFeasibility: CheckFeasibility = (matrix, policies) => {
           advisories.push({
             kind: 'counting-narrows-slot-to-one',
             at: { goal, duration, context: 'venue-aware', slotId: slot.id },
-            counting: 'counting' in slot.prescription ? slot.prescription.counting : 'n/a',
+            counting: [
+              ...new Set(
+                slot.variants.map((v) =>
+                  'counting' in v.prescription ? v.prescription.counting : 'n/a',
+                ),
+              ),
+            ].join('|'),
             excluded: [
               ...new Set(
                 eligibleIgnoringCounting
@@ -231,6 +270,40 @@ export const checkFeasibility: CheckFeasibility = (matrix, policies) => {
                   .map((e) => e.id),
               ),
             ].sort(),
+          });
+        }
+
+        // A variant nothing can be given is dead policy: authored, reviewed,
+        // and unreachable. Reported per variant so the index identifies it.
+        slot.variants.forEach((variant, index) => {
+          if (!allExercises.some((e) => variantFor(e, slot) === variant)) {
+            advisories.push({
+              kind: 'variant-unreachable',
+              at: { goal, duration, context: 'venue-aware', slotId: slot.id },
+              variantIndex: index,
+              reason: allExercises.some((e) => variantFits(e, variant))
+                ? 'shadowed-by-earlier-variant'
+                : 'no-compatible-movement',
+            });
+          }
+        });
+
+        // Variants exist for genuine dosing differences. A slot with about as
+        // many ways to dose it as movements to fill it has stopped describing
+        // one training purpose and started describing each movement's session.
+        //
+        // Two is not that. Two variants is the minimum that can express a real
+        // binary difference — a core hold where a plank is counted total and a
+        // side plank per side — and flagging it would fire on every honest use
+        // of the mechanism, which is how a signal becomes noise. Three or more,
+        // with no fewer variants than movements, is where the slot has stopped
+        // describing one purpose.
+        if (slot.variants.length >= 3 && slot.variants.length >= eligible.length) {
+          advisories.push({
+            kind: 'variants-approach-per-exercise-programming',
+            at: { goal, duration, context: 'venue-aware', slotId: slot.id },
+            variants: slot.variants.length,
+            eligibleExercises: eligible.length,
           });
         }
 
@@ -247,7 +320,7 @@ export const checkFeasibility: CheckFeasibility = (matrix, policies) => {
               kind: 'required-slot-unsatisfiable',
               at,
               patterns: slot.eligiblePatterns,
-              prescriptionKind: slot.prescription.kind,
+              prescriptionKind: [...new Set(slot.variants.map((v) => v.prescription.kind))].join('|'),
             });
           }
           if (
@@ -278,17 +351,21 @@ export const checkFeasibility: CheckFeasibility = (matrix, policies) => {
         }
       }
 
-      const estimated = programSeconds(policy, duration);
+      // Bounded from opposite ends, because dosing decides duration and the
+      // session picks its variants at generation time. The longest selectable
+      // dosing must still fit; the shortest must still be worth doing.
+      const longest = programSeconds(policy, duration, allExercises, 'longest');
+      const shortest = programSeconds(policy, duration, allExercises, 'shortest');
       const budget = duration * 60;
-      if (estimated > budget) {
-        errors.push({ kind: 'program-exceeds-duration', goal, duration, estimatedSeconds: estimated });
-      } else if (estimated / budget < MINIMUM_FILL_RATIO) {
+      if (longest > budget) {
+        errors.push({ kind: 'program-exceeds-duration', goal, duration, estimatedSeconds: longest });
+      } else if (shortest / budget < MINIMUM_FILL_RATIO) {
         advisories.push({
           kind: 'program-underfills-duration',
           goal,
           duration,
-          estimatedSeconds: estimated,
-          fillRatio: Math.round((estimated / budget) * 100) / 100,
+          estimatedSeconds: shortest,
+          fillRatio: Math.round((shortest / budget) * 100) / 100,
         });
       }
 
@@ -298,6 +375,8 @@ export const checkFeasibility: CheckFeasibility = (matrix, policies) => {
       const substituteSeconds = programSeconds(
         policy,
         duration,
+        eiExercises,
+        'shortest',
         (slot) => slot.obligation.substitute === 'required',
       );
       if (substituteSeconds / budget < MINIMUM_FILL_RATIO) {

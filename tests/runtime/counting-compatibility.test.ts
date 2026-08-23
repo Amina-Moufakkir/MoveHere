@@ -20,7 +20,7 @@ import { AUTHORED_MATRIX } from '../../src/domain/exercise-catalog.ts';
 import { loadGoalPolicies } from '../../src/domain/policy-loader.ts';
 import { AUTHORED_POLICIES } from '../../src/domain/policy-catalog.ts';
 import { checkFeasibility, selectPolicy } from '../../src/domain/feasibility.ts';
-import { canFill } from '../../src/domain/slot-eligibility.ts';
+import { canFill, variantFor } from '../../src/domain/slot-eligibility.ts';
 import { makeSessionMinutes, SESSION_DURATIONS } from '../../src/domain/session.ts';
 import { seedFrom } from '../../src/domain/prng.ts';
 import { FEATURE_REGISTRY } from '../../src/domain/feature-registry.ts';
@@ -28,6 +28,7 @@ import { confirmInventory, projectGenerationView } from '../../src/domain/confir
 import type { VenueId } from '../../src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '../../src/domain/feature.ts';
 import type { Exercise, RepCounting } from '../../src/domain/exercise.ts';
+import type { SlotTemplate } from '../../src/domain/policy.ts';
 import type { SessionGoal } from '../../src/domain/session.ts';
 
 /* --------------------------------------------------------------- fixtures */
@@ -127,34 +128,85 @@ test('no generated item is counted a way its movement does not accept', () => {
 
 /* ------------------------------------------------------------- structural */
 
-test('no shipped slot can be filled by a movement that rejects its counting', () => {
+test('the variant a movement receives is one its counting accepts', () => {
+  // Iterates variants rather than a single slot prescription: what a movement
+  // is actually given is the variant selection resolves to, not the slot.
   const bad: string[] = [];
   for (const slot of allSlots) {
-    if (!('counting' in slot.prescription)) continue;
     for (const exercise of matrix.exercises) {
-      if (canFill(exercise, slot) && !exercise.countingModes.includes(slot.prescription.counting)) {
-        bad.push(`${String(slot.id)} accepts ${String(exercise.id)}`);
+      const variant = variantFor(exercise, slot);
+      if (variant === null) continue;
+      const p = variant.prescription;
+      if ('counting' in p && !exercise.countingModes.includes(p.counting)) {
+        bad.push(`${String(slot.id)} gives ${String(exercise.id)} a '${p.counting}' dose`);
+      }
+      if (!exercise.prescriptionKinds.includes(p.kind)) {
+        bad.push(`${String(slot.id)} gives ${String(exercise.id)} a '${p.kind}' dose`);
       }
     }
   }
   assert.deepEqual(bad, [], 'eligibility must prove counting, not merely render it');
 });
 
-test('eligibility rejects a counting the movement does not accept', () => {
-  const slot = allSlots.find(
-    (s) => 'counting' in s.prescription && s.prescription.counting === 'per-side',
+test('a movement is never given a variant only another movement accepts', () => {
+  const perSideOnly = allSlots.flatMap((slot) =>
+    slot.variants
+      .filter((v) => 'counting' in v.prescription && v.prescription.counting === 'per-side')
+      .map((v) => ({ slot, variant: v })),
   );
-  assert.ok(slot !== undefined, 'the shipped policy must exercise per-side counting somewhere');
+  assert.ok(perSideOnly.length > 0, 'the shipped policy must dose something per side');
 
   const totalOnly = matrix.exercises.filter(
     (e) => e.countingModes.length === 1 && e.countingModes[0] === 'total',
   );
   assert.ok(totalOnly.length > 0);
-  for (const exercise of totalOnly) {
-    assert.equal(
-      canFill(exercise, slot),
-      false,
-      `${String(exercise.id)} accepts only total counting and must not fill a per-side slot`,
+  for (const { slot, variant } of perSideOnly) {
+    for (const exercise of totalOnly) {
+      assert.notEqual(
+        variantFor(exercise, slot),
+        variant,
+        `${String(exercise.id)} accepts only total counting and must never receive a per-side dose`,
+      );
+    }
+  }
+});
+
+test('variant order is precedence: reordering can change what a movement is given', () => {
+  // Variant order is policy semantics, not incidental collection order.
+  // Generation is invariant under permutation of *matrix* collections; it is
+  // deliberately not invariant here, and this pins that difference down.
+  const dualMode = matrix.exercises.find((e) => e.countingModes.length > 1);
+  assert.ok(dualMode !== undefined, 'a movement accepting both modes is what makes order matter');
+
+  const twoWay = allSlots.find(
+    (s) => s.variants.length > 1 && variantFor(dualMode, s) !== null,
+  );
+  assert.ok(twoWay !== undefined, 'the shipped policy must offer it more than one dosing');
+
+  const forward = variantFor(dualMode, twoWay);
+  const reversed: SlotTemplate = { ...twoWay, variants: [...twoWay.variants].reverse() as typeof twoWay.variants };
+  const backward = variantFor(dualMode, reversed);
+
+  assert.notDeepEqual(
+    forward?.prescription,
+    backward?.prescription,
+    'reordering variants must be able to change the dose, or precedence means nothing',
+  );
+});
+
+test('a slot still offers every movement it did, across its variants', () => {
+  // Guards the migration itself: variants exist to restore breadth counting
+  // narrowed, so a slot that lost a movement to the migration is a regression.
+  for (const slot of allSlots) {
+    const byPatternAndKind = matrix.exercises.filter(
+      (e) =>
+        slot.eligiblePatterns.includes(e.pattern) &&
+        slot.variants.some((v) => e.prescriptionKinds.includes(v.prescription.kind)),
+    );
+    const eligible = byPatternAndKind.filter((e) => canFill(e, slot));
+    assert.ok(
+      eligible.length > 0,
+      `${String(slot.id)} admits no movement at all`,
     );
   }
 });
