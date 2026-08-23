@@ -236,6 +236,30 @@ export const EXERCISES: readonly Exercise[] = [
     cues: ['Hang with active shoulders', 'Raise your knees toward your chest', 'Lower without swinging'],
     instructions: { kind: 'outstanding' },
   },
+  /**
+   * A separate movement from the hanging version, not a variation of it (§8).
+   *
+   * Hanging, the body is below the hands with the trunk unsupported. On
+   * parallel bars it is held above them with the elbows extended and the torso
+   * upright — a different position of nearly every joint above the hips, and a
+   * stability demand that is not comparable. One entry could not carry both:
+   * "Hang with active shoulders" is false here.
+   *
+   * The structural metadata below is new project content, not inherited. It
+   * matches the hanging version on pattern, laterality, dose and counting
+   * because those are the same facts about the same trunk action, and it shares
+   * no cue text with it.
+   */
+  {
+    id: ex('supported-knee-raise'),
+    name: 'Supported knee raise',
+    pattern: 'core',
+    laterality: 'bilateral',
+    prescriptionKinds: ['reps'],
+    countingModes: ['total'],
+    cues: ['Support yourself with straight arms', 'Keep your torso upright', 'Raise and lower your knees under control'],
+    instructions: { kind: 'outstanding' },
+  },
 
   // --- locomotion ----------------------------------------------------------
   {
@@ -375,7 +399,7 @@ export const COMPATIBILITIES: readonly ExerciseCompatibility[] = [
   compat('pull-up-bar', 'dead-hang'),
   compat('pull-up-bar', 'pull-up'),
   compat('pull-up-bar', 'hanging-knee-raise'),
-  compat('parallel-bars', 'hanging-knee-raise', 'From a support hold'),
+  compat('parallel-bars', 'supported-knee-raise'),
 
   // Terrain and surfaces.
   compat('hill', 'brisk-walk', 'Uphill'),

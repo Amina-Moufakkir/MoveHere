@@ -49,7 +49,7 @@ test('the shipped catalog loads with every movement outstanding', () => {
   const result = loadMatrix(AUTHORED_MATRIX);
   assert.ok(result.ok);
   const kinds = result.matrix.exercises.map((e) => e.instructions.kind);
-  assert.equal(kinds.length, 22);
+  assert.equal(kinds.length, 23);
   assert.deepEqual(
     [...new Set(kinds)],
     ['outstanding'],
@@ -262,7 +262,7 @@ test('instruction coverage is reportable across every movement', () => {
     result.matrix.exercises.length,
     'every movement falls in exactly one bucket',
   );
-  assert.deepEqual(counts, { authored: 0, 'not-required': 0, outstanding: 22 });
+  assert.deepEqual(counts, { authored: 0, 'not-required': 0, outstanding: 23 });
 });
 
 test('execution cues are untouched by the instruction model', () => {

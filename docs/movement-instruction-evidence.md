@@ -62,8 +62,8 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `plank` | `ACE-LIB` 32 | S | Face down; elbows directly under the shoulders, palms down; straight line from head to heels | Mat is incidental to the position |
 | `side-plank` | `ACE-LIB` 101 | S | Lie on one side, legs extended, feet stacked; supporting elbow directly under the shoulder; lift hips and knees clear | **`ACE-LIB` 303 is a BOSU exercise and is the wrong page for this movement.** 101 is the floor version |
 | `dead-bug` | `ACE-LIB` 147 | S | Supine start; limbs raised so knees are over the hips and elbows over the shoulders; one hand and the opposite heel move together, then return; reciprocal | Framing differs from MoveHere's cue — see cue finding 3 |
-| `hanging-knee-raise` @ `pull-up-bar` | thin secondary only | **X** | Knees raise toward the chest and lower again — the action only | **No institutional page.** Setup and hang position unsupported |
-| `hanging-knee-raise` @ `parallel-bars` | `DIP-KIN` (position only) | **X** | Bodyweight supported through the upper limbs on parallel bars, elbows extended | **No source describes a support-hold knee raise at all.** See the domain-model finding |
+| `hanging-knee-raise` | thin secondary only | **X** | Knees raise toward the chest and lower again — the action only | **No institutional page.** Setup and hang position unsupported |
+| `supported-knee-raise` | `DIP-KIN` (position only) | **X** | Bodyweight supported through the upper limbs on parallel bars, elbows extended | **No source describes a support-hold knee raise at all.** Its structural metadata and cues are new project content |
 | `march-in-place` | `NHS-STR` family | C | Alternating hip and knee flexion while remaining on the spot | Thin. Knee height described relatively, never as a target |
 | `hip-flexor-stretch` | `ACE-LIB` 142 | S | Half-kneeling, one foot forward and the opposite knee down; pelvis tucked, spine neutral; lean into the front hip without letting the pelvis rotate forward | Hold durations and repetition counts **discarded** |
 
@@ -124,7 +124,7 @@ though it had settled the other.
 *"Breathe through your nose if you can."* Out of scope for this pass — the
 movement is `not-required` — and still open as a cue finding.
 
-## Domain-model finding — `hanging-knee-raise` may be two movements
+## Domain-model finding — `hanging-knee-raise` was two movements (accepted, implemented)
 
 The matrix holds one exercise cited in two contexts, with `parallel-bars`
 carrying the variation label *From a support hold*. The evidence does not
@@ -158,29 +158,38 @@ split squat is a real setup difference and the mechanism is correct for it. It
 does mean the second justifying case was a modelling error rather than a setup
 variation.
 
-**This is a matrix change and is not made here.** It touches exercise identity,
-compatibility claims, and the media manifest, and it is a decision for the
-canonical plan (§7, §8), not for an evidence pass.
+**Accepted and implemented.** `hanging-knee-raise` keeps the pull-up bar;
+`supported-knee-raise` takes the parallel bars, replacing the existing
+compatibility claim rather than adding to it, and the *From a support hold*
+label is gone with it. The general rule that produced this — a context is a
+different movement when it changes the body's relationship to the structure
+rather than where a limb is placed — is in §8.
+
+The split converts a **context**-evidence gap into a **movement**-evidence gap.
+Neither knee raise is better sourced than it was; the accounting is simply
+honest now, because the missing evidence never was about a setup.
 
 ## Counts
 
 Movements and context-specific setups are counted separately, because a
 movement can be sufficiently evidenced while one of its contexts is not.
 
-**Movements — 18 researched**
+**Movements — 19, following the knee-raise split**
 
 | Status | Count | Movements |
 |---|---|---|
 | Sufficient (S) | **13** | bodyweight-squat, reverse-lunge, split-squat, step-up, glute-bridge, hip-hinge, single-leg-deadlift, push-up, pull-up, plank, side-plank, dead-bug, hip-flexor-stretch |
 | Sufficient with caveat (C) | **3** | incline-push-up (composite), dead-hang (derived), march-in-place (thin) |
-| Insufficient (X) | **2** | pike-push-up, hanging-knee-raise |
+| Insufficient (X) | **3** | pike-push-up, hanging-knee-raise, supported-knee-raise |
 
-**Context-specific setups — 4 required across 2 movements**
+**Context-specific setups — 2 required, both on one movement**
 
 | Status | Count | Contexts |
 |---|---|---|
 | Sourced | **2** | `split-squat` @ environment-independent; `split-squat` @ `park-bench` |
-| Not sourced | **2** | `hanging-knee-raise` @ `pull-up-bar`; `hanging-knee-raise` @ `parallel-bars` |
+| Not sourced | **0** | — |
+
+`split-squat` is now the only movement in the catalog needing a phase override.
 
 **Other**
 
@@ -191,6 +200,6 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | Entries retrieved by verbatim extraction | 1 (push-up elbow path) |
 | Out-of-scope fact categories discarded | 8 |
 | Cue findings raised, none actioned | 4 |
-| Domain-model findings raised, none actioned | 1 |
-| Movements ready to author on this evidence | **16 of 18** |
-| Catalog, matrix, cues, prose, UI, visuals, safety copy | unchanged |
+| Domain-model findings raised | 1, accepted and implemented |
+| Movements ready to author on this evidence | **16 of 19** |
+| Instruction prose, UI, visuals, safety copy | unchanged |

@@ -6,9 +6,15 @@
  * complete instruction — from the default alone or through phase overrides.
  * The unmodified default is not required to be valid everywhere.
  *
- * The two shapes the catalog will need are the worked cases at the bottom:
- * a grounded split squat overridden for a bench, and a bar hang overridden for
- * a parallel-bar support hold.
+ * Two resolution shapes are worked below: an environment-independent default
+ * overridden for a feature (split squat, grounded and on a bench), and a
+ * feature default overridden for another feature (step-up, bench and stairs).
+ *
+ * Neither is the hanging knee raise. That was two movements sharing one entry —
+ * the bar and the parallel bars differ in what supports the body, not in where
+ * a limb is placed — and it has been split (§8). Keeping it as this contract's
+ * worked example would have preserved the modelling mistake as the thing the
+ * mechanism is demonstrated by.
  */
 
 import assert from 'node:assert/strict';
@@ -269,21 +275,30 @@ test('the grounded split squat resolves differently on a bench', () => {
   assert.equal(benched.steps.length, 3);
 });
 
-test('the bar hang resolves to a support hold on parallel bars', () => {
+test('a feature default resolves differently in another feature context', () => {
+  // The feature-to-feature resolution path, which the environment-independent
+  // split-squat case above does not exercise.
+  //
+  // This deliberately no longer uses hanging knee raise. That movement was two
+  // movements wearing one entry — the bar and the parallel bars differ in what
+  // supports the body, not in where a limb is placed — and it has been split
+  // (§8). A test built on it would have preserved the modelling mistake as the
+  // mechanism's worked example. Step-up is a real multi-context movement: the
+  // same foot, on a different object.
   const matrix = loadMatrix(
-    withInstructions('hanging-knee-raise', {
+    withInstructions('step-up', {
       kind: 'authored',
-      defaultContext: { kind: 'confirmed-feature', featureId: 'pull-up-bar' as SupportedFeatureId },
+      defaultContext: { kind: 'confirmed-feature', featureId: 'park-bench' as SupportedFeatureId },
       steps: [
-        step('setup', 'Hang from the bar with your feet clear of the ground'),
-        step('action', 'Raise your knees toward your chest'),
-        step('return', 'Lower without swinging'),
+        step('setup', 'Stand facing the bench and place your whole foot on the seat'),
+        step('action', 'Drive through the top leg to stand tall'),
+        step('return', 'Step down under control'),
       ] as never,
       overrides: [
         {
-          featureId: 'parallel-bars' as SupportedFeatureId,
+          featureId: 'stairs' as SupportedFeatureId,
           replaces: 'setup',
-          steps: [step('setup', 'Support yourself on the bars with your arms locked')],
+          steps: [step('setup', 'Stand facing the stairs and place your whole foot on a step')],
           authority: PROJECT,
         },
       ],
@@ -291,15 +306,45 @@ test('the bar hang resolves to a support hold on parallel bars', () => {
     }),
   );
   assert.ok(matrix.ok);
-  const exercise = exerciseFrom(matrix, 'hanging-knee-raise');
+  const exercise = exerciseFrom(matrix, 'step-up');
 
-  const bar = resolveInstructions(exercise, featureBasis('pull-up-bar'));
-  const bars = resolveInstructions(exercise, featureBasis('parallel-bars'));
-  assert.ok(bar.kind === 'authored' && bars.kind === 'authored');
+  const bench = resolveInstructions(exercise, featureBasis('park-bench'));
+  const stairs = resolveInstructions(exercise, featureBasis('stairs'));
+  assert.ok(bench.kind === 'authored' && stairs.kind === 'authored');
 
-  assert.match(bar.steps[0].text, /Hang from the bar/);
-  assert.match(bars.steps[0].text, /Support yourself on the bars/);
-  assert.deepEqual(bar.steps.slice(1), bars.steps.slice(1));
+  assert.match(bench.steps[0].text, /on the seat/);
+  assert.match(stairs.steps[0].text, /on a step/);
+  // Only the setup differs; the action and return are authored once.
+  assert.deepEqual(bench.steps.slice(1), stairs.steps.slice(1));
+});
+
+test('the split leaves the two knee raises as separate single-context movements', () => {
+  const result = loadMatrix(AUTHORED_MATRIX);
+  assert.ok(result.ok);
+
+  const contexts = (id: string) =>
+    result.matrix.compatibilities
+      .filter((c) => String(c.exerciseId) === id)
+      .map((c) => String(c.featureId))
+      .sort();
+
+  assert.deepEqual(contexts('hanging-knee-raise'), ['pull-up-bar']);
+  assert.deepEqual(contexts('supported-knee-raise'), ['parallel-bars']);
+
+  // The variation label carried the identity difference and goes with it.
+  const parallel = result.matrix.compatibilities.find(
+    (c) => String(c.featureId) === 'parallel-bars',
+  );
+  assert.ok(parallel !== undefined);
+  assert.equal(parallel.variationLabel, undefined);
+
+  // No cue text is shared between them.
+  const cuesOf = (id: string) =>
+    result.matrix.exercises.find((e) => String(e.id) === id)?.cues ?? [];
+  const overlap = cuesOf('supported-knee-raise').filter((c) =>
+    cuesOf('hanging-knee-raise').includes(c),
+  );
+  assert.deepEqual(overlap, [], 'the new movement inherits no cue from the one it was split from');
 });
 
 test('resolution is deterministic and phase-ordered', () => {
@@ -413,7 +458,7 @@ test('the shipped catalog is untouched by this pass', () => {
   const result = loadMatrix(AUTHORED_MATRIX);
   assert.ok(result.ok);
   const states = result.matrix.exercises.map((e) => e.instructions.kind);
-  assert.equal(states.length, 22);
+  assert.equal(states.length, 23);
   assert.deepEqual([...new Set(states)], ['outstanding']);
   assert.equal(
     result.advisories.filter((a) => a.kind === 'instruction-context-inherits-default').length,
