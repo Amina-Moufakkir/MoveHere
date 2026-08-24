@@ -116,6 +116,31 @@ const VISUALS: readonly RegistryRow[] = [
     },
   },
   {
+    exerciseId: 'glute-bridge',
+    featureId: null,
+    entry: {
+      /* Two stacked phases in one frame — start above, hips raised below. The
+         stacked layout is the brief's, not this file's: a supine movement shot
+         side-on is wider than tall, so stacking gives each pose the full width.
+         All three assets are 1536 x 1024, measured. */
+      park: {
+        asset: { both: require('../../img/outdoor-glute-bridge.png') },
+        alt: 'Two stacked photographs of a glute bridge in a city park. Above, a woman in a black crop top and shorts lies on her back on the grass with her knees bent, her feet flat and her arms by her sides. Below, the same position with her hips raised so her body slopes from her shoulders to her knees. A path, a bench, a lamp post, water and a distant skyline are behind her.',
+      },
+      substitute: {
+        /* One alt covers the themed pair because both show the same person in
+           the same clothing and the same two positions; only the room lighting
+           and its decor differ, and neither is described. */
+        asset: {
+          light: require('../../img/indoor-daylight-glute-bridge.png'),
+          dark: require('../../img/indoor-dark-glute-bridge.png'),
+        },
+        alt: 'Two stacked photographs of a glute bridge in a room. Above, a man in a grey T-shirt and shorts lies on his back on a wooden floor with his knees bent, his feet flat and his arms by his sides. Below, the same position with his hips raised so his body slopes from his shoulders to his knees. A window and a potted plant are behind him.',
+      },
+      aspectRatio: 1536 / 1024,
+    },
+  },
+  {
     exerciseId: 'plank',
     featureId: null,
     entry: {

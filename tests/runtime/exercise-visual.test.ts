@@ -28,6 +28,18 @@ const PLANK: VisualEntry<string> = {
   aspectRatio: 1536 / 1024,
 };
 
+const GLUTE_BRIDGE: VisualEntry<string> = {
+  park: { asset: { both: 'outdoor-glute-bridge.png' }, alt: 'park glute bridge alt' },
+  substitute: {
+    asset: {
+      light: 'indoor-daylight-glute-bridge.png',
+      dark: 'indoor-dark-glute-bridge.png',
+    },
+    alt: 'substitute glute bridge alt',
+  },
+  aspectRatio: 1536 / 1024,
+};
+
 /* Feature-keyed: environment is fixed by the basis, so there is no substitute. */
 const BENCH: VisualEntry<string> = {
   park: { asset: { light: 'daylight-bench.png', dark: 'dark-bench.png' }, alt: 'bench alt' },
@@ -107,6 +119,12 @@ test('presentation never changes media identity', () => {
     !/session|dark|substitute|park:/i.test(keyFn),
     'the key is built from exercise and feature alone',
   );
+  // Every shipped row keys on exercise and feature, whatever its variant count.
+  const rows = [...registry.matchAll(/exerciseId: '([^']+)'[\s\S]*?featureId: ([^,]+),/g)];
+  assert.deepEqual(
+    rows.map((m) => `${m[1]}@${m[2].trim().replace(/'/g, '')}`).sort(),
+    ['glute-bridge@null', 'plank@null', 'step-up@park-bench'],
+  );
 });
 
 test('the domain knows nothing about any of this', () => {
@@ -141,6 +159,52 @@ test('substitute is never described as a place', () => {
   const shared = readFileSync('src/presentation/exercise-visual.ts', 'utf8');
   const claims = shared.match(/\b(user|person|they)\b[^.]*\bis indoors\b/gi) ?? [];
   assert.deepEqual(claims, []);
+});
+
+/* ------------------------------------------------------------ glute bridge */
+
+test('glute-bridge selects one outdoor asset for park, and by theme for substitute', () => {
+  assert.equal(pick(GLUTE_BRIDGE, 'park', false).source, 'outdoor-glute-bridge.png');
+  assert.equal(pick(GLUTE_BRIDGE, 'park', true).source, 'outdoor-glute-bridge.png');
+  assert.equal(
+    pick(GLUTE_BRIDGE, 'park', false).source,
+    pick(GLUTE_BRIDGE, 'park', true).source,
+    'the park composition is one asset, not two that match',
+  );
+  assert.equal(
+    pick(GLUTE_BRIDGE, 'substitute', false).source,
+    'indoor-daylight-glute-bridge.png',
+  );
+  assert.equal(pick(GLUTE_BRIDGE, 'substitute', true).source, 'indoor-dark-glute-bridge.png');
+});
+
+test('glute-bridge alt and ratio follow the selected composition', () => {
+  assert.equal(pick(GLUTE_BRIDGE, 'park', true).alt, 'park glute bridge alt');
+  assert.equal(pick(GLUTE_BRIDGE, 'substitute', true).alt, 'substitute glute bridge alt');
+  for (const session of ['park', 'substitute'] as const) {
+    for (const dark of [false, true]) {
+      assert.equal(pick(GLUTE_BRIDGE, session, dark).aspectRatio, 1536 / 1024);
+    }
+  }
+});
+
+test('glute-bridge is one environment-independent media identity', () => {
+  // Three assets, one key, no feature. Presentation multiplies depictions; it
+  // does not multiply identities, and it introduces no compatibility claim —
+  // the park composition contains a bench, a lamp post and a path as scenery,
+  // and `check:exercise-media` still validates this row as feature-less.
+  const registry = readFileSync('mobile/media/exercise-visuals.ts', 'utf8');
+  const row = registry.slice(registry.indexOf("exerciseId: 'glute-bridge'"));
+  const entry = row.slice(0, row.indexOf('\n  },'));
+  assert.ok(/featureId:\s*null/.test(entry), 'glute-bridge cites no feature');
+  assert.ok(!/park-bench|stairs|pull-up-bar|parallel-bars|hill/.test(entry));
+  for (const file of [
+    'outdoor-glute-bridge.png',
+    'indoor-daylight-glute-bridge.png',
+    'indoor-dark-glute-bridge.png',
+  ]) {
+    assert.ok(entry.includes(file), `the shipped entry must reference ${file}`);
+  }
 });
 
 /* ------------------------------------------------ the fixture tracks reality */
