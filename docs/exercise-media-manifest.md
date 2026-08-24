@@ -97,6 +97,26 @@ parameterises a stated fact and is permitted, provided the value chosen is not i
 excluded named landmark. A detail the instruction states nothing about, and which selects
 between recognised variants of the movement, is introduced and is not permitted.
 
+**Cue text is reference-only, and is not depiction authority.** Pairing sections list cues
+because the app presents them alongside the movement, not because they describe what to
+draw. A producer may not use a cue to choose pose, alignment, range, timing, force emphasis,
+equipment, or any other visual fact unless that fact is independently permitted by the
+verified movement basis, the committed instruction, or an explicit binding constraint in the
+brief. Cue text must never be reproduced inside the image.
+
+Where a grounded depiction requirement and an existing cue differ, or where the two remain
+unresolved against each other, **the grounded basis governs and the discrepancy stays open
+for cue and trainer review.** An asset does not settle it. Several shipped cues are recorded
+as unestablished or as MoveHere's own wording rather than the source's, and a picture drawn
+to one of those would hand it an authority nothing granted it.
+
+**`push-up` and `step-up` are the worked consequence.** Both are blocked above, and the
+reason is exactly this rule rather than a shortage of ideas about how to draw them. Their
+cues do name a technique — elbows back rather than flared, driving through the top leg — and
+in both cases that naming is what is under review. A producer may not read either cue as
+the answer, because the cue is one side of the open question, not a grounded fact about the
+movement.
+
 ### First batch — readiness under this rule
 
 Assessed 2026-08-24 against each movement's human-verified basis and its committed
@@ -132,6 +152,122 @@ evidence and does **not** close the recorded instruction gap: the basis still st
 it stopped, and the step stays as thin as it was. What changes is that the image becomes
 the only surface carrying that detail, which is a reason to keep the gap on the record, not
 a reason to treat it as closed.
+
+### Per-movement briefs — first batch
+
+Written 2026-08-24, after an audit against the visual-evidence rule above. **These are
+production inputs, not notes.** An earlier set of briefs was agreed and never written down;
+the assets stayed `outstanding` while the decisions governing them existed only in a
+conversation. Anything commissioned from this list is commissioned from what follows.
+
+**What the audit changed, because the pattern will recur.** The earlier briefs predated the
+committed instructions, so they leaned on the **cues** — shoulder-width feet, forearms,
+body-in-one-line, lower-back-stays-down, extend-opposite-limbs. Four of those five are
+recorded as unestablished or as MoveHere's own wording rather than the source's. Five
+cue-derived depiction requirements would have been baked into images where nothing reviews
+them. **A brief quotes the committed instruction, never the cue.**
+
+**Production order: plank, glute bridge, bodyweight squat, dead bug.** The specimen slot is
+vacant, so whichever asset ships first becomes the de facto style reference. Plank has the
+fewest degrees of freedom to get that wrong — a single centred pose, no phase pairing, no
+depth parameter, no left-to-right ordering, and one binary form constraint. Cast, clothing,
+palette and rendering style get settled against the smallest surface of contestable
+judgement. Dead bug is last because its pairing constraint is the one most easily lost
+between a daylight master and its dark counterpart.
+
+#### 1 · Plank — `plank@-`
+
+- **Movement identity.** Forearm plank held on the ground, core pattern, dosed by time — a
+  held position, not a repetition.
+- **Laterality.** Bilateral.
+- **Phases.** **Single centred pose.** A second phase would depict movement the
+  prescription does not ask for.
+- **Form constraint (binding).** **Straight legs, with the torso and legs stiff.** The
+  knee-supported variant must never be depicted: the committed instruction requires legs
+  straight out behind and a stiff torso, which excludes it. Distal foot contact may
+  therefore be visible, and depicting it chooses nothing — the instruction already did.
+- **Composition.** Full side-on profile, body filling the width of the frame. **Elbows on
+  the floor directly under the shoulders**, shoulders over the elbows. Not *forearms*: the
+  instruction places the elbows, and the two are not the same referent.
+- **Foot and ankle orientation.** An unavoidable neutral rendering choice. Draw it plainly;
+  it must not be emphasised, annotated, close-cropped or framed as technique.
+- **Must not depict.** No mat, towel, bench, block or wall. No elevated surface under
+  forearms or feet — incline and decline planks are not in the matrix. Not a
+  straight-arm/high plank: the instruction places the elbows on the floor. No timer, clock
+  or counter. No sagging-hip or hip-hiking correction, no breathing indication, no
+  head-position emphasis, no body-in-one-line treatment, no spine overlay or alignment
+  line, no arrows.
+
+#### 2 · Glute bridge — `glute-bridge@-`
+
+- **Movement identity.** Supine glute bridge, hinge pattern. Lying on the back, knees bent,
+  feet flat on the floor about hip-width apart, toes pointing away. The heels press into
+  the floor and the hips rise.
+- **Laterality.** Bilateral. Nothing may read as a single-leg variant.
+- **Phases.** Two, left to right. Left: lying with knees bent and feet flat. Right: hips
+  raised.
+- **Foot-placement constraint (binding).** Feet at an ordinary mid-range distance from the
+  hips. **Must not depict the heels tucked close to the hips** — that cue is unestablished,
+  and a drawing which encodes it asserts visually what the instruction deliberately does
+  not say.
+- **Composition.** Side-on so hip height and the knee angle are both legible. Both feet
+  flat and fully visible, upper back and shoulders on the ground.
+- **Must not depict.** No mat, block, band, ball, bench or prop of any kind. No hip-height
+  endpoint treatment — no line, marker, or exaggerated extension reading as *this high*. No
+  ribs-down, arch-control, bracing or glute-squeeze indication, and no attempt to depict
+  them through shading, overlay or emphasis. No arrows, motion lines or anatomical overlay.
+
+#### 3 · Bodyweight squat — `bodyweight-squat@-`
+
+- **Movement identity.** Unsupported bodyweight squat from standing, squat pattern. Feet a
+  little wider than the hips, toes turned out slightly. The hips move back, then down, with
+  the hips and knees bending. The heels stay on the floor.
+- **Laterality.** Bilateral — both legs work together. Nothing may read as a single-leg or
+  staggered variant. No even-loading or weight-distribution treatment.
+- **Phases.** Two, left to right. Left: standing, feet set. Right: a clearly descended
+  position with the hips back and the hips and knees bent.
+- **Depth constraint (binding).** The descent must sit **clearly above thigh-parallel.**
+  Parallel is a discarded endpoint, and a figure at that landmark depicts a target the app
+  does not prescribe. Depth is otherwise a rendering parameter of *hips and knees bend* and
+  needs no further specification.
+- **Stance.** Follow the instruction — a little wider than the hips. **Not the cue's
+  shoulder-width**, which is a wider claim than the source makes.
+- **Composition.** Three-quarter or near-side-on so hip and knee flexion are both legible.
+  Both feet fully visible and flat.
+- **Must not depict.** No bench, box, chair, kerb, wall or step anywhere in frame,
+  background included — the matrix holds no feature compatibility for this movement, so any
+  object is a compatibility that does not exist. No barbell, dumbbell, kettlebell or held
+  object. No arms braced on anything. No depth line, floor marking, mirror or reference
+  grid. No knee-tracking indication, no weight-shift or heel-loading emphasis, no
+  spinal-angle or torso-uprightness treatment, no descent-tempo suggestion. No arrows,
+  motion lines or anatomical overlay.
+
+#### 4 · Dead bug — `dead-bug@-`
+
+- **Movement identity.** Supine dead bug, core pattern. Lying on the back, both arms raised
+  with the elbows over the shoulders, both legs raised with the knees directly over the
+  hips and bent about ninety degrees. One arm and the opposite leg lower toward the floor
+  together.
+- **Laterality.** Unilateral — one contralateral pair. The lowering arm and leg must
+  clearly be opposite limbs.
+- **Phases.** Two, left to right. Left: the raised start position. Right: one arm and the
+  opposite leg lowered toward the floor.
+- **Pairing constraint (binding).** **Both phases must show the same opposite-limb
+  pairing.** Different pairings across the two phases would depict the alternation sequence
+  the instruction deliberately omits, putting a side-switching rule into a picture past
+  every guard that keeps it out of the prose. This constraint binds the dark counterpart
+  too: it re-renders one composition and does not re-choose the pair.
+- **Range constraint (binding).** The lowered arm and leg stay **visibly above the floor.**
+  The mandatory hand-and-heel floor contact in the source is a discarded endpoint.
+- **Composition.** Elevated three-quarter view from above and to the side, so which limbs
+  are moving is unambiguous — a flat side-on view hides it, which is the only thing this
+  image needs to communicate. The figure lies on its back in both phases.
+- **Must not depict.** No mat, ball, band, foam roller or prop of any kind — a ball or band
+  is standard dead-bug equipment elsewhere and is exactly the invented object this rule
+  exists to stop. No wall, furniture or overhead object to reach toward. Never both arms
+  and both legs lowered at once — that is a hollow hold, a different movement not in the
+  catalog. No lumbar-contact emphasis, bracing indication, floor-contact marker, highlighted
+  spine, tempo cue, count or arrow of any kind.
 
 **Mapping identity is not composition identity.** Every key below stays distinct: its own
 asset file, its own registry entry, its own lookup. Where the movement itself is identical
