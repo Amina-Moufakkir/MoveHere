@@ -902,8 +902,11 @@ register row and a first read.
 ### Blocked on missing evidence — 3
 
 `pike-push-up` · `hanging-knee-raise` · `supported-knee-raise` — no institutional
-source located. `supported-knee-raise` is a movement this project defined, so its
-absence from the literature is expected rather than surprising.
+source located. For `supported-knee-raise` the gap is one of identity rather than
+of the movement: the project separated the supported form into its own catalog
+entry after evidence showed it should not stay conflated with the hanging one,
+and no directly applicable institutional instruction source has yet been matched
+to that identity. The movement itself is ordinary and widely performed.
 
 ### Blocked on a domain decision — 2
 

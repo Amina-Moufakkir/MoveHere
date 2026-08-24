@@ -694,6 +694,44 @@ AUTHORED INSTRUCTION
 
 **Context decides where a person puts their foot; the prescription decides how many and which side.** Resolution changes which steps are read and nothing else. Side-switching still derives from the prescription at render time, from the same place, for the same reason.
 
+### Instruction evidence eligibility
+
+**A movement's presence in the catalog and its instructions are separate questions.** An exercise may ship as project content with no external instruction basis at all. Source-grounding gates what may be *written about* a movement; it never gates whether the movement may be *offered*. A catalog entry rests on the compatibility and authority rules above. An instruction rests on evidence. They are not the same gate and must not be collapsed into one.
+
+Absence of a convenient public source is not evidence that a movement is invalid. Several movements this project ships are ordinary and widely performed and simply have no institutional page describing them. The supported knee raise is a further case: the project separated the supported form into its own catalog identity after evidence showed it should not remain conflated with the hanging knee raise, and no directly applicable institutional instruction source has yet been found for that identity. The movement is not new; the identity is, and the search has so far not matched one to the other.
+
+**Source-grounding is required before source-grounded instructions may be authored**, unless professional review independently supplies both the authority and the basis, in which case the review *is* the grounding.
+
+**Where a bounded search found nothing adequate, the instruction stays `outstanding`, and model knowledge may not fill the gap.** This is the rule that matters most, because breaking it is invisible from the outside. An instruction assembled from what a model happens to know, shipped in a product that labels content by how it was authored, is content whose stated provenance is false. It does not become acceptable by turning out to be accurate.
+
+**Where a candidate source exists but nobody has read it, the instruction also stays `outstanding` — and the two cases must remain distinguishable in the evidence record.** They produce the same state and are not the same problem. One is closed until new evidence appears; the other is open, cheap, and someone's next task. A record that flattens them loses the difference between work that is finished and work that was never started.
+
+**`not-required` is never inferred from missing or insufficient evidence.** It is a deliberate decision that a movement needs no written instruction, made about the movement, and recorded with its reason. Arriving at it because evidence proved hard to find would convert a gap into a claim, which is precisely what the three-valued state exists to prevent.
+
+**Source-grounding does not promote content authority.** A source agreeing with project content leaves it project content. Authority is a property of how content was authored and reviewed, not of whether something external happens to agree with it, and only professional review moves the tier.
+
+**An `outstanding` instruction produces no "How to do it" affordance in the client**, and no "not available yet" label is added in its place. The client shows what exists; it does not narrate what does not. An absent affordance says nothing, while a labelled empty one advertises an internal content gap on every session containing that movement — which serves the project's bookkeeping rather than the person exercising.
+
+**Cues continue to render regardless.** They are existing project content under their own authority, unaffected by the state of the instruction beside them. A movement with no instruction still carries what to attend to while performing it.
+
+The four states, with the movements currently in each:
+
+```text
+evidence insufficient    searched, nothing adequate found
+    pike push-up, hanging knee raise, supported knee raise
+
+verification incomplete  a candidate source exists, unread
+    hip flexor stretch, march in place
+
+not-required             deliberate decision, reason recorded
+    brisk walk, easy run
+
+blocked on domain input  §8 unresolved questions
+    thoracic rotation, shuttle run
+```
+
+The last is not an evidence state at all. It is listed here only so the four are not confused with one another: those two movements are waiting on a decision this project has not made, not on a source it has not read.
+
 ### Unresolved domain questions
 
 The following are recorded so they are not quietly resolved by an implementation. **No further design should be built around them until reviewed fitness-domain input exists.**
@@ -1024,7 +1062,7 @@ Recorded so it is not lost between passes:
 
 - **Laterality and rep counting.** **Closed.** **Laterality is an intrinsic property of an exercise** — `bilateral | unilateral` — because whether a movement works one side at a time is a fact about the movement, not a policy choice. **Rep counting is a property of a prescription** — `total | per-side` — because it states what a prescribed number means. What was missing for both passes was the proof that the two agree: counting was authored per slot, slots select by movement pattern, and nothing checked the result. An audit found 1,335 of 6,540 generated items carrying a count their movement did not accept; the evidence is preserved in `docs/counting-compatibility-audit.md`. Counting compatibility (§8) closes it — `countingModes` authored per movement, proved when policy loads — and the figure is now zero.
 - **Hanging knee raise is two movements.** Accepted, not implemented. The matrix holds one exercise cited on a pull-up bar and on parallel bars, the second labelled *From a support hold*. The evidence does not support that being a variation: the body hangs below the hands in one and is supported above them in the other, and comparative research treats the supported version as its own exercise (`docs/movement-instruction-evidence.md`). `hanging-knee-raise` keeps the bar; a distinct supported knee raise takes the parallel bars, replacing the existing compatibility claim rather than adding to it. The new movement needs its own cues and structural metadata — the existing ones are false of a support hold — and both stay instruction-outstanding. Outstanding.
-- **Movement instruction content.** The contract exists — typed steps, the three-valued state, declared default context and phase overrides, all validated when the matrix loads. No instruction is authored: coverage is 0 authored, 0 not-required, 22 outstanding, and `check:instructions` reports it on every build. Two movements have a decided outcome waiting to be written (`brisk-walk` and `easy-run` become `not-required`: ordinary locomotor action has no construction step, and pace stays cue content). Two are blocked on the domain questions in §8 above, `thoracic-rotation` and `shuttle-run`. Outstanding.
+- **Movement instruction content.** The contract exists — typed steps, the three-valued state, declared default context and phase overrides, all validated when the matrix loads. No instruction is authored: coverage is 0 authored, 0 not-required, 23 outstanding, and `check:instructions` reports it on every build. An evidence base has been gathered and its provenance recorded in `docs/movement-instruction-evidence.md`, which also carries the readiness board. Of 23 movements, 12 are ready on directly verified evidence and 2 on derived or caveated evidence; 2 have a decided `not-required` outcome waiting to be written (`brisk-walk`, `easy-run`); 2 are verification-incomplete (`hip-flexor-stretch`, `march-in-place`); 3 are evidence-insufficient after a bounded search (`pike-push-up`, `hanging-knee-raise`, `supported-knee-raise`); and 2 are blocked on the domain questions above (`thoracic-rotation`, `shuttle-run`). The eligibility rules governing those states are in §8. Outstanding.
 - **Slot variety debt from counting compatibility.** Enforcing counting compatibility narrowed twenty-nine slots and left nine able to produce only one movement each, because a slot carries one prescription and its eligible movements are dosed differently. Every movement remains reachable and no session states work it is not asking for, so this is a valid state rather than a defect — but it is not the intended programming outcome, and it is deliberately visible: `counting-narrows-slot-to-one` names each affected slot when policy loads. Slot prescription variants (§8) is the resolution. Outstanding.
 - **Test-fixture authority.** If generation accepts only reviewed policy, test fixtures must be shaped as reviewed, which would mean fabricating a reviewer reference to make tests compile — reintroducing fabricated authority one layer above the venue brands. This is an open design question for the goal-policy contract pass, deliberately not yet solved.
 
