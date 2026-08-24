@@ -29,6 +29,18 @@
  * separately vouched for — and once every movement carries one, that reading
  * gets easier, not harder.
  *
+ * Movement instructions joined it when they became visible, and not before. An
+ * instruction tells a person how to move, which reads as more authoritative
+ * than programming rather than less, so the note has to reach it. It names only
+ * content that exists: feature-use checks are designed (§9) and unbuilt, and a
+ * note describing content nobody can see would be its own small dishonesty.
+ *
+ * **The subject list grows; the predicate does not.** *…use project-created
+ * training content that has not been reviewed by a qualified fitness
+ * professional* is the reviewed half of this sentence and is asserted on
+ * directly in `tests/runtime/safety-language.test.ts`. Adding a content type
+ * must never reword the claim being withheld.
+ *
  * **One statement, not one per asset.** The provenance question is whether the
  * instructional content has had professional review, not which tool helped
  * make the pixels. A per-image "AI-generated" badge would answer a question
@@ -36,7 +48,7 @@
  * workout screen into a warning.
  */
 export const PROJECT_CONTENT_NOTE =
-  'Sessions and exercise visuals use project-created training content that has not been reviewed by a qualified fitness professional.';
+  'Sessions, exercise visuals, and movement instructions use project-created training content that has not been reviewed by a qualified fitness professional.';
 
 /** Standing disclaimers. Present on every screen, on every client. */
 export const NOT_MEDICAL_ADVICE =

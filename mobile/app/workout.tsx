@@ -49,13 +49,21 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { findSupportedFeature } from '../../src/domain/feature-registry.ts';
-import { exerciseCues, exerciseName } from '../../src/programming/session-builder.ts';
+import { resolveInstructions } from '../../src/domain/instruction-resolution.ts';
+import { exerciseById, exerciseCues, exerciseName } from '../../src/programming/session-builder.ts';
+import {
+  CUES_HEADING,
+  INSTRUCTION_HEADING,
+  instructionPanel,
+  openInstructionsLabel,
+} from '../../src/presentation/instruction-copy.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '../../src/presentation/session-copy.ts';
 import { doseText, prescriptionDisplay } from '../../src/presentation/prescription-copy.ts';
 import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { PrimaryAction } from '../components/primary-action';
 import { ProgressTrack } from '../components/progress-track';
+import { InstructionSheet } from '../components/instruction-sheet';
 import { exerciseVisualFor } from '../media/exercise-visuals.ts';
 import { ProjectContentNote } from '../components/project-content-note';
 import { EmptyState } from '../components/empty-state';
@@ -87,6 +95,11 @@ export default function WorkoutScreen() {
    */
   const [confirming, setConfirming] = useState(false);
   const [held, setHeld] = useState<number | null>(null);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
+  }, []);
   const beat = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {
@@ -167,6 +180,16 @@ export default function WorkoutScreen() {
   const visual =
     current === undefined ? null : exerciseVisualFor(current.item.exerciseId, featureId);
   const cues = current === undefined ? [] : exerciseCues(current.item.exerciseId);
+
+  /* Resolved against the basis this item actually cited, then flattened by
+     shared presentation. Nothing here reads an authored instruction: no
+     override, no default context, no step phase reaches this screen, which is
+     why a context-resolved movement will need no change on it. */
+  const movement = current === undefined ? null : exerciseById(current.item.exerciseId);
+  const instructions =
+    movement === null || current === undefined
+      ? { kind: 'hidden' as const }
+      : instructionPanel(resolveInstructions(movement, current.item.basis));
 
   return (
     <View style={{ flex: 1, backgroundColor: t.color.cloud }}>
@@ -302,13 +325,16 @@ export default function WorkoutScreen() {
                   accessibilityLabel={doseText(current.item.prescription)}
                   style={{ marginTop: space.sm }}
                 >
-                  <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap' }}>
                     {dose.kind === 'pair' ? (
                       <>
                         <Text
                           style={{ ...type.display, fontVariant: ['tabular-nums'], color: t.color.blueVivid }}
                         >
-                          {dose.first}
+                          {dose.first.value}
+                        </Text>
+                        <Text style={{ ...type.displayUnit, marginLeft: 4, color: t.color.blueVivid }}>
+                          {dose.first.unit}
                         </Text>
                         <Text
                           style={{ ...type.displayUnit, marginHorizontal: 8, color: t.color.navyFaint }}
@@ -318,7 +344,10 @@ export default function WorkoutScreen() {
                         <Text
                           style={{ ...type.display, fontVariant: ['tabular-nums'], color: t.color.blueVivid }}
                         >
-                          {dose.second}
+                          {dose.second.value}
+                        </Text>
+                        <Text style={{ ...type.displayUnit, marginLeft: 4, color: t.color.blueVivid }}>
+                          {dose.second.unit}
                         </Text>
                       </>
                     ) : (
@@ -348,8 +377,39 @@ export default function WorkoutScreen() {
                 {current.block}
               </Text>
 
+              {/* Learning the movement comes before attending to it, so this sits
+                  above the cues. Rendered only when an instruction resolved:
+                  an absent affordance says nothing, where a disabled one would
+                  announce the project's content gaps to someone mid-session. */}
+              {instructions.kind === 'available' && (
+                <Pressable
+                  onPress={() => setShowInstructions(true)}
+                  accessibilityRole="button"
+                  accessibilityLabel={openInstructionsLabel(exerciseName(current.item.exerciseId))}
+                  style={{
+                    alignSelf: 'flex-start',
+                    marginTop: space.lg,
+                    borderRadius: radius.pill,
+                    borderWidth: 1,
+                    borderColor: t.color.lineStrong,
+                    paddingHorizontal: space.lg,
+                    minHeight: touch.min,
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text style={{ ...type.label, color: t.color.blue }}>{INSTRUCTION_HEADING}</Text>
+                </Pressable>
+              )}
+
               {cues.length > 0 && (
-                <View style={{ marginTop: space.lg, borderTopWidth: 1, borderTopColor: t.color.line }}>
+                <View style={{ marginTop: space.lg }}>
+                  <Text style={{ ...type.micro, color: t.color.navyFaint, textTransform: 'uppercase' }}>
+                    {CUES_HEADING}
+                  </Text>
+                </View>
+              )}
+              {cues.length > 0 && (
+                <View style={{ marginTop: space.sm, borderTopWidth: 1, borderTopColor: t.color.line }}>
                   {cues.map((cue) => (
                     <View
                       key={cue}
@@ -380,6 +440,16 @@ export default function WorkoutScreen() {
           </View>
         )}
       </ScrollView>
+
+      {instructions.kind === 'available' && current !== undefined && (
+        <InstructionSheet
+          visible={showInstructions}
+          movementName={exerciseName(current.item.exerciseId)}
+          steps={instructions.steps}
+          reduceMotion={reduceMotion}
+          onClose={() => setShowInstructions(false)}
+        />
+      )}
 
       <View
         style={{

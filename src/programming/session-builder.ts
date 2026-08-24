@@ -31,7 +31,7 @@ import type {
 } from '../domain/session.ts';
 import { assessmentFor } from './conditions.ts';
 import type { ReportedConditions } from './conditions.ts';
-import type { ExerciseId } from '../domain/exercise.ts';
+import type { Exercise, ExerciseId } from '../domain/exercise.ts';
 
 const loaded = (() => {
   const m = loadMatrix(AUTHORED_MATRIX);
@@ -50,6 +50,17 @@ export const exerciseName = (id: ExerciseId): string =>
 
 export const exerciseCues = (id: ExerciseId): readonly string[] =>
   MATRIX?.exercises.find((e) => e.id === id)?.cues ?? [];
+
+/**
+ * The whole movement, for callers that need more than a name.
+ *
+ * Instruction resolution needs the exercise itself, because what a person is
+ * shown depends on the movement's authored instruction and the context the
+ * session cited. Returning the movement rather than its instruction keeps the
+ * resolver the only thing that reads instruction internals.
+ */
+export const exerciseById = (id: ExerciseId): Exercise | null =>
+  MATRIX?.exercises.find((e) => e.id === id) ?? null;
 
 export interface BuildArgs {
   readonly inventory: ConfirmedVenueInventory | null;

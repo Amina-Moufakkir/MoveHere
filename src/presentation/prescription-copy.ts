@@ -12,15 +12,69 @@
 
 import type { Prescription } from '../domain/exercise.ts';
 
-/** Whether a prescribed number applies per side or to both together. */
-const sideSuffix = (p: Prescription): string =>
+/**
+ * A number and what it counts.
+ *
+ * The unit is not decoration. "3 × 10" asks a reader to know that the first
+ * number is sets and the second is repetitions, which someone new to training
+ * does not, and which the notation never says. Naming both is the difference
+ * between a prescription and a pair of digits.
+ */
+export interface DoseTerm {
+  readonly value: string;
+  readonly unit: string;
+}
+
+const plural = (n: number, one: string, many: string): string => (n === 1 ? one : many);
+
+/**
+ * Counting rides on the unit, not on a separate line.
+ *
+ * "10 reps per side" is one idea. Splitting it into a numeral and a qualifier
+ * elsewhere on screen invites reading the numeral alone, which is exactly how a
+ * per-side dose gets halved.
+ */
+const countingSuffix = (p: Prescription): string =>
   'counting' in p && p.counting === 'per-side' ? ' per side' : '';
 
-/** The full dose, as one line: "3 × 8 per side", "2 × 40s", "400 m". */
+/**
+ * Seconds shown as minutes only when they are whole minutes.
+ *
+ * Rounding to the nearest minute displayed a 150-second effort as "3 min",
+ * overstating it by half a minute. A duration a person is asked to sustain is
+ * not a number to round for tidiness.
+ */
+const durationTerm = (seconds: number, suffix: string): DoseTerm =>
+  seconds >= 120 && seconds % 60 === 0
+    ? { value: String(seconds / 60), unit: `min${suffix}` }
+    : { value: String(seconds), unit: `sec${suffix}` };
+
+/** The dose a slot prescribes, as sets and the work in each. */
+const effortTerm = (p: Prescription): DoseTerm => {
+  const suffix = countingSuffix(p);
+  if (p.kind === 'reps') return { value: String(p.reps), unit: `${plural(p.reps, 'rep', 'reps')}${suffix}` };
+  if (p.kind === 'time') return durationTerm(p.seconds, suffix);
+  return { value: String(p.meters), unit: 'm' };
+};
+
+const setsTerm = (sets: number): DoseTerm => ({
+  value: String(sets),
+  unit: plural(sets, 'set', 'sets'),
+});
+
+/**
+ * The full dose, as one line, in words a beginner can act on:
+ * "3 sets × 10 reps", "3 sets × 8 reps per side", "1 set × 2 min", "400 m".
+ *
+ * Also what assistive technology reads, which is why it carries the set count
+ * even where the display demotes it: what is on screen and what is spoken must
+ * describe the same prescription.
+ */
 export const doseText = (p: Prescription): string => {
-  if (p.kind === 'reps') return `${p.sets} × ${p.reps}${sideSuffix(p)}`;
-  if (p.kind === 'time') return `${p.sets} × ${p.seconds}s${sideSuffix(p)}`;
-  return `${p.meters} m`;
+  const effort = effortTerm(p);
+  if (p.kind === 'distance') return `${effort.value} ${effort.unit}`;
+  const sets = setsTerm(p.sets);
+  return `${sets.value} ${sets.unit} × ${effort.value} ${effort.unit}`;
 };
 
 /**
@@ -32,6 +86,10 @@ export const doseText = (p: Prescription): string => {
  */
 export const countingNote = (p: Prescription): string | null =>
   'counting' in p && p.counting === 'per-side' ? 'per side' : null;
+
+/* Retained for callers that need the qualifier alone. The dose display no
+   longer uses it: counting now rides on the unit it qualifies, so a numeral
+   and its meaning cannot be read apart. */
 
 /**
  * How a prescription should be displayed, by kind.
@@ -51,14 +109,14 @@ export const countingNote = (p: Prescription): string | null =>
  */
 export type PrescriptionDisplay =
   | {
-      /** Two numerals that both carry meaning, shown as `first × second`. */
+      /** Two terms that both carry meaning, shown as `first × second`. */
       readonly kind: 'pair';
-      readonly first: string;
-      readonly second: string;
+      readonly first: DoseTerm;
+      readonly second: DoseTerm;
       readonly support: readonly string[];
     }
   | {
-      /** One numeral and its unit. The unit is set smaller than the value. */
+      /** One term. The unit is set smaller than the value. */
       readonly kind: 'single';
       readonly value: string;
       readonly unit: string;
@@ -66,32 +124,17 @@ export type PrescriptionDisplay =
     };
 
 export const prescriptionDisplay = (p: Prescription): PrescriptionDisplay => {
-  const side = countingNote(p);
-  const support = (extra: readonly string[]): readonly string[] =>
-    side === null ? extra : [...extra, side];
+  const effort = effortTerm(p);
 
-  if (p.kind === 'reps') {
-    return { kind: 'pair', first: String(p.sets), second: String(p.reps), support: support([]) };
+  if (p.kind === 'distance') {
+    return { kind: 'single', value: effort.value, unit: effort.unit, support: [] };
   }
 
-  if (p.kind === 'time') {
-    if (p.sets === 1) {
-      // Nobody counts a four-minute walk in seconds, and nobody needs "1 ×".
-      const asMinutes = p.seconds >= 120;
-      return {
-        kind: 'single',
-        value: asMinutes ? String(Math.round(p.seconds / 60)) : String(p.seconds),
-        unit: asMinutes ? 'min' : 's',
-        support: support(['1 set']),
-      };
-    }
-    return {
-      kind: 'pair',
-      first: String(p.sets),
-      second: `${p.seconds}s`,
-      support: support([]),
-    };
+  // A single timed effort promotes its duration and demotes the set count:
+  // nobody needs "1 ×" spending the loudest type on the least useful digit.
+  if (p.kind === 'time' && p.sets === 1) {
+    return { kind: 'single', value: effort.value, unit: effort.unit, support: ['1 set'] };
   }
 
-  return { kind: 'single', value: String(p.meters), unit: 'm', support: support([]) };
+  return { kind: 'pair', first: setsTerm(p.sets), second: effort, support: [] };
 };

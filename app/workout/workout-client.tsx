@@ -158,11 +158,13 @@ export function WorkoutClient() {
                   <p className="flex items-baseline leading-none text-blue-vivid">
                     {dose.kind === 'pair' ? (
                       <>
-                        <span className="text-count font-extrabold tabular-nums">{dose.first}</span>
+                        <span className="text-count font-extrabold tabular-nums">{dose.first.value}</span>
+                        <span className="ml-1 text-4xl font-extrabold sm:text-5xl">{dose.first.unit}</span>
                         <span className="mx-2 text-4xl font-extrabold text-navy-faint sm:text-5xl">
                           &times;
                         </span>
-                        <span className="text-count font-extrabold tabular-nums">{dose.second}</span>
+                        <span className="text-count font-extrabold tabular-nums">{dose.second.value}</span>
+                        <span className="ml-1 text-4xl font-extrabold sm:text-5xl">{dose.second.unit}</span>
                       </>
                     ) : (
                       <>
