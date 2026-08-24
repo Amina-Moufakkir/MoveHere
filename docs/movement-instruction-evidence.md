@@ -1083,6 +1083,21 @@ body off the floor without naming the second contact point. A reader following
 the steps arrives at a plank; the step is thinner than it could be, and closing
 it needs a source that states it.
 
+> **Visual production note, 2026-08-24 — the gap is not closed by an image.** The
+> approved visual rule clears `plank` for production: its committed instruction
+> requires straight legs and a stiff torso, which excludes the knee-supported
+> variant, so depicting the straight-leg plank with distal foot contact does not
+> choose between the two unresolved variants. Foot and ankle orientation stays an
+> unavoidable neutral rendering choice and must not be emphasised as technique.
+>
+> **The asymmetry is recorded here deliberately.** Once that asset ships, the
+> visual makes the lower support visible where this prose does not name it. That
+> upgrades nothing: `ACE-LIB` 32 still stops where it stopped, this gap stays
+> open, and it still closes only the way the others do — a primary source that
+> states the fact, read by a person. The consequence is that the image, not the
+> instruction, is the surface carrying that detail, which is a reason to keep the
+> entry on the record rather than to retire it.
+
 **`glute-bridge` — heel-to-hip distance.** `ACE-LIB` 49 establishes bent knees
 and feet flat and hip-width apart, and states no distance between the heels and
 the hips. The existing cue *"Heels close to your hips"* says one, and is

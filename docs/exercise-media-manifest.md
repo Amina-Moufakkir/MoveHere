@@ -65,6 +65,74 @@ make them neutral. A low-complexity asset is cheaper to produce and a smaller th
 wrong; it is not a checked one. Nothing on this list, at any complexity, is more than a
 project-created demonstration pending professional review.
 
+**What a visual is allowed to depict.** A drawing cannot be silent the way prose can. It
+shows a whole body in one position, so it commits to details the written instruction may
+have deliberately left open. This rule governs that difference.
+
+A movement visual **may** depict:
+
+- facts supported by the human-verified movement basis;
+- facts already present in committed MoveHere movement instructions;
+- unavoidable neutral rendering choices needed to make the figure visible.
+
+It **may not** introduce:
+
+- a disputed cue;
+- an excluded source fact;
+- a range or depth target;
+- a counting or side-switching rule;
+- a safety or suitability conclusion;
+- a technique choice the instruction deliberately leaves unresolved.
+
+**If a visual necessarily commits to an unresolved technique detail, that visual stays
+blocked** until the detail is reviewed or otherwise resolved. Blocked means not
+commissioned — it is not a composition problem to solve by cropping the disputed part out
+of frame, which hides the commitment rather than avoiding it.
+
+**The test that separates the third permission from the second prohibition** is whether the
+detail is *parameterised or entailed* by something the instruction states, or *introduced*
+on top of it. Every drawing must fix values the prose leaves as ranges — how far a squat
+descends, how far a limb travels toward the floor, where the feet sit. Fixing such a value
+parameterises a stated fact and is permitted, provided the value chosen is not itself an
+excluded named landmark. A detail the instruction states nothing about, and which selects
+between recognised variants of the movement, is introduced and is not permitted.
+
+### First batch — readiness under this rule
+
+Assessed 2026-08-24 against each movement's human-verified basis and its committed
+instruction. Constraints are binding on the asset, not suggestions to a producer.
+
+| Movement | Verdict | Binding constraint |
+|---|---|---|
+| Bodyweight squat | Ready | the descent must not depict the discarded thigh-parallel endpoint |
+| Glute bridge | Ready | must not visually encode *heels close to your hips*, which is unestablished |
+| Plank | Ready | straight legs and stiff torso; the knee-supported variant must not be depicted |
+| Dead bug | Ready | limbs stay above the discarded floor-touch endpoint, and both phases show the **same** opposite-limb pairing |
+
+Dead bug carries the constraint most easily lost in production: two phases showing
+*different* pairings would depict the alternation sequence the instruction deliberately
+omits, putting a side-switching rule into a picture past every guard that keeps it out of
+the prose.
+
+**`push-up` and `step-up` are blocked.** A drawing cannot stay neutral about an elbow path
+or about which leg drives an ascent the way prose can — the elbows are somewhere and the
+weight is on a leg in every frame. Both stay blocked until those disputes are reviewed.
+
+**Why `plank` is ready.** Its committed instruction requires legs straight out behind and
+the torso and legs stiff. That construction excludes the knee-supported variant, which is
+the other candidate under consideration, so depicting the straight-leg plank with distal
+foot contact does not choose between the two — the choice was already made by the
+instruction. Foot and ankle orientation remains an unavoidable neutral rendering choice:
+no figure can be drawn without it, and it must not be emphasised, annotated or framed as
+technique.
+
+**The asymmetry that creates, recorded rather than waved past.** The visual makes the lower
+support visible where the prose does not name it. That does **not** upgrade the prose
+evidence and does **not** close the recorded instruction gap: the basis still stops where
+it stopped, and the step stays as thin as it was. What changes is that the image becomes
+the only surface carrying that detail, which is a reason to keep the gap on the record, not
+a reason to treat it as closed.
+
 **Mapping identity is not composition identity.** Every key below stays distinct: its own
 asset file, its own registry entry, its own lookup. Where the movement itself is identical
 across contexts, the approved human pose and composition may be reused between those
