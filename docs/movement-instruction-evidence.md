@@ -43,6 +43,19 @@ derived from and why no dedicated source exists.
 verified pages about two other movements, neither of which is it. That is the
 weakest form of derivation in this artifact and it is labelled as such.
 
+**A retraction, and the reason it was possible.** This artifact twice claimed the
+register was complete and that no movement evidence remained summariser-only.
+Both claims were false. `ACE-LIB` 142 was never added to the register, so
+`hip-flexor-stretch` sat at directly-supported status on evidence nobody read;
+and `march-in-place` was shown resting on `NHS-STR`, which was verified only for
+its wall press-up section and says nothing about marching.
+
+Both errors survived eleven verifications for the same reason: **the register was
+treated as the inventory of what needs reading, when it was only a list of what
+someone thought to write down.** The per-movement basis table is the inventory.
+Anything in it without a register row is unverified by definition, and the two
+tables must be reconciled rather than assumed to agree.
+
 ### Verification register
 
 Ordered by priority. `verified` means a person read the page itself.
@@ -74,6 +87,7 @@ question, which is the failure mode this register exists to prevent.
 | [ACE 191 Pull-ups](https://www.acefitness.org/resources/everyone/exercise-library/191/pull-ups/) | **verified 2026-08-23** | Starts beneath the bar with arms reaching overhead; takes a full grip; the body leaves the ground with the arms overhead; the upward action bends the elbows and drives them downward while the trunk stays generally vertical, continuing until the chin is approximately level with the bar; the return extends the arms overhead until fully extended. **Not a dead-hang source** — it verifies a suspended starting position from which dead-hang setup is *derived*, see below |
 | [NHS Strength exercises](https://www.nhs.uk/live-well/exercise/strength-exercises/) | **verified 2026-08-23** for its wall press-up section | Starts standing away from a wall; hands placed flat against the wall at chest level; the arms bend to move the body toward the wall; the movement reverses to return to the start. **This verifies a wall press-up, not MoveHere's incline push-up** — see the composite-evidence note. Anything the earlier summariser reported beyond these facts is not carried |
 | NHS *Standing press-up* video transcript | **human-provided, directly read 2026-08-23** | Start approximately arm's length from the support; hands placed on the support, arms initially straight, hands shoulder-width apart; back and legs kept straight; the arms bend to move toward the support and straighten to return; standing farther away increases the lean. **NHS explicitly states the press-up may be performed with the hands on a bench instead of a tree** |
+| [ACE 142 Kneeling Hip-flexor Stretch](https://www.acefitness.org/resources/everyone/exercise-library/142/kneeling-hip-flexor-stretch/) | **unverified — summariser-mediated** | **Omitted from this register when it was written, and not noticed for eleven verifications.** `hip-flexor-stretch` has been carried at directly-supported status on evidence nobody read. Needs a first read: half-kneeling position, pelvis tuck, the lean into the front hip. Do not record hold durations or repetition counts |
 | `pike-push-up`, `hanging-knee-raise`, `supported-knee-raise`, `march-in-place` | **no page** | These need a source found, not a source checked |
 
 ## Admitted sources
@@ -90,7 +104,14 @@ question, which is the failure mode this register exists to prevent.
 
 ## Per-movement basis
 
-Status key — **S** sufficient · **C** sufficient with stated caveat · **X** insufficient, do not author.
+Status key — **S** sufficient · **C** sufficient with stated caveat · **X** insufficient,
+do not author · **U** basis not verified.
+
+**U is a provenance status, not a sufficiency one.** An entry may describe the
+movement adequately and still be unauthorable, because no person has read the
+source it rests on. Sufficiency and provenance are separate axes, and the rule
+that no prose may be committed from an unverified entry applies regardless of how
+good the evidence looks.
 
 | Movement | Basis ref | Status | Descriptive facts supported | Uncertain / not supported |
 |---|---|---|---|---|
@@ -113,8 +134,8 @@ Status key — **S** sufficient · **C** sufficient with stated caveat · **X** 
 | `dead-bug` | `ACE-LIB` 147 — **human-verified** | S | Lying on the back; both arms and legs raised before the moving phase, knees directly over the hips and bent about 90 degrees, arms and elbows over the shoulders; one arm and the opposite leg lower toward the floor together, then return; the opposite pairing follows | **The source's alternating sequence is not MoveHere's counting** — see the counting-boundary note. Hollowing, stabilisation and low-back material excluded and not readable as cue support |
 | `hanging-knee-raise` | thin secondary only | **X** | Knees raise toward the chest and lower again — the action only | **No institutional page.** Setup and hang position unsupported |
 | `supported-knee-raise` | `DIP-KIN` (position only) | **X** | Bodyweight supported through the upper limbs on parallel bars, elbows extended | **No source describes a support-hold knee raise at all.** Its structural metadata and cues are new project content |
-| `march-in-place` | `NHS-STR` family | C | Alternating hip and knee flexion while remaining on the spot | Thin. Knee height described relatively, never as a target |
-| `hip-flexor-stretch` | `ACE-LIB` 142 | S | Half-kneeling, one foot forward and the opposite knee down; pelvis tucked, spine neutral; lean into the front hip without letting the pelvis rotate forward | Hold durations and repetition counts **discarded** |
+| `march-in-place` | **none** | **U** | *No verified source.* A summariser search returned NHS warm-up and NHS-trust pages describing alternating hip and knee flexion on the spot; none was read | **The earlier `NHS-STR` attribution is withdrawn.** `NHS-STR` was verified only for its wall press-up section and says nothing about this movement. Inheriting its verified status was an error |
+| `hip-flexor-stretch` | `ACE-LIB` 142 — **second-hand, unverified** | **U** | *Summariser-reported, not confirmed:* half-kneeling, one foot forward and the opposite knee down; pelvis tucked, spine neutral; lean into the front hip without letting the pelvis rotate forward | **Was carried as directly supported in error.** ACE 142 was omitted from the register, so this was never read. Not authorable until it is. Also a time-dosed hold — see the static-hold exit note |
 
 Not researched, by instruction: `brisk-walk` and `easy-run` (decided `not-required`);
 `thoracic-rotation` and `shuttle-run` (blocked on §8 domain questions).
@@ -601,6 +622,12 @@ sequence, `step-up` and `reverse-lunge` among them.
 phase that lowers the body back toward the floor. `ACE-LIB` 101 does the same for
 the side plank.
 
+**Four movements expose this, not three.** `plank`, `side-plank`, `dead-hang`,
+and `hip-flexor-stretch` — every time-dosed held position in the catalog. The
+last was missed when this note was written; its basis is also unverified, so it
+carries both problems at once. `march-in-place` is continuous movement rather
+than a hold and is unaffected.
+
 The Pass 2A manifest classified both as needing **no `return` step**, on the
 grounds that a held position has no repetition to complete. That reasoning still
 holds — `return` means *how a repetition completes*, and a timed hold has none —
@@ -839,6 +866,64 @@ The split converts a **context**-evidence gap into a **movement**-evidence gap.
 Neither knee raise is better sourced than it was; the accounting is simply
 honest now, because the missing evidence never was about a setup.
 
+## Readiness board
+
+Where all 23 shipped movements stand. **Readiness is about evidence, not about
+the movement** — a blocked entry is one this artifact cannot support, never a
+judgement that the exercise is wrong.
+
+### Ready, directly verified — 12
+
+`bodyweight-squat` · `push-up` · `pull-up` · `plank` · `side-plank` ·
+`dead-bug` · `glute-bridge` · `single-leg-deadlift` · `split-squat` (both
+contexts) · `step-up` · `reverse-lunge` · `hip-hinge`
+
+The last three carry caveats that do not reduce readiness: `step-up` and
+`reverse-lunge` rest on resistance-only loaded sources, and `hip-hinge` rests on
+a source that teaches the movement with a bar it never calls optional, which is
+separately flagged for qualified review.
+
+### Ready with derived or caveated evidence — 2
+
+| Movement | State |
+|---|---|
+| `incline-push-up` | `@park-bench` directly supported; `@stairs` composite derived |
+| `dead-hang` | Setup derived from the verified pull-up page; **nothing sources the hold**, which is the whole dose |
+
+### Basis unverified — 2
+
+`hip-flexor-stretch` · `march-in-place` — neither blocked nor ready. Each needs a
+register row and a first read.
+
+### Deliberately not-required — 2
+
+`brisk-walk` · `easy-run` — decided; the reason text is written at authoring.
+
+### Blocked on missing evidence — 3
+
+`pike-push-up` · `hanging-knee-raise` · `supported-knee-raise` — no institutional
+source located. `supported-knee-raise` is a movement this project defined, so its
+absence from the literature is expected rather than surprising.
+
+### Blocked on a domain decision — 2
+
+`shuttle-run` (distance) · `thoracic-rotation` (starting variant) — both recorded
+in §8's unresolved questions. Neither is a reading problem.
+
+### How this moved
+
+| | Ready | Basis for the estimate |
+|---|---|---|
+| Pass 2A inspection | 18 of 22 | reading the catalog |
+| First evidence sweep | 16 of 19 | summariser-mediated sources |
+| Now | **14 of 23** | human-read sources |
+
+Every revision moved the same direction, and none was caused by a movement
+becoming harder. Each was caused by looking more carefully: the knee-raise split
+added a movement and blocked two, the source search failed on pike push-up, dead
+hang turned out to have no source for its dose, and the board review found two
+movements whose evidence had never been checked at all.
+
 ## Counts
 
 Movements and context-specific setups are counted separately, because a
@@ -866,8 +951,10 @@ movement can be sufficiently evidenced while one of its contexts is not.
 | | Count |
 |---|---|
 | Admitted sources | 6 |
-| Pages directly read by a person | **15 of 16** — every page in the register (`ACE-LIB` 28, 32, 33, 41, 49, 101, 135, 147, 191, 319, 329, 366; `NSCA-LUNGE`; `NHS-STR`; `NHS-VID`); 1 read and set aside (`ACE-LIB` 350). **The register is complete.** |
-| Entries still second-hand by construction | **none of the register**; 1 movement derived (`dead-hang`), 1 context derived (`incline-push-up` @ `stairs`) |
+| Pages directly read by a person | **15** (`ACE-LIB` 28, 32, 33, 41, 49, 101, 135, 147, 191, 319, 329, 366; `NSCA-LUNGE`; `NHS-STR`; `NHS-VID`), 1 read and set aside (`ACE-LIB` 350), **1 unverified** (`ACE-LIB` 142). **The register is not complete** |
+| Movements whose basis is still second-hand | **2** — `hip-flexor-stretch`, `march-in-place` |
+| Movements derived from verified pages | **1** (`dead-hang`) |
+| Contexts derived rather than directly supported | **1** — `incline-push-up` @ `stairs`, the only one |
 | Out-of-scope fact categories discarded | 26 |
 | Cue findings raised, none actioned | 16 — 13 human-verified, 2 derived, 1 unverified; 2 constraining authoring |
 | Domain-model findings raised | 1, accepted and implemented |
