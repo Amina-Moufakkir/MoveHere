@@ -183,7 +183,18 @@ export default function WorkoutScreen() {
   const dose = current === undefined ? null : prescriptionDisplay(current.item.prescription);
   /* Presentation only. A missing visual is expected, not a failure. */
   const visual =
-    current === undefined ? null : exerciseVisualFor(current.item.exerciseId, featureId);
+    current === undefined
+      ? null
+      : /* Session and theme choose the depiction; neither touches the key. The
+           session kind is already known here (§11) and no new domain concept is
+           introduced — `substitute` says the park was withheld, never that the
+           user is indoors. */
+        exerciseVisualFor(
+          current.item.exerciseId,
+          featureId,
+          isSubstitute ? 'substitute' : 'park',
+          t.dark,
+        );
   const cues = current === undefined ? [] : exerciseCues(current.item.exerciseId);
 
   /* Resolved against the basis this item actually cited, then flattened by
@@ -275,7 +286,7 @@ export default function WorkoutScreen() {
                 }}
               >
                 <Image
-                  source={t.dark ? visual.dark : visual.light}
+                  source={visual.source}
                   accessible
                   accessibilityRole="image"
                   accessibilityLabel={visual.alt}

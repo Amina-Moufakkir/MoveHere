@@ -25,21 +25,21 @@
 import type { ImageSourcePropType } from 'react-native';
 import type { ExerciseId } from '../../src/domain/exercise.ts';
 import type { SupportedFeatureId } from '../../src/domain/feature.ts';
+import {
+  selectVisual,
+  type ResolvedVisual,
+  type SessionPresentation,
+  type VisualEntry,
+} from '../../src/presentation/exercise-visual.ts';
 
-export interface ExerciseVisual {
-  readonly light: ImageSourcePropType;
-  readonly dark: ImageSourcePropType;
-  /** Read by assistive technology in place of the image. */
-  readonly alt: string;
-  /** Intrinsic ratio, so the slot can size without distorting. */
-  readonly aspectRatio: number;
-}
+/** What the player renders: one asset, its description, its true ratio. */
+export type ExerciseVisual = ResolvedVisual<ImageSourcePropType>;
 
-interface VisualEntry {
+interface RegistryRow {
   readonly exerciseId: string;
   /** The structure the depiction relies on. Null for environment-independent. */
   readonly featureId: SupportedFeatureId | null;
-  readonly visual: ExerciseVisual;
+  readonly entry: VisualEntry<ImageSourcePropType>;
 }
 
 /**
@@ -97,14 +97,41 @@ interface VisualEntry {
  * commercialization gate, not a gate on the school build, and nothing here —
  * copy, label, or badge — may imply that a trainer has approved a depiction.
  */
-const VISUALS: readonly VisualEntry[] = [
+const VISUALS: readonly RegistryRow[] = [
   {
     exerciseId: 'step-up',
     featureId: 'park-bench',
-    visual: {
-      light: require('../../img/daylight-bench.png'),
-      dark: require('../../img/dark-bench.png'),
-      alt: 'Bench step-up, in two phases: standing beside a park bench with one foot placed on the seat, then standing tall on the bench with the other knee driven up.',
+    entry: {
+      /* Feature-keyed, so the environment is fixed by the basis: a confirmed
+         park bench exists only in a park. No substitute composition, and the
+         selector is never asked for one. */
+      park: {
+        asset: {
+          light: require('../../img/daylight-bench.png'),
+          dark: require('../../img/dark-bench.png'),
+        },
+        alt: 'Bench step-up, in two phases: standing beside a park bench with one foot placed on the seat, then standing tall on the bench with the other knee driven up.',
+      },
+      aspectRatio: 1536 / 1024,
+    },
+  },
+  {
+    exerciseId: 'plank',
+    featureId: null,
+    entry: {
+      /* One theme-neutral outdoor composition, and a themed indoor pair. All
+         three are 1536 x 1024, measured, so the ratio is true of the entry. */
+      park: {
+        asset: { both: require('../../img/outdoor-plank.png') },
+        alt: 'A woman in a black crop top and shorts holds a forearm plank on open grass in a city park, seen from the side. Her forearms rest on the grass with her elbows beneath her shoulders, her legs are straight, and her weight is on her forearms and the toes of both trainers. A path, an empty bench, a lamp post, water and a distant skyline are behind her.',
+      },
+      substitute: {
+        asset: {
+          light: require('../../img/indoor-daylight-plank.png'),
+          dark: require('../../img/indoor-dark-plank.png'),
+        },
+        alt: 'A person holds a forearm plank on a smooth indoor floor, seen from the side. Their forearms rest on the floor with their elbows beneath their shoulders, their legs are straight, and their weight is on their forearms and the toes of both trainers.',
+      },
       aspectRatio: 1536 / 1024,
     },
   },
@@ -113,13 +140,23 @@ const VISUALS: readonly VisualEntry[] = [
 const key = (exerciseId: string, featureId: SupportedFeatureId | null): string =>
   `${exerciseId}@${featureId ?? '-'}`;
 
-const INDEX = new Map(VISUALS.map((v) => [key(v.exerciseId, v.featureId), v.visual]));
+const INDEX = new Map(VISUALS.map((v) => [key(v.exerciseId, v.featureId), v.entry]));
 
 /**
- * The visual for this item, or null when none exists yet — which is the case
- * for all but one of the movements in the catalog.
+ * The visual for this item, or null when none exists yet — still the case for
+ * most of the catalog.
+ *
+ * **Identity is unchanged by presentation.** The key is the exercise and the
+ * feature the item cited, exactly as before; session and theme choose among the
+ * depictions found under that key and never widen, narrow, or reroute it. A
+ * movement in a substitute session is the same movement with the same key.
  */
 export const exerciseVisualFor = (
   exerciseId: ExerciseId,
   featureId: SupportedFeatureId | null,
-): ExerciseVisual | null => INDEX.get(key(String(exerciseId), featureId)) ?? null;
+  session: SessionPresentation,
+  dark: boolean,
+): ExerciseVisual | null => {
+  const entry = INDEX.get(key(String(exerciseId), featureId));
+  return entry === undefined ? null : selectVisual(entry, session, dark);
+};
