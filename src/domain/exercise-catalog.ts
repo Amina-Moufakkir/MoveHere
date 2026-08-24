@@ -255,7 +255,20 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps', 'time'],
     countingModes: ['total'],
     cues: ['Hands under your shoulders', 'Body in one line', 'Elbows back, not flared'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Place your hands on the floor about shoulder-width apart.'),
+        step('setup', 'Set your shoulders directly over your hands and extend your body, with no bend at your hips or knees.'),
+        step('action', 'Lower your body toward the floor, keeping your torso rigid.'),
+        step('return', 'Press back up until your arms are straight again.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 41, Push-Up — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
   {
     id: ex('incline-push-up'),

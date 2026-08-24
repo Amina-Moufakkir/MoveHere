@@ -687,6 +687,43 @@ directly supported independently of the contested point. An instruction that
 quietly adopted the source would overrule a cue nobody has revisited; one that
 echoed the cue would inherit a choice nobody has reviewed.
 
+**Outcome for `push-up`, authored 2026-08-24.** The constraint held, and it
+produced something the first ten authored movements did not.
+
+> `push-up` is the first authored movement that is **complete in movement
+> construction and intentionally incomplete in disputed technique.**
+
+A reader can reach the start position, hold it, travel in the right direction
+and finish: hands about shoulder-width, shoulders over the hands, body extended
+with no hip or knee bend, lowering with a rigid torso, pressing back to straight
+arms. Every clause traces to a recorded fact on `ACE-LIB` 41.
+
+What is absent is any account of the arm mechanics, because that is the disputed
+part. The prose does not name the elbows at all — describing the descent in terms
+of them implies a path almost however it is phrased, so the action describes what
+the body does, which both of ACE's versions share. **Hand orientation is also
+absent**, and not only because postural detail is excluded: ACE pairs turning the
+hands forward *with* the elbows-close alternative, so specifying it would settle
+the elbow path indirectly.
+
+For the ten movements before this one, staying inside verified evidence produced
+a movement complete in both senses. Here the source describes two different
+descents, so it cannot. **The incompleteness is the correct result rather than a
+shortfall** — it leaves an unreviewed technique choice visible instead of
+resolving it by phrasing. MoveHere's `Elbows back, not flared` remains unchanged
+and continues to render as a cue, which is the surface that owns unreviewed
+technique choices; the instruction stays neutral beside it.
+
+Nothing about the finding is closed by this. If the cue audit resolves the elbow
+path, the instruction gains a sentence rather than being rewritten.
+
+**One authoring judgment recorded because it was deliberate.** The prose does not
+say the arms bend, though ACE's own upward phase entails it and saying so would
+name no direction. It is not among the recorded construction facts, and this pass
+held the rule that every clause traces to one. A beginner therefore infers the
+arm bend from the hands being on the floor and from pressing back up to straight
+arms. Revisiting that is independent of the elbow question.
+
 ### Notes on individual sources
 
 ### Applicability note — name mismatches

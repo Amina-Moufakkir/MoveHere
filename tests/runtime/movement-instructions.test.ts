@@ -281,6 +281,7 @@ test('instruction coverage is reportable across every movement', () => {
     'glute-bridge',
     'plank',
     'pull-up',
+    'push-up',
     'reverse-lunge',
     'side-plank',
     'single-leg-deadlift',
