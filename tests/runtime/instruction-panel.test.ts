@@ -14,11 +14,9 @@ import { loadMatrix } from '../../src/domain/matrix-loader.ts';
 import { AUTHORED_MATRIX, EXERCISES } from '../../src/domain/exercise-catalog.ts';
 import { resolveInstructions } from '../../src/domain/instruction-resolution.ts';
 import {
-  CLOSE_INSTRUCTIONS_LABEL,
   CUES_HEADING,
   INSTRUCTION_HEADING,
   instructionPanel,
-  openInstructionsLabel,
 } from '../../src/presentation/instruction-copy.ts';
 import { PROJECT_CONTENT_NOTE } from '../../src/presentation/safety-copy.ts';
 import type { AuthoredMatrix, Exercise, InstructionState } from '../../src/domain/exercise.ts';
@@ -212,11 +210,14 @@ test('a context-resolved instruction needs no different handling', () => {
 
 /* ---------------------------------------------------------- accessibility */
 
-test('the control that opens instructions names the movement', () => {
-  const label = openInstructionsLabel('Glute bridge');
-  assert.ok(label.includes('Glute bridge'), 'a screen reader must hear which movement');
-  assert.ok(label.includes(INSTRUCTION_HEADING), 'and what the control does');
-  assert.ok(CLOSE_INSTRUCTIONS_LABEL.length > 0, 'the sheet must be dismissible by label');
+test('instructions are a section, not a control', () => {
+  // They render inline in the workout content. There is no affordance to
+  // label and nothing to dismiss, so the surface exposes a heading and steps
+  // and nothing else — a client has no decision left to make about them.
+  assert.ok(INSTRUCTION_HEADING.length > 0, 'the section needs a heading');
+  const panel = panelFor('plank');
+  assert.ok(panel.kind === 'available');
+  assert.deepEqual(Object.keys(panel).sort(), ['kind', 'steps']);
 });
 
 test('cues and instructions are separately headed', () => {

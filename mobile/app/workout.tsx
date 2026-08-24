@@ -25,6 +25,13 @@
  *
  * No timers, no keep-awake, no haptics. Advancing is a tap, as on the web.
  *
+ * Regeneration is not here. Rebuilding a session discards the progress the
+ * control beside it records, and a global, destructive action does not belong
+ * a row below the one that advances a movement. It lives where sessions are
+ * started: back to /setup, whose primary action already builds one from a
+ * fresh seed. The stack header provides that route, so nothing was invented to
+ * hold it.
+ *
  * Finishing a movement gets a brief acknowledgement: the action shows a check,
  * then the progress and the movement advance together. It is confirmation of
  * physical work that was actually done, not a reward — so it is fast, silent,
@@ -36,15 +43,22 @@
  * it, or losing the frame mid-beat can never cost the user a completed
  * movement. What the beat holds back is the render, never the record.
  *
- * The media slot is deliberate empty space held open. It is reserved for the
- * consistent exercise visual system §15 defers, and until that exists it shows
- * the environment glyph — but only when the item actually cites a confirmed
- * feature. An environment-independent movement gets a neutral treatment rather
- * than a fabricated object, because depicting a bench for a movement that needs
- * no bench is exactly the kind of invention the whole product refuses.
+ * The media slot shows a real visual at its own ratio when one exists, and a
+ * compact band otherwise. The band states which basis the item cited and
+ * nothing more: an environment-independent movement gets a neutral treatment
+ * rather than a fabricated object, because depicting a bench for a movement
+ * that needs no bench is exactly the kind of invention the whole product
+ * refuses. It is not a demonstration, and it is no longer sized like one.
+ *
+ * Instructions render inline, in reading order — media, movement, dose, block,
+ * how to do it, cues. They were behind a sheet, which made reading them a
+ * decision to open something; on a scrolling page they are simply present, and
+ * a reader who does not need them scrolls past. Only an authored instruction
+ * renders: outstanding and not-required produce no section and no message
+ * about its absence.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AccessibilityInfo, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { AccessibilityInfo, Image, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -55,7 +69,6 @@ import {
   CUES_HEADING,
   INSTRUCTION_HEADING,
   instructionPanel,
-  openInstructionsLabel,
 } from '../../src/presentation/instruction-copy.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '../../src/presentation/session-copy.ts';
 import { doseText, prescriptionDisplay } from '../../src/presentation/prescription-copy.ts';
@@ -63,18 +76,16 @@ import { useVenue } from '../components/venue-provider';
 import { FeatureGlyph } from '../components/feature-glyph';
 import { PrimaryAction } from '../components/primary-action';
 import { ProgressTrack } from '../components/progress-track';
-import { InstructionSheet } from '../components/instruction-sheet';
 import { exerciseVisualFor } from '../media/exercise-visuals.ts';
 import { ProjectContentNote } from '../components/project-content-note';
 import { EmptyState } from '../components/empty-state';
-import { makeSeed } from '../../src/programming/seed.ts';
 import { glyph, gutter, radius, space, touch, type, useTheme } from '../theme/tokens';
 
 export default function WorkoutScreen() {
   const router = useRouter();
   const t = useTheme();
   const insets = useSafeAreaInsets();
-  const { session, workout, setDone, completeSession, startSession } = useVenue();
+  const { session, workout, setDone, completeSession } = useVenue();
 
   const items = useMemo(
     () =>
@@ -95,11 +106,6 @@ export default function WorkoutScreen() {
    */
   const [confirming, setConfirming] = useState(false);
   const [held, setHeld] = useState<number | null>(null);
-  const [showInstructions, setShowInstructions] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState(false);
-  useEffect(() => {
-    void AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
-  }, []);
   const beat = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
     () => () => {
@@ -138,7 +144,6 @@ export default function WorkoutScreen() {
   const done = Math.min(held ?? session.done, total);
   const current = items[Math.min(done, total - 1)];
   const isSubstitute = workout.kind === 'substitute-session';
-  const finished = done >= total;
 
   const advance = () => {
     if (confirming) return; // one tap, one movement
@@ -193,7 +198,15 @@ export default function WorkoutScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.color.cloud }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: space.xl }}>
+      {/* flex: 1 is load-bearing. Without it the ScrollView sizes to its
+          content, so a tall visual pushed the footer off-screen and left the
+          cues below it unreachable — the content did not scroll, it was
+          clipped. The footer is a sibling, so it stays put and this region
+          takes whatever is left. */}
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: space.section }}
+      >
         {/* Progress, full-bleed. Derived from the generated items. */}
         <ProgressTrack
           total={total}
@@ -274,6 +287,11 @@ export default function WorkoutScreen() {
                 />
               </View>
             ) : (
+              /* A band, not a card. The fallback states which basis the item
+                 cited and nothing else — it is not a demonstration, and sizing
+                 it like one spent a quarter of the screen on two words while
+                 pushing the cues past the fold. A real visual earns the tall
+                 slot back through its own aspect ratio, above. */
               <View
                 accessible
                 accessibilityLabel={
@@ -283,24 +301,23 @@ export default function WorkoutScreen() {
                 }
                 style={{
                   marginHorizontal: gutter,
-                  height: 180,
-                  borderRadius: radius.lg,
+                  minHeight: touch.action,
+                  borderRadius: radius.md,
+                  flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: space.md,
+                  gap: space.sm,
+                  paddingHorizontal: space.lg,
+                  paddingVertical: space.md,
                   backgroundColor: featureLabel === null ? t.color.blueWash : t.color.paleGreen,
                 }}
               >
                 {featureLabel === null ? (
                   /* Neutral. No object is depicted, because none is required. */
-                  <Text style={{ ...type.subtitle, color: t.color.blue }}>No equipment</Text>
+                  <Text style={{ ...type.label, color: t.color.blue }}>No equipment</Text>
                 ) : (
                   <>
-                    <FeatureGlyph
-                      id={featureId ?? ''}
-                      size={glyph.context}
-                      color={t.color.greenInk}
-                    />
+                    <FeatureGlyph id={featureId ?? ''} size={glyph.row} color={t.color.greenInk} />
                     <Text style={{ ...type.label, color: t.color.greenInk }}>
                       Using the {featureLabel}
                     </Text>
@@ -377,28 +394,45 @@ export default function WorkoutScreen() {
                 {current.block}
               </Text>
 
-              {/* Learning the movement comes before attending to it, so this sits
-                  above the cues. Rendered only when an instruction resolved:
-                  an absent affordance says nothing, where a disabled one would
-                  announce the project's content gaps to someone mid-session. */}
+              {/* Inline, above the cues: learning the movement comes before
+                  attending to it. A sheet made this a decision to open
+                  something; on a scrolling page it is simply there, and the
+                  reader chooses by scrolling past. Numbered rather than
+                  labelled — setup, action and return prove an instruction is
+                  complete and are not how a person reads one. */}
               {instructions.kind === 'available' && (
-                <Pressable
-                  onPress={() => setShowInstructions(true)}
-                  accessibilityRole="button"
-                  accessibilityLabel={openInstructionsLabel(exerciseName(current.item.exerciseId))}
-                  style={{
-                    alignSelf: 'flex-start',
-                    marginTop: space.lg,
-                    borderRadius: radius.pill,
-                    borderWidth: 1,
-                    borderColor: t.color.lineStrong,
-                    paddingHorizontal: space.lg,
-                    minHeight: touch.min,
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Text style={{ ...type.label, color: t.color.blue }}>{INSTRUCTION_HEADING}</Text>
-                </Pressable>
+                <View style={{ marginTop: space.lg }}>
+                  <Text style={{ ...type.micro, color: t.color.navyFaint, textTransform: 'uppercase' }}>
+                    {INSTRUCTION_HEADING}
+                  </Text>
+                  <View style={{ marginTop: space.sm, borderTopWidth: 1, borderTopColor: t.color.line }}>
+                    {instructions.steps.map((stepText, index) => (
+                      <View
+                        key={stepText}
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'flex-start',
+                          gap: space.md,
+                          paddingVertical: space.md,
+                          borderBottomWidth: 1,
+                          borderBottomColor: t.color.line,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            ...type.label,
+                            color: t.color.blueVivid,
+                            fontVariant: ['tabular-nums'],
+                            minWidth: 18,
+                          }}
+                        >
+                          {index + 1}
+                        </Text>
+                        <Text style={{ flex: 1, ...type.lead, color: t.color.navy }}>{stepText}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
               )}
 
               {cues.length > 0 && (
@@ -441,15 +475,6 @@ export default function WorkoutScreen() {
         )}
       </ScrollView>
 
-      {instructions.kind === 'available' && current !== undefined && (
-        <InstructionSheet
-          visible={showInstructions}
-          movementName={exerciseName(current.item.exerciseId)}
-          steps={instructions.steps}
-          reduceMotion={reduceMotion}
-          onClose={() => setShowInstructions(false)}
-        />
-      )}
 
       <View
         style={{
@@ -480,26 +505,10 @@ export default function WorkoutScreen() {
           </Text>
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.md }}>
-          <ProjectContentNote style={{ flex: 1 }} />
-          {!finished && (
-            <Pressable
-              onPress={() => startSession(makeSeed(Date.now()))}
-              accessibilityRole="button"
-              accessibilityLabel="Generate another session"
-              style={{
-                borderRadius: radius.pill,
-                borderWidth: 1,
-                borderColor: t.color.lineStrong,
-                paddingHorizontal: space.md,
-                minHeight: touch.min,
-                justifyContent: 'center',
-              }}
-            >
-              <Text style={{ ...type.label, color: t.color.navyMuted }}>Generate another</Text>
-            </Pressable>
-          )}
-        </View>
+        {/* Full width, wording untouched. It was sharing this row with a
+            regenerate control and wrapping to five lines as a result; the
+            footprint was the layout, not the sentence. */}
+        <ProjectContentNote />
       </View>
     </View>
   );

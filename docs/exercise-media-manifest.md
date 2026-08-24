@@ -45,6 +45,13 @@ slot stays vacant until a corrected Bench Step-up asset is approved.
 - **The cited structure or surface, and nothing else.** Environment-independent visuals
   contain no equipment and no invented environmental structure of any kind, background
   included.
+- **Two presentation contexts.** A conforming visual is intended for both the workout
+  player, where it sits above the movement and is glanced at mid-effort, and the "How
+  to do it" sheet, where it sits beside the written steps and is read. The second is
+  the more demanding of the two: the sheet gives the visual room the player cannot,
+  and someone opening it is learning the movement rather than recognising it. Compose
+  for a frame that must survive both — legible small, and worth enlarging. This is an
+  intent for future conforming assets and grants nothing to the superseded draft.
 - **Daylight master first, dark derived from it.** The dark counterpart reproduces the
   approved daylight composition exactly — same cast, same pose, same phase framing, same
   structure, same crop — and changes the palette, nothing else. It is a re-render of one

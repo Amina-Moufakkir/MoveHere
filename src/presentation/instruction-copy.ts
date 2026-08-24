@@ -15,6 +15,12 @@
  * how a person reads one. Dropping them here means no client can display the
  * schema by accident — the ordering already carries everything a reader needs.
  *
+ * Instructions render inline in the workout content rather than behind a
+ * control that opens them. There is no affordance to label, and nothing to
+ * dismiss: the steps are a section of the page, and a reader chooses by
+ * scrolling. That also removes the last place a client had to decide something
+ * about instructions on its own.
+ *
  * Nothing here derives counts, durations, side-switching, tempo, or safety
  * language. An instruction says how to get into a movement and what it is; how
  * much of it to do is the prescription's, and it is rendered elsewhere.
@@ -36,12 +42,6 @@ export const INSTRUCTION_HEADING = 'How to do it';
  * two separable on screen as well as in the model.
  */
 export const CUES_HEADING = 'Key cues';
-
-/** Read by assistive technology on the control that opens the sheet. */
-export const openInstructionsLabel = (movementName: string): string =>
-  `${INSTRUCTION_HEADING}: ${movementName}`;
-
-export const CLOSE_INSTRUCTIONS_LABEL = 'Close';
 
 /**
  * What to render for this movement, as this session cited it.

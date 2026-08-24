@@ -127,6 +127,13 @@ L.push('  inventing one would depict movement the prescription does not ask for.
 L.push('- **The cited structure or surface, and nothing else.** Environment-independent visuals');
 L.push('  contain no equipment and no invented environmental structure of any kind, background');
 L.push('  included.');
+L.push('- **Two presentation contexts.** A conforming visual is intended for both the workout');
+L.push('  player, where it sits above the movement and is glanced at mid-effort, and the "How');
+L.push('  to do it" sheet, where it sits beside the written steps and is read. The second is');
+L.push('  the more demanding of the two: the sheet gives the visual room the player cannot,');
+L.push('  and someone opening it is learning the movement rather than recognising it. Compose');
+L.push('  for a frame that must survive both — legible small, and worth enlarging. This is an');
+L.push('  intent for future conforming assets and grants nothing to the superseded draft.');
 L.push('- **Daylight master first, dark derived from it.** The dark counterpart reproduces the');
 L.push('  approved daylight composition exactly — same cast, same pose, same phase framing, same');
 L.push('  structure, same crop — and changes the palette, nothing else. It is a re-render of one');
