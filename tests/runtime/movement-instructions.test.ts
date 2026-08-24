@@ -45,15 +45,20 @@ const failureKinds = (result: ReturnType<typeof loadMatrix>): readonly string[] 
 
 /* ------------------------------------------------------ the three states */
 
-test('the shipped catalog loads with every movement outstanding', () => {
+test('every movement declares an instruction state, and none is not-required yet', () => {
   const result = loadMatrix(AUTHORED_MATRIX);
   assert.ok(result.ok);
   const kinds = result.matrix.exercises.map((e) => e.instructions.kind);
   assert.equal(kinds.length, 23);
-  assert.deepEqual(
-    [...new Set(kinds)],
-    ['outstanding'],
-    'pass 1 authors no instruction content, and none may be classified not-required by default',
+  assert.ok(kinds.every((k) => k === 'authored' || k === 'not-required' || k === 'outstanding'));
+
+  // `not-required` is a deliberate content decision and may never arrive by
+  // default or by inference from missing evidence (§8). brisk-walk and easy-run
+  // have a decided outcome, and until it is written this stays zero.
+  assert.equal(
+    kinds.filter((k) => k === 'not-required').length,
+    0,
+    'no movement may be classified not-required until that decision is authored',
   );
 });
 
@@ -262,7 +267,58 @@ test('instruction coverage is reportable across every movement', () => {
     result.matrix.exercises.length,
     'every movement falls in exactly one bucket',
   );
-  assert.deepEqual(counts, { authored: 0, 'not-required': 0, outstanding: 23 });
+  assert.equal(counts['not-required'], 0);
+
+  // Named rather than counted: which movements carry instructions is a content
+  // decision, and a batch that quietly authored a fourth should say so here.
+  const authored = result.matrix.exercises
+    .filter((e) => e.instructions.kind === 'authored')
+    .map((e) => String(e.id))
+    .sort();
+  assert.deepEqual(authored, ['bodyweight-squat', 'glute-bridge', 'plank']);
+});
+
+test('every authored instruction rests on its own project-content basis', () => {
+  const result = loadMatrix(AUTHORED_MATRIX);
+  assert.ok(result.ok);
+  for (const e of result.matrix.exercises) {
+    if (e.instructions.kind !== 'authored') continue;
+    const authority = e.instructions.authority;
+    assert.equal(
+      authority.status,
+      'project-content',
+      `${String(e.id)}: source-grounding does not promote authority (§8)`,
+    );
+    assert.ok(
+      authority.status === 'project-content' && authority.basisRefs.length > 0,
+      `${String(e.id)}: an instruction must name what it rests on`,
+    );
+  }
+});
+
+test('no authored instruction borrows an unestablished cue', () => {
+  // The cues carrying findings the evidence did not support. An instruction
+  // repeating one would launder a cue into sourced content (§8).
+  const forbidden: readonly (readonly [string, string])[] = [
+    ['glute-bridge', 'Heels close to your hips'],
+    ['glute-bridge', 'Ribs down at the top'],
+    ['plank', 'Body in one line'],
+    ['bodyweight-squat', 'Feet about shoulder width'],
+    ['bodyweight-squat', 'Stand tall at the top'],
+  ];
+  const result = loadMatrix(AUTHORED_MATRIX);
+  assert.ok(result.ok);
+  for (const [id, cue] of forbidden) {
+    const e = result.matrix.exercises.find((x) => String(x.id) === id);
+    assert.ok(e !== undefined);
+    if (e.instructions.kind !== 'authored') continue;
+    for (const s of e.instructions.steps) {
+      assert.ok(
+        !s.text.includes(cue),
+        `${id}: instruction repeats the unestablished cue "${cue}"`,
+      );
+    }
+  }
 });
 
 test('execution cues are untouched by the instruction model', () => {

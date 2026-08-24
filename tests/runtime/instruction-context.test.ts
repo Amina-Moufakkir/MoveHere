@@ -454,12 +454,23 @@ test('a context reading the default instruction is reported', () => {
 
 /* ------------------------------------------------------- the shipped catalog */
 
-test('the shipped catalog is untouched by this pass', () => {
+test('no shipped instruction yet uses a context override', () => {
   const result = loadMatrix(AUTHORED_MATRIX);
   assert.ok(result.ok);
-  const states = result.matrix.exercises.map((e) => e.instructions.kind);
-  assert.equal(states.length, 23);
-  assert.deepEqual([...new Set(states)], ['outstanding']);
+  assert.equal(result.matrix.exercises.length, 23);
+
+  // Authoring has begun, and every authored movement so far is
+  // environment-independent with a single context. split-squat is the only
+  // movement that will need an override, and it is not authored yet.
+  for (const e of result.matrix.exercises) {
+    if (e.instructions.kind !== 'authored') continue;
+    assert.deepEqual(
+      e.instructions.defaultContext,
+      { kind: 'environment-independent' },
+      `${String(e.id)}: authored movements so far are all environment-independent`,
+    );
+    assert.equal(e.instructions.overrides, undefined);
+  }
   assert.equal(
     result.advisories.filter((a) => a.kind === 'instruction-context-inherits-default').length,
     0,

@@ -866,6 +866,33 @@ The split converts a **context**-evidence gap into a **movement**-evidence gap.
 Neither knee raise is better sourced than it was; the accounting is simply
 honest now, because the missing evidence never was about a setup.
 
+## Gaps carried by authored instructions
+
+Where shipped instruction prose is silent because the verified basis stopped
+there. **These are recorded, not repaired.** Filling them from model knowledge
+would produce content whose stated provenance is false (§8), and filling them
+from a cue would launder an unestablished cue into sourced content.
+
+Each entry names what a reader does not get, so the silence is a known cost
+rather than an oversight discovered later.
+
+**`plank` — the lower support point.** `ACE-LIB` 32 establishes the elbows
+beneath the shoulders and the legs extended, and does not state what the lower
+body rests on once the body lifts. The instruction therefore says to lift the
+body off the floor without naming the second contact point. A reader following
+the steps arrives at a plank; the step is thinner than it could be, and closing
+it needs a source that states it.
+
+**`glute-bridge` — heel-to-hip distance.** `ACE-LIB` 49 establishes bent knees
+and feet flat and hip-width apart, and states no distance between the heels and
+the hips. The existing cue *"Heels close to your hips"* says one, and is
+unestablished (finding 10), so the instruction is silent on it. This is the most
+visible cost of the discipline in the first batch: a conventional fitness writer
+would supply the distance without hesitating.
+
+Both gaps close the same way — a primary source that states the fact, read by a
+person — and neither closes by writing more carefully.
+
 ## Readiness board
 
 Where all 23 shipped movements stand. **Readiness is about evidence, not about

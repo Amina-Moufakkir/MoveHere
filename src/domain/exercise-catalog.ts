@@ -23,6 +23,8 @@ import type {
   EnvironmentIndependentDeclarationId,
   ContentAuthority,
   MatrixVersion,
+  MovementStep,
+  PresentableAuthority,
 } from './exercise.ts';
 
 const PROJECT: ContentAuthority = {
@@ -35,6 +37,36 @@ const PROJECT: ContentAuthority = {
 };
 
 const ex = (id: string): ExerciseId => id as ExerciseId;
+
+/**
+ * Movement instructions — authoring discipline (§8).
+ *
+ * Every step below is written from a construction fact a person read in a
+ * primary source and recorded in `docs/movement-instruction-evidence.md`.
+ * Nothing here comes from model knowledge, from an execution cue, or from
+ * material that document lists as discarded.
+ *
+ * What that rules out is worth naming, because each was available and each was
+ * declined: depth and range targets, joint-alignment prescriptions, bracing and
+ * breathing instructions, fault corrections, tempo, hold durations, and every
+ * benefit or muscle claim. An instruction says how to get into a movement and
+ * what it is. It does not say how far, how fast, how many, or why.
+ *
+ * **Cues are not a source.** Where a cue says something the evidence does not,
+ * the instruction stays silent rather than borrowing it — a glute bridge
+ * instruction does not say heels close to the hips, because no source read for
+ * this project establishes a heel-to-hip distance.
+ *
+ * Instructions carry their own authority, separate from the exercise's, and
+ * name the page they rest on.
+ */
+const instructionBasis = (source: string): PresentableAuthority => ({
+  status: 'project-content',
+  authoredAt: '2026-08-23',
+  basisRefs: [source, 'docs/movement-instruction-evidence.md — verification register'],
+});
+
+const step = (kind: MovementStep['kind'], text: string): MovementStep => ({ kind, text });
 
 /**
  * `countingModes` — how a prescribed number may be read for each movement.
@@ -76,7 +108,16 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps', 'time'],
     countingModes: ['total'],
     cues: ['Feet about shoulder width', 'Sit back and down', 'Stand tall at the top'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Stand with your feet a little wider than your hips, toes turned out slightly.'),
+        step('action', 'Move your hips back, then down, letting your hips and knees bend. Your heels stay on the floor.'),
+        step('return', 'Press back up, hips and torso rising together, until you are standing again.'),
+      ],
+      authority: instructionBasis('ACE Exercise Library 135, Bodyweight Squat — read 2026-08-23'),
+    },
   },
   {
     id: ex('reverse-lunge'),
@@ -118,7 +159,17 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps', 'time'],
     countingModes: ['total'],
     cues: ['Heels close to your hips', 'Push the floor away', 'Ribs down at the top'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Lie on your back with your knees bent and your feet flat on the floor.'),
+        step('setup', 'Set your feet about hip-width apart, toes pointing away from you.'),
+        step('action', 'Press your heels into the floor and raise your hips.'),
+        step('return', 'Lower your hips back toward the floor.'),
+      ],
+      authority: instructionBasis('ACE Exercise Library 49, Glute Bridge — read 2026-08-23'),
+    },
   },
   {
     id: ex('hip-hinge'),
@@ -204,7 +255,16 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['total'],
     cues: ['Forearms under your shoulders', 'Body in one line', 'Breathe, do not hold your breath'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Lie face down with your legs straight out behind you.'),
+        step('setup', 'Place your elbows on the floor directly under your shoulders.'),
+        step('action', 'Lift your body off the floor and hold it there, torso and legs stiff, shoulders over your elbows.'),
+      ],
+      authority: instructionBasis('ACE Exercise Library 32, Front Plank — read 2026-08-23'),
+    },
   },
   {
     id: ex('side-plank'),
