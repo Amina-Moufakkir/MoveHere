@@ -60,9 +60,9 @@ const ex = (id: string): ExerciseId => id as ExerciseId;
  * Instructions carry their own authority, separate from the exercise's, and
  * name the page they rest on.
  */
-const instructionBasis = (source: string): PresentableAuthority => ({
+const instructionBasis = (source: string, authoredAt = '2026-08-23'): PresentableAuthority => ({
   status: 'project-content',
-  authoredAt: '2026-08-23',
+  authoredAt,
   basisRefs: [source, 'docs/movement-instruction-evidence.md — verification register'],
 });
 
@@ -189,7 +189,20 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['per-side'],
     cues: ['Hinge at the hip', 'Back leg and torso move together', 'Move slowly for balance'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Stand with your feet about hip-width apart and your knees slightly bent.'),
+        step('action', 'Move your hips backward and let one foot lift away from the floor.'),
+        step('action', 'Let that leg reach out behind you as your torso leans forward.'),
+        step('return', 'Come back upright, bringing your free leg back down toward the floor.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 329, Single-leg Romanian Deadlift — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
 
   // --- push ----------------------------------------------------------------
@@ -274,7 +287,19 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time'],
     countingModes: ['per-side'],
     cues: ['Elbow under your shoulder', 'Hips stacked and lifted', 'Keep your neck long'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Lie on one side with your legs straight, one leg resting on top of the other.'),
+        step('setup', 'Place your lower elbow on the floor directly under your shoulder.'),
+        step('action', 'Lift your hips and knees away from the floor and hold, keeping that elbow under your shoulder.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 101, Side Plank with Straight Leg — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
   {
     id: ex('dead-bug'),
@@ -284,7 +309,20 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total', 'per-side'],
     cues: ['Lower back stays down', 'Extend opposite arm and leg', 'Move slowly'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Lie on your back and raise both arms so your elbows are over your shoulders.'),
+        step('setup', 'Raise both legs so your knees are directly over your hips and bent about ninety degrees.'),
+        step('action', 'Lower one arm and the opposite leg toward the floor together.'),
+        step('return', 'Bring that arm and that leg back to where they started.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 147, Supine Dead Bug — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
   {
     id: ex('hanging-knee-raise'),

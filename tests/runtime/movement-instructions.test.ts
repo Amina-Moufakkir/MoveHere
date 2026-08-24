@@ -275,7 +275,14 @@ test('instruction coverage is reportable across every movement', () => {
     .filter((e) => e.instructions.kind === 'authored')
     .map((e) => String(e.id))
     .sort();
-  assert.deepEqual(authored, ['bodyweight-squat', 'glute-bridge', 'plank']);
+  assert.deepEqual(authored, [
+    'bodyweight-squat',
+    'dead-bug',
+    'glute-bridge',
+    'plank',
+    'side-plank',
+    'single-leg-deadlift',
+  ]);
 });
 
 test('every authored instruction rests on its own project-content basis', () => {
