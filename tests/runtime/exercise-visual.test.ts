@@ -40,6 +40,18 @@ const GLUTE_BRIDGE: VisualEntry<string> = {
   aspectRatio: 1536 / 1024,
 };
 
+const SQUAT: VisualEntry<string> = {
+  park: { asset: { both: 'outdoor-bodyweight-squat.png' }, alt: 'park squat alt' },
+  substitute: {
+    asset: {
+      light: 'indoor-daylight-bodyweight-squat.png',
+      dark: 'indoor-dark-bodyweight-squat.png',
+    },
+    alt: 'substitute squat alt',
+  },
+  aspectRatio: 1536 / 1024,
+};
+
 /* Feature-keyed: environment is fixed by the basis, so there is no substitute. */
 const BENCH: VisualEntry<string> = {
   park: { asset: { light: 'daylight-bench.png', dark: 'dark-bench.png' }, alt: 'bench alt' },
@@ -123,7 +135,7 @@ test('presentation never changes media identity', () => {
   const rows = [...registry.matchAll(/exerciseId: '([^']+)'[\s\S]*?featureId: ([^,]+),/g)];
   assert.deepEqual(
     rows.map((m) => `${m[1]}@${m[2].trim().replace(/'/g, '')}`).sort(),
-    ['glute-bridge@null', 'plank@null', 'step-up@park-bench'],
+    ['bodyweight-squat@null', 'glute-bridge@null', 'plank@null', 'step-up@park-bench'],
   );
 });
 
@@ -202,6 +214,52 @@ test('glute-bridge is one environment-independent media identity', () => {
     'outdoor-glute-bridge.png',
     'indoor-daylight-glute-bridge.png',
     'indoor-dark-glute-bridge.png',
+  ]) {
+    assert.ok(entry.includes(file), `the shipped entry must reference ${file}`);
+  }
+});
+
+/* ------------------------------------------------------- bodyweight squat */
+
+test('bodyweight-squat selects one outdoor asset for park, and by theme for substitute', () => {
+  assert.equal(pick(SQUAT, 'park', false).source, 'outdoor-bodyweight-squat.png');
+  assert.equal(pick(SQUAT, 'park', true).source, 'outdoor-bodyweight-squat.png');
+  assert.equal(
+    pick(SQUAT, 'park', false).source,
+    pick(SQUAT, 'park', true).source,
+    'the park composition is one asset, not two that match',
+  );
+  assert.equal(
+    pick(SQUAT, 'substitute', false).source,
+    'indoor-daylight-bodyweight-squat.png',
+  );
+  assert.equal(pick(SQUAT, 'substitute', true).source, 'indoor-dark-bodyweight-squat.png');
+});
+
+test('bodyweight-squat alt and ratio follow the selected composition', () => {
+  assert.equal(pick(SQUAT, 'park', true).alt, 'park squat alt');
+  assert.equal(pick(SQUAT, 'substitute', false).alt, 'substitute squat alt');
+  for (const session of ['park', 'substitute'] as const) {
+    for (const dark of [false, true]) {
+      assert.equal(pick(SQUAT, session, dark).aspectRatio, 1536 / 1024);
+    }
+  }
+});
+
+test('bodyweight-squat is one environment-independent media identity', () => {
+  // Three assets and two phase layouts — the park composition reads left to
+  // right, the substitute pair stacks — under one key with no feature. Layout
+  // is a composition property; it does not multiply identities, and the park
+  // scenery (a bench, a lamp post, a railing) creates no compatibility claim.
+  const registry = readFileSync('mobile/media/exercise-visuals.ts', 'utf8');
+  const row = registry.slice(registry.indexOf("exerciseId: 'bodyweight-squat'"));
+  const entry = row.slice(0, row.indexOf('\n  },'));
+  assert.ok(/featureId:\s*null/.test(entry), 'bodyweight-squat cites no feature');
+  assert.ok(!/park-bench|stairs|pull-up-bar|parallel-bars|hill/.test(entry));
+  for (const file of [
+    'outdoor-bodyweight-squat.png',
+    'indoor-daylight-bodyweight-squat.png',
+    'indoor-dark-bodyweight-squat.png',
   ]) {
     assert.ok(entry.includes(file), `the shipped entry must reference ${file}`);
   }

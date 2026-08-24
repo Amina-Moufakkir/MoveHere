@@ -116,6 +116,32 @@ const VISUALS: readonly RegistryRow[] = [
     },
   },
   {
+    exerciseId: 'bodyweight-squat',
+    featureId: null,
+    entry: {
+      /* Two ordered phases, standing then a descent that stays clearly above
+         the discarded thigh-parallel endpoint. The park composition runs left
+         to right; the two substitute compositions stack top to bottom. Both
+         layouts are permitted, and the ordering is what carries the sequence.
+         All three are 1536 x 1024, measured. */
+      park: {
+        asset: { both: require('../../img/outdoor-bodyweight-squat.png') },
+        alt: 'Two photographs of a bodyweight squat in a city park, side by side. On the left, a man in a grey T-shirt and black shorts stands with his feet apart and his arms held straight out in front of him. On the right, the same man part way into a squat, his hips moved back and down, his knees bent and lower than his hips, and both feet flat on the path. A bench, a lamp post, a railing, trees, water and a distant skyline are behind him.',
+      },
+      substitute: {
+        /* One alt for the themed pair: the same man in the same clothing makes
+           the same two positions in both, and the alt describes neither the
+           room lighting nor its decor, which is all that differs. */
+        asset: {
+          light: require('../../img/indoor-daylight-bodyweight-squat.png'),
+          dark: require('../../img/indoor-dark-bodyweight-squat.png'),
+        },
+        alt: 'Two stacked photographs of a bodyweight squat in a room. Above, a man in a T-shirt and shorts stands with his feet apart and his arms held straight out in front of him. Below, the same man part way into a squat, his hips moved back and down, his knees bent and lower than his hips, and both feet flat on the wooden floor. A window, a potted plant, a framed print and a shelf holding books and baskets are behind him.',
+      },
+      aspectRatio: 1536 / 1024,
+    },
+  },
+  {
     exerciseId: 'glute-bridge',
     featureId: null,
     entry: {
