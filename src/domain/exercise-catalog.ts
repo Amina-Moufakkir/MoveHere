@@ -471,7 +471,14 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time', 'distance'],
     countingModes: ['total'],
     cues: ['Steady, purposeful pace', 'Relaxed shoulders', 'Breathe through your nose if you can'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'not-required',
+      reason:
+        'A continuous locomotor mode with no distinct setup, action and return for this ' +
+        'contract to order. Its session meaning is carried by the prescription and the cue ' +
+        'layer. This is a judgment about the contract, not about how much technique ' +
+        'walking involves.',
+    },
   },
   {
     id: ex('easy-run'),
@@ -481,7 +488,14 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['time', 'distance'],
     countingModes: ['total'],
     cues: ['Conversational pace', 'Short, quick steps', 'Stay relaxed'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'not-required',
+      reason:
+        'A continuous locomotor mode with no distinct setup, action and return for this ' +
+        'contract to order. Its session meaning is carried by the prescription and the cue ' +
+        'layer. This is a judgment about the contract, not about how much technique ' +
+        'running involves.',
+    },
   },
   {
     id: ex('shuttle-run'),

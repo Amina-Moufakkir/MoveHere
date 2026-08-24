@@ -71,35 +71,41 @@ test('an outstanding instruction offers nothing at all', () => {
   }
 });
 
-test('a not-required instruction also offers nothing', () => {
-  // No movement carries this state yet, so it is exercised against a fixture.
-  const decided: InstructionState = {
-    kind: 'not-required',
-    reason: 'walking has no construction step',
-  };
-  const patched: AuthoredMatrix = {
-    ...AUTHORED_MATRIX,
-    exercises: EXERCISES.map((e): Exercise =>
-      String(e.id) === 'brisk-walk' ? { ...e, instructions: decided } : e,
-    ),
-  };
-  const r = loadMatrix(patched);
-  assert.ok(r.ok);
-  const walk = r.matrix.exercises.find((e) => String(e.id) === 'brisk-walk');
-  assert.ok(walk !== undefined);
-  assert.deepEqual(
-    instructionPanel(resolveInstructions(walk, eiBasis)),
-    { kind: 'hidden' },
-    'a decided not-required is silent for the same reason outstanding is',
-  );
+test('a not-required movement offers nothing, in shipped content', () => {
+  // brisk-walk and easy-run carry a decided not-required state. This runs
+  // against the real catalog rather than a fixture: the point of the state is
+  // that a decision was made about real content, and a fixture cannot show it
+  // was.
+  const decided = matrix.exercises.filter((e) => e.instructions.kind === 'not-required');
+  assert.deepEqual(decided.map((e) => String(e.id)).sort(), ['brisk-walk', 'easy-run']);
+  for (const e of decided) {
+    assert.deepEqual(
+      panelFor(String(e.id)),
+      { kind: 'hidden' },
+      `${String(e.id)}: a decided not-required renders no section and no explanation of its absence`,
+    );
+  }
 });
 
 test('hidden is indistinguishable between outstanding and not-required', () => {
   // The distinction is real and belongs in the content records. On screen it
   // would be an announcement about internal completeness to someone mid-workout.
+  // Both sides are shipped content now, so this compares what a user meets.
   const outstanding = panelFor('pike-push-up');
-  const decided = instructionPanel({ kind: 'not-required', reason: 'x' });
+  const decided = panelFor('brisk-walk');
+  assert.equal(find('pike-push-up').instructions.kind, 'outstanding');
+  assert.equal(find('brisk-walk').instructions.kind, 'not-required');
   assert.deepEqual(outstanding, decided);
+});
+
+test('a not-required movement still carries its cues', () => {
+  // not-required removes the instruction, not the coaching. For these
+  // movements the cues are the only coaching content a user sees, which is
+  // what makes cue provenance matter more here, not less — and which this
+  // state decision does not address either way.
+  for (const id of ['brisk-walk', 'easy-run']) {
+    assert.ok(find(id).cues.length > 0, `${id}: cues are the remaining coaching surface`);
+  }
 });
 
 /* ----------------------------------------------------------------- content */

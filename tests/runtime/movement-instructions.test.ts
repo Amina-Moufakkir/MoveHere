@@ -45,7 +45,7 @@ const failureKinds = (result: ReturnType<typeof loadMatrix>): readonly string[] 
 
 /* ------------------------------------------------------ the three states */
 
-test('every movement declares an instruction state, and none is not-required yet', () => {
+test('every movement declares an instruction state, and not-required is named', () => {
   const result = loadMatrix(AUTHORED_MATRIX);
   assert.ok(result.ok);
   const kinds = result.matrix.exercises.map((e) => e.instructions.kind);
@@ -53,13 +53,31 @@ test('every movement declares an instruction state, and none is not-required yet
   assert.ok(kinds.every((k) => k === 'authored' || k === 'not-required' || k === 'outstanding'));
 
   // `not-required` is a deliberate content decision and may never arrive by
-  // default or by inference from missing evidence (§8). brisk-walk and easy-run
-  // have a decided outcome, and until it is written this stays zero.
-  assert.equal(
-    kinds.filter((k) => k === 'not-required').length,
-    0,
-    'no movement may be classified not-required until that decision is authored',
-  );
+  // default or by inference from missing evidence (§8). Named rather than
+  // counted, so a movement cannot drift into this state because nobody wrote
+  // its instruction — which is the failure the state exists to make visible.
+  const decided = result.matrix.exercises
+    .filter((e) => e.instructions.kind === 'not-required')
+    .map((e) => String(e.id))
+    .sort();
+  assert.deepEqual(decided, ['brisk-walk', 'easy-run']);
+});
+
+test('each not-required decision states a reason', () => {
+  const result = loadMatrix(AUTHORED_MATRIX);
+  assert.ok(result.ok);
+  for (const e of result.matrix.exercises) {
+    if (e.instructions.kind !== 'not-required') continue;
+    const reason = e.instructions.reason;
+    assert.ok(reason.trim().length > 0, `${String(e.id)}: a decision must say why`);
+    // The reason is a product decision about the contract's fit, and is not
+    // evidence. It must not read as a claim about the movement's difficulty or
+    // about what a reader already knows.
+    assert.ok(
+      !/everyone knows|obvious|simple|easy to|no technique|anyone can/i.test(reason),
+      `${String(e.id)}: the reason must not rest on assumed reader knowledge or simplicity`,
+    );
+  }
 });
 
 test('outstanding and not-required stay distinguishable', () => {
@@ -267,7 +285,7 @@ test('instruction coverage is reportable across every movement', () => {
     result.matrix.exercises.length,
     'every movement falls in exactly one bucket',
   );
-  assert.equal(counts['not-required'], 0);
+  assert.equal(counts['not-required'], 2);
 
   // Named rather than counted: which movements carry instructions is a content
   // decision, and a batch that quietly authored a fourth should say so here.

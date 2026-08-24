@@ -834,6 +834,59 @@ This is the first gap where the missing element is one the source considered
 important enough to enforce with a device rather than describe in words — and the
 one most likely to matter to someone hinging in a park with nobody watching.
 
+## Content-model decision — the first `not-required` states
+
+`brisk-walk` and `easy-run` moved from `outstanding` to `not-required` on
+2026-08-24. **This is a product and content-model decision, not a source-grounded
+one**, and it is recorded here rather than in the verification register because
+no source was consulted and none is claimed.
+
+Until this pass, `not-required` existed in the schema, the resolver and one
+fixture-based test, and **no shipped movement carried it**. Every verification
+line read `0 need none by decision`. The state was proven mechanically and
+unproven as a content decision, which is the gap this closes.
+
+**Why the state matters.** `outstanding` and `not-required` are deliberately
+indistinguishable on screen — both render nothing, and neither announces its own
+absence. So the only thing separating *a decision that none is needed* from
+*nobody has written one* is the reason and the discipline behind it. Without a
+real instance, that distinction was untested in practice, and the risk was
+`not-required` quietly becoming a synonym for unwritten.
+
+**The decision, stated once for both movements.** These are continuous locomotor
+modes. There is no distinct movement-construction sequence for the instruction
+contract to express as setup → action → return, and their session meaning is
+carried by the prescription and the existing cue layer instead.
+
+**What the decision explicitly is not.** It is not a claim that these movements
+are simple, that a reader already knows them, that they require no technique, or
+that no source could be found. Walking and running can absolutely be coached —
+**the narrower decision is that MoveHere's ordered movement-construction
+instruction type is not the right place for it.** That distinction is what keeps
+`not-required` honest rather than turning it into "easy exercise", and the
+reason strings are written to carry it.
+
+A test asserts the reasons do not rest on assumed reader knowledge or on
+simplicity. Its guard is deliberately blunt: authoring this pass, it rejected an
+earlier draft whose disclaimer contained the words it forbids, and the reason was
+reworded rather than the guard taught to recognise denials.
+
+**This state validates nothing about the cues.** `not-required` removes the
+instruction, not the coaching, and it neither strengthens nor sources anything
+already present. All six cues across the two movements are unchanged.
+
+**A consequence worth stating plainly.** For a `not-required` movement the cues
+are the *only* coaching content a user ever sees, with no instruction beside
+them. That makes cue provenance matter more for these movements, not less.
+`brisk-walk` carries *"Breathe through your nose if you can"*, recorded in
+finding 4 as an unsourced physiological claim, and **that finding remains open**.
+This state decision does not touch it, resolve it, or depend on it — but the two
+now sit on the same screen with nothing else between them and the reader.
+
+**Not a precedent for the remaining nine.** `outstanding` movements stay
+outstanding on the evidence and authoring grounds already recorded. Nothing here
+licenses converting a movement whose instruction is merely unwritten.
+
 ### Notes on individual sources
 
 ### Applicability note — name mismatches
