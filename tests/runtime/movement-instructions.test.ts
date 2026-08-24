@@ -279,6 +279,7 @@ test('instruction coverage is reportable across every movement', () => {
     'bodyweight-squat',
     'dead-bug',
     'glute-bridge',
+    'hip-hinge',
     'plank',
     'pull-up',
     'push-up',

@@ -777,6 +777,63 @@ structure-neutral movement spanning several feature contexts appears, this is a
 known shape rather than a rediscovery — and so that a reader does not mistake
 `step-up`'s default for an evidential claim about stairs.
 
+### Outcome for `hip-hinge`, authored 2026-08-24 — and the three gaps compared
+
+`hip-hinge` is the **third movement complete in movement construction and
+intentionally incomplete in disputed technique.** Its gap is not the same kind as
+the other two, and collapsing them would lose the part that matters.
+
+| Movement | What the source does | What MoveHere does | Shape of the gap |
+|---|---|---|---|
+| `push-up` | presents **two verbal elbow-path techniques** — flare as default, elbows-close as alternative | chooses one, in a cue | the source states both; the instruction states neither |
+| `step-up` | names the **trailing leg** as pushing off during the ascent | cues driving through the **top leg** | source and cue disagree in words; the instruction names no mover |
+| `hip-hinge` | states **no spinal instruction at all** — it controls head and spinal position **physically**, with a light bar held at head, thoracic spine and sacrum | cues *Flat back throughout* | there is no verbal source position to import, because the source used a device instead |
+
+**The first two are disagreements; the third is an absence.** Push-up and step-up
+each have a verified verbal position that authoring declines to adopt. Hip hinge
+has none to decline. `ACE-LIB` 33 never phrases a spinal instruction, so removing
+the bar — which the environment-independent movement requires — leaves nothing
+verified to put in its place, and none is invented.
+
+**What is recorded about the authored prose:**
+
+- **Every clause is directly supported** by verified `ACE-LIB` 33 body-position
+  facts: the standing setup, feet shoulder-width, toes forward or slightly
+  outward, the hips moving backward, the torso hinging forward at the hips, only
+  slight knee bending, and the return to upright standing. ACE's weight shift
+  toward the heels and its torso endpoint are excluded and absent.
+- **No clause relies on the reviewer inference** that the bar functions as
+  positional feedback. That inference is not used, cited or paraphrased. The
+  prose contains no spine, neck, head, chest or shoulder-blade reference at all.
+- **The applicability decision remains a provenance-level caveat**, not a claim
+  inside a sentence. Carrying bar-independent body-position facts into the
+  unloaded movement is a judgment about the basis; the source strictly describes
+  a hinge *performed with a bar in place*. The authored basis string carries that
+  caveat so a reader meets it wherever the authority is inspected.
+- **Removing the bar leaves spinal and head positioning unspecified in the
+  instruction.** A reader can satisfy every clause with a rounded back. The prose
+  does not exclude it, because nothing verified excludes it.
+- **`Flat back throughout` is unchanged, unreviewed project content**, and **must
+  not be represented as a sourced replacement for the bar.** It renders as a cue
+  on the same screen, which is not the same as being evidence, and finding 6
+  stands: whether a verbal cue can carry what a physical device carried needs
+  qualified review, not an authoring decision.
+- **`hip-hinge` remains on the qualified trainer-review list**, for that reason
+  and not merely as a cue-audit item.
+
+**This is technique completeness, not movement-construction insufficiency.** The
+movement is constructible and distinguishable from a squat: hips travelling
+backward with only slight knee bending is exactly what separates the two, and
+both facts are present and directly verified. Remaining `outstanding` would not
+have closed the gap — `ACE-LIB` 33 has been read, and it holds no spinal wording
+to gather on a second pass. The open question is a review question, and it is
+unchanged by whether the construction prose exists.
+
+**Worth noting as an escalation rather than a third instance of one pattern.**
+This is the first gap where the missing element is one the source considered
+important enough to enforce with a device rather than describe in words — and the
+one most likely to matter to someone hinging in a park with nobody watching.
+
 ### Notes on individual sources
 
 ### Applicability note — name mismatches

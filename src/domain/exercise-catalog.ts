@@ -233,7 +233,20 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total'],
     cues: ['Soft knees', 'Push your hips back', 'Flat back throughout'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Stand with your feet about shoulder-width apart, your toes pointing forward or turned out slightly.'),
+        step('action', 'Move your hips backward, letting your torso hinge forward at the hips.'),
+        step('action', 'Allow only a slight bend in your knees.'),
+        step('return', 'Move your hips forward again until you are standing upright.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 33, Hip Hinge (taught with a light bar the source never calls optional; only the bar-independent body-position facts are carried) — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
   {
     id: ex('single-leg-deadlift'),
