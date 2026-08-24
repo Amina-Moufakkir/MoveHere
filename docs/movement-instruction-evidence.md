@@ -724,6 +724,59 @@ held the rule that every clause traces to one. A beginner therefore infers the
 arm bend from the hands being on the floor and from pressing back up to straight
 arms. Revisiting that is independent of the elbow question.
 
+**Outcome for `step-up`, authored 2026-08-24.** The constraint held here too, by
+the same means: the ascent names no mover. The body rises, and the legs are
+distinguished only by sequence — first foot up, other foot alongside, that second
+foot down first — which is verified construction and carries no emphasis claim.
+ACE's trailing-leg push-off and MoveHere's `Drive through the top leg` are both
+absent, and the cue is unchanged. **Whole-foot placement is not claimed**: the
+prose says the foot is placed *firmly*, which is what the source establishes.
+
+This is the second movement complete in construction and intentionally
+incomplete in disputed technique, and the weaker of the two gaps — someone can
+perform a correct step-up from this prose without knowing which leg to favour,
+where push-up's absent piece touched how the arms move at all.
+
+### Finding — `defaultContext` can be structurally required but semantically arbitrary
+
+Surfaced by `step-up` and recorded because it is a property of the model, not of
+this movement.
+
+`step-up` is cited for two supported features and is not environment-independent.
+Its instruction is deliberately structure-neutral: every construction fact
+`ACE-LIB` 28 establishes — the hip-width start, firm placement, the upright
+torso, the rise, the trailing foot alongside, the ordered descent — is about the
+body and the generic platform, and **not one of them varies with which platform
+it is.** The prose therefore names no structure, and both cited contexts resolve
+to byte-identical steps.
+
+**The schema still requires exactly one `defaultContext`.** So a single feature
+must be nominated as the context the prose was authored for, when in fact it was
+authored for neither in particular and serves both equally.
+
+**Neither feature is better evidenced.** `ACE-LIB` 28 names no bench and no
+stair; it describes a platform and specifies no height. This is materially unlike
+`incline-push-up`, whose contexts genuinely are unevenly evidenced — `NHS-VID`
+explicitly permits a bench and authorises nothing about a stair (finding 16).
+There, the asymmetry is real and worth encoding. Here there is none.
+
+`stairs` was chosen as the default on semantic grounds only: a stair is the
+closer reading of a generic step or platform, while a park bench is a supported
+object being *used* as one. `park-bench` is the reported inheriting context.
+
+**What the reported inheritance is doing here is unusual.** Normally the advisory
+flags a context reading prose authored for somewhere else. In this case the prose
+was authored for nowhere in particular, so the advisory records that the default
+is a schema requirement rather than a claim of equivalence between the two
+features — inheritance stays visible instead of silently implying the bench and
+the stair are the same object.
+
+**Not generalised.** One case does not justify amending the instruction schema or
+the canonical plan, and neither is amended. Recorded so that if a second
+structure-neutral movement spanning several feature contexts appears, this is a
+known shape rather than a rediscovery — and so that a reader does not mistake
+`step-up`'s default for an evidential claim about stairs.
+
 ### Notes on individual sources
 
 ### Applicability note — name mismatches

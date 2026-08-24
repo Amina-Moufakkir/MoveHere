@@ -286,6 +286,7 @@ test('instruction coverage is reportable across every movement', () => {
     'side-plank',
     'single-leg-deadlift',
     'split-squat',
+    'step-up',
   ]);
 });
 

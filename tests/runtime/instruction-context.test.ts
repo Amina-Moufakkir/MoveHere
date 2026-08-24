@@ -487,11 +487,40 @@ test('split-squat is the only shipped instruction using a context override', () 
   });
   assert.equal(pullUp.instructions.overrides, undefined);
 
-  // Every cited context is authored for. Nothing inherits by omission.
-  assert.equal(
-    result.advisories.filter((a) => a.kind === 'instruction-context-inherits-default').length,
-    0,
-  );
+  // One context inherits, and it is named here rather than counted. The loader
+  // reports inheriting so it stays a decision someone made; this records which
+  // decision was made, so a second one cannot arrive unnoticed.
+  const inheriting = result.advisories
+    .filter((a) => a.kind === 'instruction-context-inherits-default')
+    .map((a) => `${String(a.exerciseId)}@${'featureId' in a ? String(a.featureId) : '?'}`)
+    .sort();
+  assert.deepEqual(inheriting, ['step-up@park-bench']);
+});
+
+test('step-up serves both its contexts from one instruction', () => {
+  const result = loadMatrix(AUTHORED_MATRIX);
+  assert.ok(result.ok);
+  const stepUp = result.matrix.exercises.find((e) => String(e.id) === 'step-up');
+  assert.ok(stepUp !== undefined && stepUp.instructions.kind === 'authored');
+
+  // ACE 28 names neither a bench nor a stair — it describes a platform, and no
+  // construction fact it establishes varies with which platform that is. So one
+  // context reads the other's prose deliberately, rather than because nobody
+  // wrote for it. An override would be required the moment a fact did differ,
+  // as split-squat's setup does. The default is stairs because a stair is the
+  // closer reading of a generic platform; a bench is a supported object being
+  // used as one. Neither is better evidenced.
+  assert.equal(stepUp.instructions.overrides, undefined);
+
+  const bench = resolveInstructions(stepUp, featureBasis('park-bench'));
+  const stairs = resolveInstructions(stepUp, featureBasis('stairs'));
+  assert.ok(bench.kind === 'authored' && stairs.kind === 'authored');
+  assert.deepEqual(bench.steps, stairs.steps, 'both contexts resolve to the same prose');
+
+  // Which means the prose may not name either structure, or it would describe
+  // one context while being read in the other.
+  const text = bench.steps.map((s) => s.text).join(' ');
+  assert.ok(!/bench|stair/i.test(text), 'shared prose names no specific structure');
 });
 
 test('the split-squat override changes the setup and nothing else', () => {

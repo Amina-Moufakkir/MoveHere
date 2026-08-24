@@ -188,7 +188,20 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total', 'per-side'],
     cues: ['Place the whole foot on the step', 'Drive through the top leg', 'Step down under control'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'confirmed-feature', featureId: 'stairs' },
+      steps: [
+        step('setup', 'Stand with your feet about hip-width apart.'),
+        step('setup', 'Place one foot firmly on the step.'),
+        step('action', 'Keeping your torso upright, rise onto the step and bring your other foot up alongside the first.'),
+        step('return', 'Step that second foot back down to the ground first, then bring the other foot down off the step.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 28, Step-Up (dumbbell-loaded source, used only for facts that survive removing the load) — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
 
   // --- hinge ---------------------------------------------------------------
