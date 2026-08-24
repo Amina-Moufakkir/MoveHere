@@ -37,9 +37,18 @@ slot stays vacant until a corrected Bench Step-up asset is approved.
   screen reader. Text baked into an image is none of those things.
 - **No arrows or motion graphics.** No direction arrows, motion lines, trails, highlights,
   or overlays of any kind.
-- **Dynamic movements: two phases, left to right.** Start on the left, finish on the
-  right. The ordering of the two poses is the only thing that carries direction — by the
-  two rules above there is nothing else in frame to carry it, and nothing else is needed.
+- **Dynamic movements: two ordered phases.** Horizontal compositions read left to right;
+  vertically stacked compositions read top to bottom. Either layout is permitted when it
+  makes the movement more legible at the target aspect ratio. **A single asset must preserve
+  one unambiguous sequence**, and no arrow, label, number or badge is added merely to
+  communicate direction — by the rules above there is nothing else in frame to carry it, and
+  the ordering is what carries it.
+
+  This replaces a universal left-to-right requirement. Reading order was a reasonable
+  default and it was not the only legible one: a supine movement photographed side-on is
+  wider than it is tall, so two of them side by side halve the width each pose gets, while
+  stacking gives each the full width. The invariant was never the axis — it was that
+  sequence is unambiguous and carried by ordering alone.
 - **Static holds: a single centred pose.** A held position has no second phase, and
   inventing one would depict movement the prescription does not ask for.
 - **Exercise-relevant structure: only what the basis supports.** No structure may appear in
@@ -81,12 +90,30 @@ slot stays vacant until a corrected Bench Step-up asset is approved.
   and someone opening it is learning the movement rather than recognising it. Compose
   for a frame that must survive both — legible small, and worth enlarging. This is an
   intent for future conforming assets and grants nothing to the superseded draft.
-- **Daylight master first, dark derived from it.** The dark counterpart reproduces the
-  approved daylight composition exactly — same cast, same pose, same phase framing, same
-  structure, same crop — and changes the palette, nothing else. It is a re-render of one
-  composition, never a second interpretation of the movement: two independent drawings are
-  two depictions, and a theme switch mid-session would swap which one the user is looking
-  at.
+- **Daylight and dark: semantic sameness, not photographic sameness.** The two theme
+  variants of one asset may differ in cast, clothing, lighting, ordinary non-exercise decor,
+  background treatment, theme atmosphere, and camera treatment or crop where the theme needs
+  it.
+
+  They must preserve **movement identity, the grounded movement facts, phase count, phase
+  ordering, laterality, the equipment and structure relationship, and every movement-specific
+  binding constraint in the brief below.** **Theme variation must never become movement
+  variation.** A theme switch mid-session may change what the room looks like; it may not
+  change what the person is doing.
+
+  This retires an earlier requirement that the dark asset reproduce the daylight composition
+  exactly — same cast, same pose, same crop, palette only. That rule was aimed at the right
+  failure: two independently imagined drawings are two depictions, and a theme switch would
+  silently swap which one a user is looking at. But it enforced that by demanding
+  photographic identity, which a dark treatment cannot really deliver — a dark studio is a
+  different room, not the same room with the lights down. The guarantee that matters is that
+  both variants depict the same movement performed the same way, and that is now what is
+  required.
+
+  It also resolves a divergence already shipped: the two indoor `plank@-` variants use
+  different casts and different rooms. Under this rule they conform, because the movement,
+  its phases and its structure relationship are identical across them. **They are not to be
+  re-shot to make their photographs match.**
 
 **Every depiction encodes judgement.** Framing, joint angles, how far a phase travels,
 and where the movement is cut into phases are all choices, and a simple movement does not
@@ -182,6 +209,34 @@ it stopped, and the step stays as thin as it was. What changes is that the image
 the only surface carrying that detail, which is a reason to keep the gap on the record, not
 a reason to treat it as closed.
 
+### Cast direction — production only, not depiction authority
+
+**Deliberately outside the per-movement briefs.** Nothing in this section constrains how a
+movement is performed or depicted, and none of it may be read as part of a movement
+specification. It records who tends to appear in the pictures, which is a production choice
+and nothing else.
+
+**Next-batch cast direction.** The next exercise visual batch after Glute Bridge should
+establish a **male outdoor/park cast.** This is a production choice intended to vary the
+people represented across MoveHere visuals rather than repeat one subject throughout the
+library. It does not create a requirement that every variant of that exercise use the same
+person, and it carries **no exercise, goal, difficulty, compatibility, prescription,
+instruction, authority, or user-demographic meaning.**
+
+What follows from the rules already in this brief, restated here so the cast note is not
+read as narrowing them:
+
+- **Cast may vary between park and substitute compositions.** They are different
+  compositions, not two renderings of one.
+- **Cast may vary between daylight and dark**, under semantic sameness. Two theme variants
+  of one asset are not required to show the same person.
+- **Movement grounding and binding visual constraints do not vary with cast.** Every
+  constraint in the per-movement briefs binds identically whoever is in frame — the pose,
+  the phases, the range, the structure relationship and the neutrality requirements are
+  facts about the movement, and a change of subject changes none of them.
+- **This note does not override the approved Glute Bridge family already produced.** It
+  applies to the batch after it.
+
 ### Per-movement briefs — first batch
 
 Written 2026-08-24, after an audit against the visual-evidence rule above. **These are
@@ -238,8 +293,15 @@ between a daylight master and its dark counterpart.
   feet flat on the floor about hip-width apart, toes pointing away. The heels press into
   the floor and the hips rise.
 - **Laterality.** Bilateral. Nothing may read as a single-leg variant.
-- **Phases.** Two, left to right. Left: lying with knees bent and feet flat. Right: hips
-  raised.
+- **Phases (binding).** Two, **stacked top to bottom**: the starting position above, lying
+  with knees bent and feet flat; the raised position below, hips lifted. This layout is
+  intentional rather than incidental — a supine movement photographed side-on is wider than
+  it is tall, and stacking gives each pose the full width of the frame instead of half of it.
+- **No unsupported exercise equipment (binding).** Ordinary non-exercise decor is permitted
+  as scenery. **Exercise equipment is not**, including as background dressing, and including
+  when it touches nothing: dumbbells, kettlebells, bands, balls, mats, benches, racks. The
+  product supports no home equipment at all (§12), so depicting any shows a user a thing
+  MoveHere neither generates for nor holds a registry entry against.
 - **Foot-placement constraint (binding).** Feet at an ordinary mid-range distance from the
   hips. **Must not depict the heels tucked close to the hips** — that cue is unestablished,
   and a drawing which encodes it asserts visually what the instruction deliberately does
@@ -261,8 +323,9 @@ between a daylight master and its dark counterpart.
   the hips and knees bending. The heels stay on the floor.
 - **Laterality.** Bilateral — both legs work together. Nothing may read as a single-leg or
   staggered variant. No even-loading or weight-distribution treatment.
-- **Phases.** Two, left to right. Left: standing, feet set. Right: a clearly descended
-  position with the hips back and the hips and knees bent.
+- **Phases.** Two, in either layout: first the standing position with the feet set, then a
+  clearly descended position with the hips back and the hips and knees bent. Left to right
+  if horizontal, top to bottom if stacked; the sequence is what is fixed, not the axis.
 - **Depth constraint (binding).** The descent must sit **clearly above thigh-parallel.**
   Parallel is a discarded endpoint, and a figure at that landmark depicts a target the app
   does not prescribe. Depth is otherwise a rendering parameter of *hips and knees bend* and
@@ -291,13 +354,17 @@ between a daylight master and its dark counterpart.
   together.
 - **Laterality.** Unilateral — one contralateral pair. The lowering arm and leg must
   clearly be opposite limbs.
-- **Phases.** Two, left to right. Left: the raised start position. Right: one arm and the
-  opposite leg lowered toward the floor.
+- **Phases.** Two, in either layout: first the raised start position, then one arm and the
+  opposite leg lowered toward the floor. Left to right if horizontal, top to bottom if
+  stacked; the sequence is what is fixed, not the axis. **The pairing constraint below is
+  unchanged by this and binds in either layout.**
 - **Pairing constraint (binding).** **Both phases must show the same opposite-limb
   pairing.** Different pairings across the two phases would depict the alternation sequence
   the instruction deliberately omits, putting a side-switching rule into a picture past
-  every guard that keeps it out of the prose. This constraint binds the dark counterpart
-  too: it re-renders one composition and does not re-choose the pair.
+  every guard that keeps it out of the prose. **It binds the dark variant too.** Theme
+  variants may differ photographically, but the pairing is a movement fact, not a
+  photographic one: a dark variant that re-chose which arm and leg move would make theme
+  variation into movement variation, which is exactly what that rule forbids.
 - **Range constraint (binding).** The lowered arm and leg stay **visibly above the floor.**
   The mandatory hand-and-heel floor contact in the source is a discarded endpoint.
 - **Composition.** Elevated three-quarter view from above and to the side, so which limbs
