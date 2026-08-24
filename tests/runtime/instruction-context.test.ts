@@ -454,25 +454,78 @@ test('a context reading the default instruction is reported', () => {
 
 /* ------------------------------------------------------- the shipped catalog */
 
-test('no shipped instruction yet uses a context override', () => {
+test('split-squat is the only shipped instruction using a context override', () => {
   const result = loadMatrix(AUTHORED_MATRIX);
   assert.ok(result.ok);
   assert.equal(result.matrix.exercises.length, 23);
 
-  // Authoring has begun, and every authored movement so far is
-  // environment-independent with a single context. split-squat is the only
-  // movement that will need an override, and it is not authored yet.
-  for (const e of result.matrix.exercises) {
-    if (e.instructions.kind !== 'authored') continue;
-    assert.deepEqual(
-      e.instructions.defaultContext,
-      { kind: 'environment-independent' },
-      `${String(e.id)}: authored movements so far are all environment-independent`,
-    );
-    assert.equal(e.instructions.overrides, undefined);
-  }
+  // The override mechanism shipped before anything used it. It is used now, by
+  // exactly one movement, and this records which — a second movement acquiring
+  // one is a content decision that should have to say so here.
+  const withOverrides = result.matrix.exercises
+    .filter((e) => e.instructions.kind === 'authored' && e.instructions.overrides !== undefined)
+    .map((e) => String(e.id));
+  assert.deepEqual(withOverrides, ['split-squat']);
+
+  const squat = result.matrix.exercises.find((e) => String(e.id) === 'split-squat');
+  assert.ok(squat !== undefined && squat.instructions.kind === 'authored');
+  assert.deepEqual(squat.instructions.defaultContext, { kind: 'environment-independent' });
+  assert.equal(squat.instructions.overrides?.length, 1);
+  const override = squat.instructions.overrides?.[0];
+  assert.ok(override !== undefined);
+  assert.equal(String(override.featureId), 'park-bench');
+  assert.equal(override.replaces, 'setup');
+  assert.ok(override.steps.every((step) => step.kind === 'setup'));
+
+  // A default context is not always environment-independent. pull-up exists
+  // only on the bar, so the bar is the context its default constructs.
+  const pullUp = result.matrix.exercises.find((e) => String(e.id) === 'pull-up');
+  assert.ok(pullUp !== undefined && pullUp.instructions.kind === 'authored');
+  assert.deepEqual(pullUp.instructions.defaultContext, {
+    kind: 'confirmed-feature',
+    featureId: 'pull-up-bar',
+  });
+  assert.equal(pullUp.instructions.overrides, undefined);
+
+  // Every cited context is authored for. Nothing inherits by omission.
   assert.equal(
     result.advisories.filter((a) => a.kind === 'instruction-context-inherits-default').length,
     0,
   );
+});
+
+test('the split-squat override changes the setup and nothing else', () => {
+  const result = loadMatrix(AUTHORED_MATRIX);
+  assert.ok(result.ok);
+  const squat = result.matrix.exercises.find((e) => String(e.id) === 'split-squat');
+  assert.ok(squat !== undefined);
+
+  const ground = resolveInstructions(squat, eiBasis);
+  const bench = resolveInstructions(squat, featureBasis('park-bench'));
+  assert.ok(ground.kind === 'authored' && bench.kind === 'authored');
+
+  const after = (r: typeof ground) =>
+    r.steps.filter((step) => step.kind !== 'setup').map((step) => step.text);
+  assert.deepEqual(
+    after(ground),
+    after(bench),
+    'the action and the return are authored once and shared, not duplicated per context',
+  );
+
+  const setups = (r: typeof ground) =>
+    r.steps.filter((step) => step.kind === 'setup').map((step) => step.text);
+  assert.notDeepEqual(setups(ground), setups(bench), 'the setup is what the bench changes');
+  assert.ok(
+    setups(bench).some((text) => /bench/i.test(text)),
+    'the bench context names the structure it uses',
+  );
+  assert.ok(
+    !setups(ground).some((text) => /bench/i.test(text)),
+    'the grounded form must not mention a structure it does not require (invariant 2)',
+  );
+
+  // Resolving through an override must not promote authority. Both parts are
+  // project-content, and the result is the weaker of the two either way (§8).
+  assert.equal(bench.authority.status, 'project-content');
+  assert.equal(ground.authority.status, 'project-content');
 });

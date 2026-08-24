@@ -280,8 +280,11 @@ test('instruction coverage is reportable across every movement', () => {
     'dead-bug',
     'glute-bridge',
     'plank',
+    'pull-up',
+    'reverse-lunge',
     'side-plank',
     'single-leg-deadlift',
+    'split-squat',
   ]);
 });
 

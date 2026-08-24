@@ -127,7 +127,20 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total', 'per-side'],
     cues: ['Step back, not down', 'Keep the front shin upright', 'Push through the front foot'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Stand with your feet about hip-width apart.'),
+        step('action', 'Step one foot backward until it touches the ground behind you.'),
+        step('action', 'Lower your back knee toward the floor, keeping your chest raised.'),
+        step('return', 'Press your front foot into the ground and bring your back leg forward to stand again.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 319, Reverse Lunge (barbell-loaded source, used only for facts that survive removing the load) — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
   {
     id: ex('split-squat'),
@@ -137,7 +150,35 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['per-side'],
     cues: ['Stagger your stance', 'Lower straight down', 'Keep your weight on the front leg'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'environment-independent' },
+      steps: [
+        step('setup', 'Stand with one foot forward and the other behind you, about hip-width apart.'),
+        step('setup', 'Set your feet further apart front to back than a walking step, with your back heel lifted off the floor.'),
+        step('setup', 'Stand tall, with your toes and knees pointing forward.'),
+        step('action', 'Lower your back knee toward the floor.'),
+        step('return', 'Press your front foot into the ground to come back up.'),
+      ],
+      overrides: [
+        {
+          featureId: 'park-bench',
+          replaces: 'setup',
+          steps: [
+            step('setup', 'Stand with one foot forward and the other behind you, facing away from the bench.'),
+            step('setup', 'Rest your back foot on the bench behind you.'),
+          ],
+          authority: instructionBasis(
+            'ACE Exercise Library 366, Bulgarian Split Squat — read 2026-08-23',
+            '2026-08-24',
+          ),
+        },
+      ],
+      authority: instructionBasis(
+        'NSCA, The Undervalued Lunge (PTQ 4.4) — Completely Stationary modification — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
   {
     id: ex('step-up'),
@@ -256,7 +297,20 @@ export const EXERCISES: readonly Exercise[] = [
     prescriptionKinds: ['reps'],
     countingModes: ['total'],
     cues: ['Start from a full hang', 'Pull your chest toward the bar', 'Lower under control'],
-    instructions: { kind: 'outstanding' },
+    instructions: {
+      kind: 'authored',
+      defaultContext: { kind: 'confirmed-feature', featureId: 'pull-up-bar' },
+      steps: [
+        step('setup', 'Take a full grip on the bar with your arms reaching overhead.'),
+        step('setup', 'Let your body hang with your arms straight and your feet off the ground.'),
+        step('action', 'Bend your elbows and drive them downward to pull your body up, keeping your trunk upright.'),
+        step('return', 'Lower back down until your arms are straight overhead again.'),
+      ],
+      authority: instructionBasis(
+        'ACE Exercise Library 191, Pull-ups — read 2026-08-23',
+        '2026-08-24',
+      ),
+    },
   },
 
   // --- core ----------------------------------------------------------------
