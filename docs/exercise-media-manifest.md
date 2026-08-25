@@ -379,6 +379,111 @@ between a daylight master and its dark counterpart.
   catalog. No lumbar-contact emphasis, bracing indication, floor-contact marker, highlighted
   spine, tempo cue, count or arrow of any kind.
 
+### Production status — Dead bug halted 2026-08-25
+
+**Visual production for `dead-bug@-` is stopped. No candidate is registered, and none was
+accepted on the grounds of being the closest attempt.**
+
+**Several candidates were produced, across two different generation approaches** — the
+route that produced the plank, glute bridge and bodyweight squat families, and, after those
+attempts failed, an external generator. Every one was audited against this brief before
+anything was registered, and every one was rejected.
+
+**The later attempts were genuinely better, and still failed.** Progress was real and is
+worth recording, because it shows what was and was not the hard part:
+
+- the first candidate placed the arms palm-to-palm in the start position, which merged them
+  into a single limb; later candidates separated them correctly, matching the committed
+  setup — both arms raised with the elbows over the shoulders;
+- early candidates left the lowered limbs ambiguous against the ground; later candidates
+  cleared the range constraint outright, with the lowered hand and the extended heel both
+  visibly above the grass;
+- camera elevation improved from a flat side profile toward a partly raised angle.
+
+**None of them made the contralateral relationship anatomically verifiable.** That is the
+single constraint every candidate failed, and it failed in more than one way:
+
+- side-on compositions in which the far shoulder and far hip are occluded, so which arm and
+  which leg move cannot be established;
+- anatomically incorrect shoulder and arm relationships;
+- both arms appearing to originate from the same side or the same shoulder;
+- a lowered arm passing behind the head with **no shoulder of its own depicted**, leaving
+  the arm with no continuous shoulder-to-hand line;
+- distorted anatomy introduced while trying to correct the camera angle and the limb
+  relationship at the same time.
+
+In the final candidate the legs were traceable to their own sides of the pelvis and the
+raised arm had a clean shoulder, but only **one** shoulder appeared anywhere in the frame.
+With the lowered arm's origin absent, the pairing could be guessed from occlusion depth and
+not seen — and a constraint whose wording is *visually verifiable* is not met by an image
+that needs a seven-times magnification and an inference chain to interpret.
+
+**The final external-generator candidate additionally failed on dimensions.** It measured
+1264 x 848, a ratio of 1.4906 rather than 3:2, delivered as JPEG at below the library's
+resolution. Aspect ratio is carried on a registry entry and shared across that movement's
+compositions; a park asset at 1.4906 beside indoor assets at 1.5000 would make the stored
+value false for one of them.
+
+**`dead-bug@-` therefore stays outstanding**, which is the honest state: no asset exists
+that MoveHere can show. **The brief is unchanged and both binding constraints remain in
+force** for any future attempt — the same opposite-limb pairing in both phases, and the
+lowered arm and leg staying visibly above the floor.
+
+**This is a production limitation, not evidence that the movement or the brief is wrong.**
+Nothing here says the constraint is unreasonable or that the composition it asks for is
+impossible. Three of the four movements in this batch cleared the same rule set, and one of
+them — bodyweight squat — took four rounds and got there.
+
+**Why this movement is stricter than it looks.** The opposite-limb pairing is not a
+stylistic preference about the photograph; it is the movement's identity. A dead bug in
+which the same-side arm and leg move together is a different exercise, and a picture that
+cannot show which limbs move cannot show which exercise it is. That is why a side-on frame
+fails here and passes elsewhere in this set: for plank or glute bridge a profile shows the
+movement completely; for this one it hides the only thing the image exists to communicate.
+
+**No rule was amended to accommodate a failed generation.** Where a rejected asset exposed a
+genuinely wrong abstraction, this brief was amended and says so — the background-structure
+rule and the phase-axis rule were both rewritten that way, and the shipped plank pair was
+reconciled rather than re-shot. This is not one of those cases: the composition rule
+predicted this failure before the first attempt and identified it in every attempt since.
+
+**Where a resolution would come from.** Not from relaxing the requirement. Any of these
+would satisfy it as written:
+
+- a generation model that renders coherent multi-limb anatomy from an elevated
+  three-quarter view;
+- controlled illustration, where limb sides are drawn deliberately rather than sampled;
+- licensed photography shot to this brief;
+- human-created artwork.
+
+The constraint stays as it is until one of those produces an asset that meets it.
+
+### First visual-production batch — closed 2026-08-25
+
+The batch approved as plank, glute bridge, bodyweight squat, dead bug is **closed with
+three of four delivered**.
+
+| Movement | Outcome |
+|---|---|
+| `plank@-` | illustrated — theme-neutral park composition, themed substitute pair |
+| `glute-bridge@-` | illustrated — one dark asset rejected for gym dressing and replaced |
+| `bodyweight-squat@-` | illustrated — four rounds; depth and aspect ratio both rejected once |
+| `dead-bug@-` | **outstanding** — halted, see above |
+
+Media coverage stands at **4 illustrated, 27 outstanding** of 31 pairings, the fourth being
+the superseded Bench Step-up draft that predates these rules.
+
+**What the batch established, beyond the assets.** The visual-evidence rule and its
+parameterised-versus-introduced test; the incidental-environment rule with its removability
+test; cue text as reference-only rather than depiction authority; phase ordering on either
+axis; daylight and dark as semantic rather than photographic sameness; and the prohibition
+on unsupported exercise equipment as set dressing. Four of those six were written or
+rewritten because a real asset exposed a gap, and each is now enforced against the
+twenty-seven pairings still outstanding.
+
+Closing the batch does not close `dead-bug@-`. It stays outstanding and unillustrated until
+an asset meets the brief.
+
 **Mapping identity is not composition identity.** Every key below stays distinct: its own
 asset file, its own registry entry, its own lookup. Where the movement itself is identical
 across contexts, the approved human pose and composition may be reused between those
