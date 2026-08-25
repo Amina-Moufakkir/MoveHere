@@ -12,7 +12,7 @@ Visual hierarchy, the green and white brand treatment, typographic character, sp
 
 ## What it does not govern
 
-Product scope, capability claims, roadmap, sequencing, or evidence. Those are `docs/product-plan-v4.4.md`.
+Product scope, capability claims, roadmap, sequencing, or evidence. Those are `docs/product-plan-v4.5.md`.
 
 It also does not govern deployment. This design direction applies to the consolidated product; it does not replace or supersede `web-mvp-v1`, which stays live as a frozen historical MVP. See §21.
 
@@ -32,10 +32,11 @@ Expansion should strengthen that loop rather than turn MoveHere into a generic w
 
 ## Classification
 
-Four classes:
+Five classes:
 
 - **CURRENT** — authorized and substantially implemented.
 - **NEAR-TERM PRESENTATION/PRODUCT** — needs no new domain capability; exposes or improves what MoveHere already does.
+- **PLANNED** — the product intends to have it, and its scoping questions are owed. **PLANNED is not CURRENT**: it authorizes no implementation and no affordance. A planned capability appears on the production surface only once its minimum truthful functional implementation exists (§22).
 - **FUTURE CAPABILITY CANDIDATE** — compatible with the vision, requires an explicit future product, domain or architecture decision first.
 - **NOT AUTHORIZED BY VISION ALONE** — the concept cannot authorize it; current scope or evidence prevents or contradicts it.
 
@@ -48,7 +49,7 @@ Four classes:
 | Features | NEAR-TERM | Must describe authorized capability only |
 | For Any Place | **NOT AUTHORIZED** as written | Asserts venue awareness where none is implemented. See *Works Anywhere* below |
 | About | NEAR-TERM | |
-| **Login** | **FUTURE** | Accounts, authentication and server persistence are excluded (§14, §21) |
+| **Login** | **PLANNED** | Intended for the full product (§22). **Not authorized on the current production surface** until a functional authentication flow exists. The image's placement is approved for that moment, not for now |
 | **Get Started** | **NEAR-TERM** | Enters the existing local, unauthenticated flow. No account required |
 | PARK-FIRST WORKOUTS badge | CURRENT | Accurate today |
 | *Work out. Anywhere. MoveHere.* | NEAR-TERM, **as a brand statement only** | See *Works Anywhere* |
@@ -82,15 +83,21 @@ Four classes:
 | **Beginner to Advanced** | **NOT AUTHORIZED** | See below |
 | Short-duration workouts | CURRENT | 10, 20, 30 and 45 minutes |
 | Your Goals. Your Pace. | Goals: NEAR-TERM. Pace: FUTURE | "Pace" implies progression or personalisation that does not exist |
-| Accounts | FUTURE | |
-| Persistent user history | FUTURE | One session persists and is overwritten |
+| Accounts | PLANNED | Intended for the full product (§22); not authorized now |
+| Persistent user history | PLANNED | Intended for the full product (§22). Today one session persists locally and is overwritten |
 | Saved environments and preferences | One venue: CURRENT. Multiple venues and preferences: FUTURE | A single home-park inventory persists locally today |
 
 ## The five that must not be waved through
 
-### Login and accounts — FUTURE
+### Login and accounts — PLANNED
 
-Accounts, authentication and server-side persistence are excluded from current scope. The loop eventually needs identity for cross-device history, so this is a genuine future candidate rather than a rejected idea. It is not authorized now, and **the web consolidation stage must not ship a sign-in affordance that does nothing**.
+Accounts, authentication and persisted history are **PLANNED** capabilities of the full product (§22). They are intended, and their scoping questions are owed. They are still excluded from current scope, and none of them exists.
+
+It is not authorized now, and **the web consolidation stage must not ship a sign-in affordance that does nothing**.
+
+§22 states the rule that governs the gap between intent and implementation: **planned capability does not authorize a production affordance before its minimum truthful functional implementation exists.** So `Login` does not ship in the current header — no placeholder, no disabled control, no reserved gap, and no interim route that explains that authentication is unavailable. When it appears, it authenticates.
+
+**The image's `Login` control is approved visual placement for the point at which authentication exists — not implementation authority for the current surface.** A later reader restoring it to match the image would be matching a picture rather than shipping a capability. §22.3 records the deliberate header divergence.
 
 *Get Started* and *Start Your Workout* are different: both enter the existing local flow and need no account. They are near-term.
 

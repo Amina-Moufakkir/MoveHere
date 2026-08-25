@@ -2,7 +2,9 @@
 
 ## Source of truth
 
-`docs/product-plan-v4.4.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
+`docs/product-plan-v4.5.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
+
+`docs/product-plan-v4.4.md` is retained unchanged as the historical product authority for that version. It is not current. v4.5 supersedes it on exactly one point: **authentication and accounts are PLANNED for the full product, not FUTURE** (§22). v4.4 classifies them as excluded outright, which is no longer how the product is described. Everything else in v4.4 — every invariant, gate, and current-stage exclusion — v4.5 carries forward unchanged.
 
 `docs/product-plan-v4.3.md` is retained unchanged as the historical product authority for that version. It is not current: it describes native as the current phase, instructions as unauthored, and exercise visuals as unimplemented, all of which v4.4 corrects.
 
@@ -38,7 +40,7 @@ These are standing product and safety decisions, not preferences. User demand do
 
 Out of scope for the current web consolidation stage (§21), on **both** clients:
 
-- Supabase, authentication, accounts, server-side persistence, RLS, and PostGIS. State is local only on both clients. Do not introduce any of these unless the canonical product plan is explicitly revised first.
+- Supabase, authentication, accounts, server-side persistence, RLS, and PostGIS. State is local only on both clients. Do not introduce any of these unless the canonical product plan is explicitly revised first. Authentication is **PLANNED** for the full product (§22) — that is a classification, not permission. No provider is chosen, Supabase is not selected by precedent, and §22 authorizes no implementation.
 - Vision inference and camera capture.
 - Location and GPS.
 - Home-equipment support, indoor venues, and venue classes beyond parks.
@@ -49,6 +51,10 @@ Also out of scope, because the approved design anchor shows or implies them: **p
 **Deployment is not capability.** The consolidated product deploys to Vercel; the frozen `web-mvp-v1` stays live on GitHub Pages and is no longer rebuilt. A hosting platform capable of servers, databases or auth authorizes none of them — the exclusions above continue to govern. Before any §21 application work, the deployment-preservation gate must pass: the existing deploy workflow publishes to GitHub Pages on every push to `main`, so merging an evolved client would overwrite the historical MVP automatically.
 
 A native runtime and a marketing surface make several of these newly *possible* or newly *tempting* rather than newly appropriate. A capability being available is not a reason to use it — each exclusion stays governed by the plan section that made it. Unauthorized capability appears in neither copy nor affordance.
+
+**Planned capability does not authorize a production affordance before its minimum truthful functional implementation exists** (§22). Concretely: `Login` does not ship in the header — no placeholder, no disabled control, no reserved gap, no interim `/login` route explaining that accounts don't exist. When `Login` appears, it authenticates. The approved design image shows a `Login` control; that is visual placement for when auth exists, not authority to render one now. Matching the image is not a reason.
+
+`output: 'export'` is an architectural boundary, not a build preference. Authentication planning does not authorize removing it, and Vercel's ability to run a server is not evidence that MoveHere needs one (§22.2).
 
 ## Engineering conventions
 
