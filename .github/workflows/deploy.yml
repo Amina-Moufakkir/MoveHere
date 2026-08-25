@@ -1,4 +1,12 @@
-# Build, verify, and publish the static export to GitHub Pages.
+# Publish the frozen historical MVP to GitHub Pages.
+#
+# GitHub Pages serves web-mvp-v1 and nothing else. The checkout below is pinned
+# to that tag deliberately, so any run of this workflow rebuilds the historical
+# site regardless of the branch it was dispatched from.
+#
+# Ordinary development no longer deploys here. There is no push trigger: the
+# codebase continues to evolve, and the deployed artifact does not. The current
+# product deploys separately rather than replacing this site.
 #
 # Verification runs before the build, not after: a deploy that ships content the
 # contract suite rejects would be worse than no deploy. The base path is supplied
@@ -7,8 +15,6 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -26,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: web-mvp-v1
 
       - uses: actions/setup-node@v4
         with:
