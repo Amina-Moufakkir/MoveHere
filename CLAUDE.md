@@ -2,11 +2,17 @@
 
 ## Source of truth
 
-`docs/product-plan-v4.3.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
+`docs/product-plan-v4.4.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
+
+`docs/product-plan-v4.3.md` is retained unchanged as the historical product authority for that version. It is not current: it describes native as the current phase, instructions as unauthored, and exercise visuals as unimplemented, all of which v4.4 corrects.
+
+`docs/design/target-product-experience.md` records the approved target product experience and classifies every capability the north-star design shows or implies. **It governs visual and product-experience direction and authorizes no capability.** Where it and the plan differ, the plan governs.
 
 MoveHere has two clients over one shared domain (§15): the **web** client (Next.js, released as `web-mvp-v1`) and the **native mobile** client (Expo + React Native, iOS and Android).
 
-The current phase is **Native Mobile Client** (§20): feature parity with the released web MVP, over the same shared domain. Parity is an implementation result — not validation, not traction, not evidence of product-market fit.
+The current stage is **Web Product Consolidation** (§21): evolving the existing Next.js client to express the target product experience, over the same shared domain, against the approved design direction. It evolves the released client rather than creating a parallel application.
+
+The **Native Mobile Client** (§20) is **paused at a validated implementation checkpoint** — not complete, and not at parity in either direction. Android is unverified and carried forward. Any stage's completion is an implementation result — not validation, not traction, not evidence of product-market fit.
 
 Phase 0 — Product & Engineering Foundation (§19) is mechanism-complete but **did not close its exit conditions**. Park audits, Gate I, and qualified fitness review of goal programming policy remain open and carry forward. Shipped training content is project content and is labeled as such. Adding a second client resolves none of this.
 
@@ -30,7 +36,7 @@ These are standing product and safety decisions, not preferences. User demand do
 
 ## Phase boundaries
 
-Out of scope for the current native parity phase (§20), on **both** clients:
+Out of scope for the current web consolidation stage (§21), on **both** clients:
 
 - Supabase, authentication, accounts, server-side persistence, RLS, and PostGIS. State is local only on both clients. Do not introduce any of these unless the canonical product plan is explicitly revised first.
 - Vision inference and camera capture.
@@ -38,7 +44,11 @@ Out of scope for the current native parity phase (§20), on **both** clients:
 - Home-equipment support, indoor venues, and venue classes beyond parks.
 - Notifications, Apple Health and Health Connect, payments, and community features.
 
-A native runtime makes several of these newly *possible* rather than newly appropriate. A device capability being available is not a reason to use it — each exclusion stays governed by the plan section that made it.
+Also out of scope, because the approved design anchor shows or implies them: **progress tracking, session history, any claim of measured improvement, readiness or "how you feel" input to generation, beginner-to-advanced programming, and scanning.** A capability does not become authorized by appearing in an approved design.
+
+**Deployment is not capability.** The consolidated product deploys to Vercel; the frozen `web-mvp-v1` stays live on GitHub Pages and is no longer rebuilt. A hosting platform capable of servers, databases or auth authorizes none of them — the exclusions above continue to govern. Before any §21 application work, the deployment-preservation gate must pass: the existing deploy workflow publishes to GitHub Pages on every push to `main`, so merging an evolved client would overwrite the historical MVP automatically.
+
+A native runtime and a marketing surface make several of these newly *possible* or newly *tempting* rather than newly appropriate. A capability being available is not a reason to use it — each exclusion stays governed by the plan section that made it. Unauthorized capability appears in neither copy nor affordance.
 
 ## Engineering conventions
 
