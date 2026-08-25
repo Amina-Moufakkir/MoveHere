@@ -267,77 +267,7 @@ export default function WorkoutScreen() {
 
         {current !== undefined && (
           <View style={{ marginTop: space.lg }}>
-            {/* ---- Media slot ---- */}
-            {visual !== null ? (
-              /* Provisional project-created instructional content. Sized to
-                 support the movement, not to dominate the screen: the
-                 prescription, the cues and the action all have to stay within
-                 reach without hunting for them. */
-              <View
-                /* Sized from the asset's own ratio, not a fixed height, so a
-                   wide movement frame fills the width instead of letterboxing
-                   inside a box shaped for something else. */
-                style={{
-                  marginHorizontal: gutter,
-                  aspectRatio: visual.aspectRatio,
-                  borderRadius: radius.lg,
-                  overflow: 'hidden',
-                  backgroundColor: t.color.pale,
-                }}
-              >
-                <Image
-                  source={visual.source}
-                  accessible
-                  accessibilityRole="image"
-                  accessibilityLabel={visual.alt}
-                  resizeMode="cover"
-                  /* The container owns the box; the image fills it. An Image
-                     given a height but no width takes its intrinsic width,
-                     which overflows the screen and leaves the slot blank. */
-                  style={{ width: '100%', height: '100%' }}
-                />
-              </View>
-            ) : (
-              /* A band, not a card. The fallback states which basis the item
-                 cited and nothing else — it is not a demonstration, and sizing
-                 it like one spent a quarter of the screen on two words while
-                 pushing the cues past the fold. A real visual earns the tall
-                 slot back through its own aspect ratio, above. */
-              <View
-                accessible
-                accessibilityLabel={
-                  featureLabel === null
-                    ? 'No equipment needed for this movement'
-                    : `Using the ${featureLabel}`
-                }
-                style={{
-                  marginHorizontal: gutter,
-                  minHeight: touch.action,
-                  borderRadius: radius.md,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: space.sm,
-                  paddingHorizontal: space.lg,
-                  paddingVertical: space.md,
-                  backgroundColor: featureLabel === null ? t.color.blueWash : t.color.paleGreen,
-                }}
-              >
-                {featureLabel === null ? (
-                  /* Neutral. No object is depicted, because none is required. */
-                  <Text style={{ ...type.label, color: t.color.blue }}>No equipment</Text>
-                ) : (
-                  <>
-                    <FeatureGlyph id={featureId ?? ''} size={glyph.row} color={t.color.greenInk} />
-                    <Text style={{ ...type.label, color: t.color.greenInk }}>
-                      Using the {featureLabel}
-                    </Text>
-                  </>
-                )}
-              </View>
-            )}
-
-            <View style={{ paddingHorizontal: gutter, marginTop: space.lg }}>
+            <View style={{ paddingHorizontal: gutter }}>
               <Text
                 accessibilityRole="header"
                 style={{ ...type.title, color: t.color.navy }}
@@ -405,6 +335,45 @@ export default function WorkoutScreen() {
                 {current.block}
               </Text>
 
+              {/* What the movement is performed with, stated for every item.
+                  This is not media and never stands in for it: a movement with
+                  a visual still cites a basis, and one without still says so.
+                  Folding the two together meant gaining a picture silently cost
+                  the movement its basis label, which is a fact about the
+                  session rather than a decoration around the photograph. */}
+              <View
+                accessible
+                accessibilityLabel={
+                  featureLabel === null
+                    ? 'No equipment needed for this movement'
+                    : `Using the ${featureLabel}`
+                }
+                style={{
+                  marginTop: space.lg,
+                  minHeight: touch.action,
+                  borderRadius: radius.md,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: space.sm,
+                  paddingHorizontal: space.lg,
+                  paddingVertical: space.md,
+                  backgroundColor: featureLabel === null ? t.color.blueWash : t.color.paleGreen,
+                }}
+              >
+                {featureLabel === null ? (
+                  /* Neutral. No object is depicted, because none is required. */
+                  <Text style={{ ...type.label, color: t.color.blue }}>No equipment</Text>
+                ) : (
+                  <>
+                    <FeatureGlyph id={featureId ?? ''} size={glyph.row} color={t.color.greenInk} />
+                    <Text style={{ ...type.label, color: t.color.greenInk }}>
+                      Using the {featureLabel}
+                    </Text>
+                  </>
+                )}
+              </View>
+
               {/* Inline, above the cues: learning the movement comes before
                   attending to it. A sheet made this a decision to open
                   something; on a scrolling page it is simply there, and the
@@ -443,6 +412,46 @@ export default function WorkoutScreen() {
                       </View>
                     ))}
                   </View>
+                </View>
+              )}
+
+              {/* The visual follows the written instruction rather than
+                  preceding it. Ahead of the steps a 3:2 frame pushed every one
+                  of them past the fold, so the movements carrying a produced
+                  asset showed less of how to perform them than the movements
+                  carrying none — the picture was costing the instruction it
+                  exists to support. Here it is what a reader reaches after the
+                  steps: supporting evidence for an instruction, not the thing
+                  the screen is arranged around.
+
+                  Absent media renders nothing at all. No placeholder, no empty
+                  frame, no disabled control — an unillustrated movement is not
+                  a broken illustrated one, and the basis above already states
+                  what it uses. */}
+              {visual !== null && (
+                <View
+                  /* Sized from the asset's own ratio: the production brief
+                     fixes 3:2, and a slot that cropped or shrank it would
+                     change what a conforming asset depicts to fit the player. */
+                  style={{
+                    marginTop: space.lg,
+                    aspectRatio: visual.aspectRatio,
+                    borderRadius: radius.lg,
+                    overflow: 'hidden',
+                    backgroundColor: t.color.pale,
+                  }}
+                >
+                  <Image
+                    source={visual.source}
+                    accessible
+                    accessibilityRole="image"
+                    accessibilityLabel={visual.alt}
+                    resizeMode="cover"
+                    /* The container owns the box; the image fills it. An Image
+                       given a height but no width takes its intrinsic width,
+                       which overflows the screen and leaves the slot blank. */
+                    style={{ width: '100%', height: '100%' }}
+                  />
                 </View>
               )}
 

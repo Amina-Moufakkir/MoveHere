@@ -126,7 +126,7 @@ const VISUALS: readonly RegistryRow[] = [
          All three are 1536 x 1024, measured. */
       park: {
         asset: { both: require('../../img/outdoor-bodyweight-squat.png') },
-        alt: 'Two photographs of a bodyweight squat in a city park, side by side. On the left, a man in a grey T-shirt and black shorts stands with his feet apart and his arms held straight out in front of him. On the right, the same man part way into a squat, his hips moved back and down, his knees bent and lower than his hips, and both feet flat on the path. A bench, a lamp post, a railing, trees, water and a distant skyline are behind him.',
+        alt: 'Two photographs of a bodyweight squat in a city park, side by side. On the left, a man stands with his feet apart and his arms held straight out in front of him. On the right, the same man part way into a squat, his hips moved back and down, his knees bent and lower than his hips, and both feet flat on the ground.',
       },
       substitute: {
         /* One alt for the themed pair: the same man in the same clothing makes
@@ -136,7 +136,7 @@ const VISUALS: readonly RegistryRow[] = [
           light: require('../../img/indoor-daylight-bodyweight-squat.png'),
           dark: require('../../img/indoor-dark-bodyweight-squat.png'),
         },
-        alt: 'Two stacked photographs of a bodyweight squat in a room. Above, a man in a T-shirt and shorts stands with his feet apart and his arms held straight out in front of him. Below, the same man part way into a squat, his hips moved back and down, his knees bent and lower than his hips, and both feet flat on the wooden floor. A window, a potted plant, a framed print and a shelf holding books and baskets are behind him.',
+        alt: 'Two stacked photographs of a bodyweight squat in a room. Above, a man stands with his feet apart and his arms held straight out in front of him. Below, the same man part way into a squat, his hips moved back and down, his knees bent and lower than his hips, and both feet flat on the wooden floor.',
       },
       aspectRatio: 1536 / 1024,
     },
@@ -151,7 +151,7 @@ const VISUALS: readonly RegistryRow[] = [
          All three assets are 1536 x 1024, measured. */
       park: {
         asset: { both: require('../../img/outdoor-glute-bridge.png') },
-        alt: 'Two stacked photographs of a glute bridge in a city park. Above, a woman in a black crop top and shorts lies on her back on the grass with her knees bent, her feet flat and her arms by her sides. Below, the same position with her hips raised so her body slopes from her shoulders to her knees. A path, a bench, a lamp post, water and a distant skyline are behind her.',
+        alt: 'Two stacked photographs of a glute bridge on the grass in a city park. Above, a woman lies on her back with her knees bent, her feet flat and her arms by her sides. Below, the same position with her hips raised so her body slopes from her shoulders to her knees.',
       },
       substitute: {
         /* One alt covers the themed pair because both show the same person in
@@ -161,7 +161,7 @@ const VISUALS: readonly RegistryRow[] = [
           light: require('../../img/indoor-daylight-glute-bridge.png'),
           dark: require('../../img/indoor-dark-glute-bridge.png'),
         },
-        alt: 'Two stacked photographs of a glute bridge in a room. Above, a man in a grey T-shirt and shorts lies on his back on a wooden floor with his knees bent, his feet flat and his arms by his sides. Below, the same position with his hips raised so his body slopes from his shoulders to his knees. A window and a potted plant are behind him.',
+        alt: 'Two stacked photographs of a glute bridge in a room. Above, a man lies on his back on a wooden floor with his knees bent, his feet flat and his arms by his sides. Below, the same position with his hips raised so his body slopes from his shoulders to his knees.',
       },
       aspectRatio: 1536 / 1024,
     },
@@ -174,14 +174,14 @@ const VISUALS: readonly RegistryRow[] = [
          three are 1536 x 1024, measured, so the ratio is true of the entry. */
       park: {
         asset: { both: require('../../img/outdoor-plank.png') },
-        alt: 'A woman in a black crop top and shorts holds a forearm plank on open grass in a city park, seen from the side. Her forearms rest on the grass with her elbows beneath her shoulders, her legs are straight, and her weight is on her forearms and the toes of both trainers. A path, an empty bench, a lamp post, water and a distant skyline are behind her.',
+        alt: 'A woman holds a forearm plank on the grass in a city park, seen from the side. Her forearms are on the ground with her elbows beneath her shoulders, her legs are straight, and her weight is on her forearms and the toes of both trainers.',
       },
       substitute: {
         asset: {
           light: require('../../img/indoor-daylight-plank.png'),
           dark: require('../../img/indoor-dark-plank.png'),
         },
-        alt: 'A person holds a forearm plank on a smooth indoor floor, seen from the side. Their forearms rest on the floor with their elbows beneath their shoulders, their legs are straight, and their weight is on their forearms and the toes of both trainers.',
+        alt: 'A person holds a forearm plank on the floor of a room, seen from the side. Their forearms are on the floor with their elbows beneath their shoulders, their legs are straight, and their weight is on their forearms and the toes of both trainers.',
       },
       aspectRatio: 1536 / 1024,
     },
