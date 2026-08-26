@@ -2,9 +2,11 @@
 
 ## Source of truth
 
-`docs/product-plan-v4.5.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
+`docs/product-plan-v4.6.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
 
-`docs/product-plan-v4.4.md` is retained unchanged as the historical product authority for that version. It is not current. v4.5 supersedes it on exactly one point: **authentication and accounts are PLANNED for the full product, not FUTURE** (§22). v4.4 classifies them as excluded outright, which is no longer how the product is described. Everything else in v4.4 — every invariant, gate, and current-stage exclusion — v4.5 carries forward unchanged.
+`docs/product-plan-v4.5.md` is retained unchanged as the historical product authority for that version. It is not current. v4.6 supersedes it on how the approved design anchor's capabilities are **classified** (§23): progress and session history, multi-environment expansion, and readiness adaptation are **PLANNED**; environment/conditions adaptation is recognised as **CURRENT**; beginner-to-advanced **remains NOT AUTHORIZED**; *"Your Goals. Your Pace."* is **not authorized as written**. v4.5's §22 and its governing rule carry forward untouched.
+
+`docs/product-plan-v4.4.md` is retained unchanged for its version. v4.5 superseded it on one point: authentication and accounts are PLANNED, not FUTURE (§22).
 
 `docs/product-plan-v4.3.md` is retained unchanged as the historical product authority for that version. It is not current: it describes native as the current phase, instructions as unauthored, and exercise visuals as unimplemented, all of which v4.4 corrects.
 
@@ -40,7 +42,7 @@ These are standing product and safety decisions, not preferences. User demand do
 
 Out of scope for the current web consolidation stage (§21), on **both** clients:
 
-- Supabase, authentication, accounts, server-side persistence, RLS, and PostGIS. State is local only on both clients. Do not introduce any of these unless the canonical product plan is explicitly revised first. Authentication is **PLANNED** for the full product (§22) — that is a classification, not permission. No provider is chosen, Supabase is not selected by precedent, and §22 authorizes no implementation.
+- Supabase, authentication, accounts, server-side persistence, RLS, and PostGIS. State is local only on both clients. Do not introduce any of these unless the canonical product plan is explicitly revised first. Authentication is **PLANNED** for the full product (§22) — that is a classification, not permission. No provider is chosen, Supabase is not selected by precedent, and §22 authorizes no implementation. **Local session history does not require any of this**: progress's first stage is local-first and must not be blocked behind the authentication milestone (§23.1).
 - Vision inference and camera capture.
 - Location and GPS.
 - Home-equipment support, indoor venues, and venue classes beyond parks.
@@ -48,11 +50,13 @@ Out of scope for the current web consolidation stage (§21), on **both** clients
 
 Also out of scope, because the approved design anchor shows or implies them: **progress tracking, session history, any claim of measured improvement, readiness or "how you feel" input to generation, beginner-to-advanced programming, and scanning.** A capability does not become authorized by appearing in an approved design.
 
+Out of scope *for this stage* is not the same as out of the product, and §23 now separates them: progress, session history and readiness are **PLANNED** and still excluded here; measured improvement and beginner-to-advanced are excluded from the product outright. See the §23 summary below before assuming which kind a line is.
+
 **Deployment is not capability.** The consolidated product deploys to Vercel; the frozen `web-mvp-v1` stays live on GitHub Pages and is no longer rebuilt. A hosting platform capable of servers, databases or auth authorizes none of them — the exclusions above continue to govern. Before any §21 application work, the deployment-preservation gate must pass: the existing deploy workflow publishes to GitHub Pages on every push to `main`, so merging an evolved client would overwrite the historical MVP automatically.
 
 A native runtime and a marketing surface make several of these newly *possible* or newly *tempting* rather than newly appropriate. A capability being available is not a reason to use it — each exclusion stays governed by the plan section that made it. Unauthorized capability appears in neither copy nor affordance.
 
-**Planned capability does not authorize a production affordance before its minimum truthful functional implementation exists** (§22). Concretely: `Login` does not ship in the header — no placeholder, no disabled control, no reserved gap, no interim `/login` route explaining that accounts don't exist. When `Login` appears, it authenticates. The approved design image shows a `Login` control; that is visual placement for when auth exists, not authority to render one now. Matching the image is not a reason.
+**Planned capability does not authorize a production affordance before its minimum truthful functional implementation exists** (§22, and §23 for every capability it names). Concretely: `Login` does not ship in the header — no placeholder, no disabled control, no reserved gap, no interim `/login` route explaining that accounts don't exist. When `Login` appears, it authenticates. The approved design image shows a `Login` control; that is visual placement for when auth exists, not authority to render one now. Matching the image is not a reason.
 
 `output: 'export'` is an architectural boundary, not a build preference. Authentication planning does not authorize removing it, and Vercel's ability to run a server is not evidence that MoveHere needs one (§22.2).
 
@@ -90,3 +94,15 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Capability classification (§23)
+
+Promoting a capability to PLANNED changes what MoveHere intends, never what it may claim. **PLANNED ≠ CURRENT.** v4.6 brings the design anchor's feature copy no closer to shipping than v4.5 did — visual parity with the anchor is available now; parity with its claims is not.
+
+- **PLANNED, unbuilt:** progress and session history (§23.1, local-first) · multi-environment expansion (§23.2) · readiness adaptation (§23.3, §10 review precedes design).
+- **CURRENT:** adaptation to confirmed environment and reported conditions (§23.3).
+- **NOT AUTHORIZED, and not promoted:** beginner-to-advanced programming (§23.4). Needs a beachhead expansion revising §3/§5 on evidence, a real difficulty/progression model, and qualified review — all three. *Beginner-friendly* is a different, truthful statement and is not a step toward it.
+- **Refused outright, not deferred:** "getting stronger", "improving fitness", "performance improvement", improvement trend lines. MoveHere records no load, reps completed or effort.
+- **Never call prescribed duration** *total workout minutes* or *minutes trained*. The honest name is **minutes programmed**. Measured elapsed time, if it ever exists, is a distinct metric.
+- **"Anywhere"** is not truthful as a capability claim while parks are the only environment class. The brand line *Work out. Anywhere. MoveHere.* stays permitted; feature copy names only what is supported.
+- **§15 accessibility overrides literal visual parity** where the generated anchor is non-conformant. `#9BB293` is decorative only (2.29:1); interactive boundaries take `#7E9A75`.

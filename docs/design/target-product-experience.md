@@ -12,7 +12,7 @@ Visual hierarchy, the green and white brand treatment, typographic character, sp
 
 ## What it does not govern
 
-Product scope, capability claims, roadmap, sequencing, or evidence. Those are `docs/product-plan-v4.5.md`.
+Product scope, capability claims, roadmap, sequencing, or evidence. Those are `docs/product-plan-v4.6.md`.
 
 It also does not govern deployment. This design direction applies to the consolidated product; it does not replace or supersede `web-mvp-v1`, which stays live as a frozen historical MVP. See §21.
 
@@ -36,7 +36,7 @@ Five classes:
 
 - **CURRENT** — authorized and substantially implemented.
 - **NEAR-TERM PRESENTATION/PRODUCT** — needs no new domain capability; exposes or improves what MoveHere already does.
-- **PLANNED** — the product intends to have it, and its scoping questions are owed. **PLANNED is not CURRENT**: it authorizes no implementation and no affordance. A planned capability appears on the production surface only once its minimum truthful functional implementation exists (§22).
+- **PLANNED** — the product intends to have it, and its scoping questions are owed. **PLANNED is not CURRENT**: it authorizes no implementation and no affordance. A planned capability appears on the production surface only once its minimum truthful functional implementation exists (§22, §23).
 - **FUTURE CAPABILITY CANDIDATE** — compatible with the vision, requires an explicit future product, domain or architecture decision first.
 - **NOT AUTHORIZED BY VISION ALONE** — the concept cannot authorize it; current scope or evidence prevents or contradicts it.
 
@@ -72,20 +72,20 @@ Five classes:
 | **Scan & Confirm** | Confirm: **CURRENT**. Scan: **FUTURE** | The architecture anticipates vision and the target experience may describe it. **Current copy must not imply scanning exists** — use *Confirm what's available* or *Tell MoveHere what's available* |
 | Generation from environment, resources, time and goal | CURRENT | The implemented mechanism |
 | Substitutions when needed | CURRENT | Substitute sessions, labelled as substitutes |
-| Completion logging | NEAR-TERM | One session, local, overwritten |
-| **Progress tracking / Track Progress** | **FUTURE**, with one part **NOT AUTHORIZED** | See below |
+| Completion logging | NEAR-TERM | One session, local, overwritten. This is the substrate the planned session history extends (§23.1) |
+| **Progress tracking / Track Progress** | **PLANNED**, with one part **NOT AUTHORIZED** | Measurable facts are planned (§23.1). Claims of improvement are refused, not deferred. See below |
 | Park-First | CURRENT | |
-| **Works Anywhere** | **NOT AUTHORIZED** as capability | See below |
-| Smart & Adaptive | NEAR-TERM **if scoped to environment and conditions** | Adaptation to the venue and to reported conditions is current. Adaptation to the person is not |
-| **Adapts to how you feel that day** | **NOT AUTHORIZED** | See below |
+| **Works Anywhere** | **PLANNED** as multi-environment expansion | §23.2. The expansion is intended; the phrase is not authorized. Copy names only supported classes. See below |
+| Smart & Adaptive | **Split: environment/conditions CURRENT; person PLANNED** | §23.3. Venue and reported-conditions adaptation is the implemented mechanism. Person-state adaptation is planned and review-gated |
+| **Adapts to how you feel that day** | **PLANNED**, §10 review-gated | §23.3. Not authorized now. Qualified review precedes design, not implementation. See below |
 | Strength / Conditioning / Core presentation | CURRENT, with a correction | Strength and Conditioning are goals. **Core is a block role, not a goal** — the concept conflates two levels |
 | No-equipment sessions | CURRENT | Environment-independent movements |
-| **Beginner to Advanced** | **NOT AUTHORIZED** | See below |
+| **Beginner to Advanced** | **NOT AUTHORIZED** — unchanged by §23 | Excluded from the product, not merely this stage. §23.4 records the three requirements. See below |
 | Short-duration workouts | CURRENT | 10, 20, 30 and 45 minutes |
-| Your Goals. Your Pace. | Goals: NEAR-TERM. Pace: FUTURE | "Pace" implies progression or personalisation that does not exist |
+| Your Goals. Your Pace. | **Not authorized as written** | §23.5. Goal is accurate; "pace" has no product definition. Current truth is *Your Goal. Your Time.* |
 | Accounts | PLANNED | Intended for the full product (§22); not authorized now |
 | Persistent user history | PLANNED | Intended for the full product (§22). Today one session persists locally and is overwritten |
-| Saved environments and preferences | One venue: CURRENT. Multiple venues and preferences: FUTURE | A single home-park inventory persists locally today |
+| Saved environments and preferences | One venue: CURRENT. Multiple venues: **PLANNED** (§23.2) | A single home-park inventory persists locally today |
 
 ## The five that must not be waved through
 
@@ -101,46 +101,104 @@ It is not authorized now, and **the web consolidation stage must not ship a sign
 
 *Get Started* and *Start Your Workout* are different: both enter the existing local flow and need no account. They are near-term.
 
-### Track Progress — split, and one part cannot be claimed at all
+### Track Progress — PLANNED, and one part cannot be claimed at all
 
 Four distinct things hide in one phrase:
 
 | | |
 |---|---|
 | Local completion logging, one session | **CURRENT** |
-| Session history | **FUTURE** — needs a persistence-shape decision |
-| Consistency over time | **FUTURE** — needs a defined metric |
+| Session history | **PLANNED** — local-first, no accounts required (§23.1) |
+| Consistency over time | **Deferred** — a streak needs a definition before it is a metric (§23.1) |
 | Measured improvement | **NOT AUTHORIZED** |
 
 MoveHere records that a session was completed, how many movements it held, which features it used, and whether it was a substitute. It records **no load, no completed repetitions, no perceived effort, and no duration achieved**. There is nothing from which improvement could be computed, and no measure of improvement has ever been defined.
 
 **A progress claim whose measurement has never been defined is not a feature that has not shipped. It is a claim the product cannot make.**
 
-### Beginner to Advanced — NOT AUTHORIZED
+§23.1 promotes the *measurable* half to PLANNED and scopes it: completed sessions, minutes programmed, sessions per week, goal distribution, park-versus-substitute distribution, and session history. It also fixes a trap in the naming — the sum of prescribed durations is **minutes programmed**, never *total workout minutes* or *minutes trained*. A 30-minute session marked complete evidences an intention and a tap, not thirty elapsed minutes.
+
+The unmeasurable half does not move. Improvement claims stay refused.
+
+### Beginner to Advanced — NOT AUTHORIZED, and not promoted by §23
 
 The product plan lists advanced athletes among the users MoveHere is explicitly not for, and the wedge depends on that exclusion. This is **not** reclassified as a future commitment: widening the beachhead requires evidence rather than feature opportunity, and that is a product-plan amendment, not a copy decision.
 
-### Adapts to how you feel that day — NOT AUTHORIZED
+### Adapts to how you feel that day — PLANNED, review-gated
 
 Current generation inputs are confirmed venue inventory, duration, goal and reported conditions. A readiness input is a **new generation-policy capability**, and it sits close to the medical boundary: "how you feel" shades into soreness, pain and injury, which are excluded from programming entirely.
 
-It may be compatible with future exploration. It is **not an approved roadmap commitment**, and any reconsideration requires a new generation-policy decision reviewed against the medical and injury boundary.
+§23.3 promotes it to **PLANNED**: intended, unbuilt, and **review-gated — qualified review precedes design, not implementation**. Nothing about §10 relaxes. Injury-aware programming, condition-specific substitution and severity triage stay excluded however readiness is eventually scoped.
 
-### Works Anywhere — the finest distinction
+The other half of *Smart & Adaptive* is now recorded as **CURRENT**: adaptation to confirmed environment and reported conditions is the implemented mechanism, and the anchor's slot is accurate when scoped to it.
+
+### Works Anywhere — PLANNED as expansion, not as a phrase
 
 Four different things wear this phrase:
 
 1. **The product vision** — environment awareness generally. True, and the plan's opening claim.
 2. **The current implementation** — park-aware. True today.
 3. **Environment-independent continuity** — sessions requiring nothing, which genuinely do work anywhere. True today.
-4. **Future indoor and home awareness** — not implemented, and entering only through the same admission and compatibility boundaries as the park.
+4. **Future indoor and home awareness** — not implemented, and entering only through the same admission and compatibility boundaries as the park. §23.2 promotes this expansion to **PLANNED**; each class still enters individually through §7's five conditions.
 
 **The brand statement may stand.** *Work out. Anywhere. MoveHere.* is defensible: environment-independent sessions really do work anywhere, and the vision really is broader than parks.
 
 **Capability copy must be narrower.** A feature card promising *"parks, courts, paths, or home"* asserts venue awareness in places where none is implemented, and names home specifically, which is excluded. The *For Any Place* navigation item has the same problem.
+
+**"Anywhere" does not become truthful by the addition of a second class.** Until multiple environment classes are CURRENT, production copy names only what is actually supported.
 
 The distinction to hold: **the brand may describe the destination; the product may only describe what it does now.**
 
 ## Using this artifact
 
 When designing a surface, classify every claim before writing it. If a claim is FUTURE or NOT AUTHORIZED, it appears in neither copy nor affordance. If a classification feels wrong, that is a product-plan question, not a design question.
+
+## Measured visual direction
+
+Taken from the anchor image by sampling pixels, not by inference. Roughly 24,000
+green pixels across five regions; geometry by edge-scanning, scaled from the
+image's 1536px width to a 1440px viewport.
+
+### Colour
+
+| Slot | Value | Source | Contrast on white |
+|---|---|---|---|
+| primary green | `#4F7E38` | CTA fill, `MoveHere.` headline | 4.80:1 — passes AA for body text; white on it is also 4.80:1 |
+| primary hover | `#41682D` | derived, −8% lightness | 6.4:1 |
+| pale tint | `#F2F4F1` | badge pill fill | decorative |
+| decorative border | `#9BB293` | secondary-CTA ring | **2.29:1 — decorative only** |
+| interactive border | `#7E9A75` | conformant substitute | 3.1:1 |
+| green ink | `#3D6329` | icon strokes, darkened for text | 7.1:1 |
+| panel surface | `#F7F7F7` | feature-strip fill | the strip is faintly grey, not white |
+
+The target green measures **hue 100°, saturation 38%** — an olive, yellow-leaning
+park green. It is not the emerald family (hue ~156°, saturation ~80%) the
+implementation had been using.
+
+### Geometry, at a 1440px viewport
+
+| Measure | Target |
+|---|---|
+| Logo left edge | 65 |
+| Headline left edge | 90 |
+| Get Started right edge | 1371 |
+| Content width | ~1305 |
+| Side gutter | ~68 |
+| Feature-strip width | ~1305 |
+
+The anchor is not a centred narrow column. It is close to full-bleed with
+generous padding, and the marketing surface needs its own measure rather than
+the app flow's.
+
+### Where the anchor is not followed
+
+`#9BB293` is **decorative and non-interactive only**. Against white it measures
+2.29:1, below the 3:1 that WCAG 2.1 AA requires where a border is the only thing
+defining a control's boundary (1.4.11). The plan binds the web client to AA
+(§15), so **§15 overrides literal visual parity wherever the generated anchor is
+non-conformant** — here, and anywhere else measurement finds the same problem.
+Interactive boundaries take `#7E9A75`, which is visually near-identical and
+conformant.
+
+An approved image is design direction. It is not an exemption from the
+accessibility standard the plan already set.
