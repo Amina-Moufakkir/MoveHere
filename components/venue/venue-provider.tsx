@@ -174,7 +174,14 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
     /* The invariant is checked against persisted state, not React state: a
        second tab, a restored session, or a render that has not caught up must
        not be able to slip a replacement past it. */
-    if (decideBegin(readSession()).kind === 'refused') return { kind: 'refused' };
+    const existing = readSession();
+    if (decideBegin(existing).kind === 'refused') {
+      /* Surface the session we refused over, so the caller's next render shows
+         the resume choice. A refusal the user cannot see is the invisible
+         redirect this replaced. */
+      setSession(existing);
+      return { kind: 'refused' };
+    }
     const record = createRecord();
     writeSession(record);
     setSession(record);

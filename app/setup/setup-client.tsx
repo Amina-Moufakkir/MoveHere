@@ -52,10 +52,35 @@ const legendClass = 'text-sm font-extrabold uppercase tracking-(--text-marker--l
 
 export function SetupClient() {
   const router = useRouter();
-  const { inventory, loadOutcome, request, setRequest, beginSession } = useVenue();
+  const { inventory, loadOutcome, request, setRequest, beginSession, discardAndBegin, session, workout } =
+    useVenue();
 
   const usable = (inventory?.features ?? []).filter((f) => f.usability.kind === 'usable');
   const venueBlind = request.conditions !== 'acceptable' || usable.length === 0;
+
+  /**
+   * The unfinished session, described exactly as the training screen describes it.
+   *
+   * The position rule is `min(done + 1, total)` — the same expression the
+   * workout player uses, not a second rule that happens to agree today. `done`
+   * counts movements ticked off, so `done = 0` is "Movement 1 of N" and
+   * `done = 2` is "Movement 3 of N".
+   *
+   * Null when there is nothing to resume, which is also the case while a
+   * session exists but its workout has not resolved — offering to resume
+   * something we cannot yet describe would be worse than offering nothing.
+   */
+  const inProgress = (() => {
+    if (session === null || workout === null || workout.kind === 'not-generated') return null;
+    const total = workout.blocks.reduce((n: number, b) => n + b.items.length, 0);
+    if (total === 0) return null;
+    return {
+      minutes: session.minutes,
+      goal: session.goal,
+      total,
+      current: Math.min(session.done + 1, total),
+    };
+  })();
 
   return (
     <div className="flex flex-1 flex-col">
@@ -204,24 +229,74 @@ export function SetupClient() {
       <section className="mt-auto border-t border-line bg-cloud py-6">
         <PageContainer measure="app-wide">
           <div className="flex max-w-3xl flex-col gap-3">
-            <p aria-live="polite" className="text-center text-sm font-semibold text-navy-muted">
-              {venueBlind
-                ? 'This will be a no-equipment session, not a park session'
-                : `A park session using ${usable.length} confirmed ${usable.length === 1 ? 'feature' : 'features'}`}
-            </p>
-            <Action
-              onClick={() => {
-                /* The invariant lives in the provider, not here (§24.6). A
-                   refusal means unfinished work exists, and F1's non-destructive
-                   interim is to go to it rather than replace it — the approved
-                   resume/discard choice is a later stage's work, and doing
-                   nothing at all would leave the control looking broken. */
-                beginSession();
-                router.push('/workout');
-              }}
-            >
-              Build my session
-            </Action>
+            {inProgress === null ? (
+              <>
+                <p aria-live="polite" className="text-center text-sm font-semibold text-navy-muted">
+                  {venueBlind
+                    ? 'This will be a no-equipment session, not a park session'
+                    : `A park session using ${usable.length} confirmed ${usable.length === 1 ? 'feature' : 'features'}`}
+                </p>
+                <Action
+                  onClick={() => {
+                    /* The invariant lives in the provider (§24.6). If it refuses,
+                       unfinished work exists and the region below takes over —
+                       the provider surfaces that session rather than redirecting,
+                       so a refusal is always a visible choice. */
+                    if (beginSession().kind === 'begun') router.push('/workout');
+                  }}
+                >
+                  Build my session
+                </Action>
+              </>
+            ) : (
+              /* One decisive action area, not two. The ordinary build control is
+                 replaced rather than sitting beside a destructive twin, because
+                 two paths to the same place — one of which silently destroys a
+                 workout — is the ambiguity this region exists to remove. */
+              <div
+                aria-live="polite"
+                className="rounded-2xl border border-line-strong bg-pale p-5 sm:p-6"
+              >
+                <p className="text-lg font-extrabold tracking-[-0.01em]">
+                  You have a workout in progress.
+                </p>
+                <p className="mt-1.5 text-sm font-semibold text-navy-muted">
+                  {inProgress.minutes} min &middot; <span className="capitalize">{inProgress.goal}</span>{' '}
+                  &middot; Movement {inProgress.current} of {inProgress.total}
+                </p>
+
+                {/* Resume first in DOM order: it is the non-destructive choice
+                    and the one a keyboard or screen-reader user reaches first. */}
+                <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+                  <Action full={false} onClick={() => router.push('/workout')}>
+                    Resume workout
+                  </Action>
+                  {/* De-emphasised the way the product already de-emphasises a
+                      destructive choice: bordered, muted ink, no fill. `/complete`'s
+                      "Not usable" is the established treatment, and there is no
+                      destructive-red semantic in this system to borrow. The primary
+                      keeps the weight, so the safe choice is the obvious one. */}
+                  <Action
+                    variant="soft"
+                    full={false}
+                    className="border-line text-navy-muted hover:border-line-strong hover:text-navy"
+                    onClick={() => {
+                      /* Explicit, named, and using the committed lifecycle
+                         operation — never a force flag on the ordinary one. */
+                      discardAndBegin();
+                      router.push('/workout');
+                    }}
+                  >
+                    Discard and build a new one
+                  </Action>
+                </div>
+
+                <p className="mt-4 text-sm leading-snug text-navy-muted">
+                  Your time, goal and conditions above describe the new workout.
+                  The one in progress keeps the choices it was built with until you discard it.
+                </p>
+              </div>
+            )}
           </div>
         </PageContainer>
       </section>
