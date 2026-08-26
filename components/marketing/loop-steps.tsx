@@ -13,10 +13,15 @@ import type { MarketingGlyph } from '@/src/presentation/feature-glyphs.ts';
  * The first label is "Confirm what's available" and never "Scan" — vision is
  * not implemented, and the word would promise a camera the product does not use.
  */
+/* Mapped from the anchor's hero row, which shows pin / dumbbell / convergence /
+   circled-check against different labels. Two of ours line up with its glyphs
+   directly; one takes the clock from the anchor's own lower row because our
+   label is about time and the anchor has no hero clock; and the convergence
+   mark goes unused because we have no "substitutions" step to put under it. */
 const STEPS: readonly { readonly label: string; readonly icon: MarketingGlyph }[] = [
-  { label: 'Confirm what’s available', icon: 'confirm' },
+  { label: 'Confirm what’s available', icon: 'place' },
   { label: 'Choose your time & goal', icon: 'time' },
-  { label: 'Get a workout that fits', icon: 'workout' },
+  { label: 'Get a workout that fits', icon: 'dumbbell' },
   { label: 'Train & complete', icon: 'complete' },
 ];
 

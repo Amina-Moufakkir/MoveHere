@@ -66,8 +66,8 @@ const previewBlocks: readonly PreviewBlock[] = (() => {
    the movement names and doses are legibly real, short enough that the card
    stays a supporting object beside the photograph. */
 const heroPreviewBlocks: readonly PreviewBlock[] = previewBlocks
-  .slice(0, 2)
-  .map((block) => ({ ...block, items: block.items.slice(0, 2) }));
+  .slice(0, 1)
+  .map((block) => ({ ...block, items: block.items.slice(0, 3) }));
 
 /* The anchor's four strip slots, in its order and with its icons. Slot 2 is its
    "Works Anywhere", slot 3 its "Smart & Adaptive", slot 4 its "Track Progress".
@@ -84,22 +84,22 @@ const FEATURES: readonly {
     id: 'park-first',
     title: 'Park-First',
     body: 'Built around benches, bars, steps and open ground.',
-    icon: 'park',
+    icon: 'tree',
   },
   {
     title: 'No Equipment? No Problem.',
     body: 'No usable park setup? MoveHere builds a no-equipment session instead.',
-    icon: 'person',
+    icon: 'equipment',
   },
   {
     title: 'Smart About What’s There',
     body: 'Sessions use the features you confirmed and the conditions you report.',
-    icon: 'adaptive',
+    icon: 'brain',
   },
   {
     title: 'Fits Your Time',
     body: '10, 20, 30 or 45 minutes.',
-    icon: 'progress',
+    icon: 'time',
   },
 ];
 
@@ -122,13 +122,13 @@ const BENEFITS: readonly {
 export default function LandingPage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden pb-36 pt-14 sm:pt-20 lg:pb-52">
+      <section className="relative isolate overflow-hidden pb-36 pt-14 sm:pt-20 xl:pb-52">
         {/* The photograph is the composition, not an illustration beside it: a
             full-height plane bleeding off the right edge, with the content field
             dissolving into it rather than sitting in a second column. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[68%] lg:block"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[68%] xl:block"
         >
           <Image
             src={heroImage}
@@ -142,9 +142,9 @@ export default function LandingPage() {
         </div>
 
         <PageContainer measure="marketing-wide" className="relative">
-          <div className="max-w-xl lg:max-w-[36rem]">
+          <div className="max-w-xl xl:max-w-[36rem]">
             <p className="inline-flex items-center gap-2 rounded-full bg-park-tint px-3.5 py-1.5 text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-park-ink">
-              <span aria-hidden className="block size-1.5 rounded-full bg-park" />
+              <Icon name="leaf" size="xs" className="text-park" />
               Park-first workouts
             </p>
 
@@ -160,8 +160,27 @@ export default function LandingPage() {
               Venue-aware workouts built around the space and features you actually have.
             </p>
 
+          </div>
+
+          {/* Below xl the bleeding plane has nowhere to bleed to, so the
+              photograph becomes the proposition's immediate explanation: it
+              follows the headline and supporting line and precedes the steps
+              and controls. It used to sit after the trust line, which put the
+              product's one piece of evidence below everything it was meant to
+              justify. Full container measure rather than the copy column —
+              this is a hero element, not a content card. */}
+          <div className="mt-10 overflow-hidden rounded-2xl xl:hidden">
+            <Image
+              src={heroImage}
+              alt=""
+              sizes="(min-width: 640px) 92vw, 100vw"
+              className="aspect-[4/3] w-full object-cover object-[46%_42%] sm:aspect-[16/9]"
+            />
+          </div>
+
+          <div className="mt-10 max-w-xl xl:mt-9 xl:max-w-[36rem]">
             {/* This row is How It Works. There is no second one. */}
-            <div className="mt-9">
+            <div>
               <LoopSteps id="how-it-works" />
             </div>
 
@@ -170,9 +189,11 @@ export default function LandingPage() {
                   spans the column. Here two CTAs sit side by side. */}
               <ActionLink href="/park" variant="accent" full={false}>
                 Start Your Workout
+                <Icon name="chevron" size="xs" />
               </ActionLink>
               <ActionLink href="#how-it-works" variant="outline" full={false}>
                 See How It Works
+                <Icon name="play" size="xs" className="text-park" />
               </ActionLink>
             </div>
 
@@ -181,41 +202,27 @@ export default function LandingPage() {
               No gym membership. Just the park and the time you have.
             </p>
 
-            {/* Below lg the bleeding plane has nowhere to bleed to, so the
-                photograph becomes a card in the flow instead of vanishing. Text
-                first, image after: the proposition should not wait behind a
-                picture on a phone. */}
-            <div className="mt-10 overflow-hidden rounded-xl lg:hidden">
-              <Image
-                src={heroImage}
-                alt=""
-                aria-hidden
-                sizes="(min-width: 640px) 90vw, 100vw"
-                className="h-56 w-full object-cover object-[42%_45%] sm:h-72"
-              />
-            </div>
+
           </div>
 
-          {/* Lower-right and small, crossing the strip's top edge as in the
-              anchor. Subordinate by construction: two blocks, a narrow measure,
-              placed so the model keeps the optical centre. */}
-          <div className="pointer-events-none absolute -bottom-20 right-[6.5rem] hidden w-[14.5rem] xl:block">
-            <SessionPreview
-              minutes={PREVIEW_MINUTES}
-              goal={PREVIEW_GOAL}
-              goalLabel="Strength"
-              blocks={heroPreviewBlocks}
-              compact
-            />
-          </div>
         </PageContainer>
       </section>
 
       {/* Lifted over the hero boundary so the photograph, the strip and the
           preview read as one plane. The overlap is the composition. */}
       <section id="features" className="relative z-10 -mt-28 scroll-mt-24 lg:-mt-36">
-        <PageContainer measure="marketing-wide">
-          <ul className="grid rounded-[2rem] border border-line bg-park-panel px-2 py-8 shadow-float sm:grid-cols-2 lg:grid-cols-4">
+        <PageContainer measure="marketing-wide" className="relative">
+          {/* A fifth, empty grid track — but only from xl, which is where the
+              preview it exists for actually renders. It used to start at lg,
+              so between 1024 and 1279 the strip reserved 216px for a card that
+              was hidden: four columns squeezed from 240px to 183px beside dead
+              space. A lane and the thing it holds have to share a breakpoint.
+
+              The anchor does not give its four columns equal usable width — the
+              phone occupies a lane on the right and the fourth column's copy is
+              visibly narrower for it. Reserving that lane is what lets the
+              preview cross the strip without ever covering a column's content. */}
+          <ul className="grid rounded-[2rem] border border-line bg-park-panel px-2 py-8 shadow-float sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-[repeat(4,1fr)_13.5rem]">
             {FEATURES.map((feature, index) => (
               <li
                 key={feature.title}
@@ -240,6 +247,21 @@ export default function LandingPage() {
               </li>
             ))}
           </ul>
+
+          {/* Sits in the reserved lane and crosses the strip in both
+              directions — above its top edge and below its bottom — which is
+              the relationship the anchor establishes. Resting it on the top
+              edge, as the previous build did, read as a card dropped onto the
+              panel rather than a layer passing through it. */}
+          <div className="pointer-events-none absolute -top-14 right-[4.25rem] hidden w-[13.5rem] xl:block">
+            <SessionPreview
+              minutes={PREVIEW_MINUTES}
+              goal={PREVIEW_GOAL}
+              goalLabel="Strength"
+              blocks={heroPreviewBlocks}
+              compact
+            />
+          </div>
         </PageContainer>
       </section>
 

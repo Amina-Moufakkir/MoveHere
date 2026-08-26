@@ -82,7 +82,7 @@ export function MarketingNav() {
         <div className="flex items-center gap-2">
           <Link
             href="/park"
-            className="hidden h-11 items-center justify-center rounded-full bg-park px-5 text-[0.9375rem] font-extrabold text-cloud transition-colors duration-(--duration-quick) hover:bg-park-hover md:inline-flex"
+            className="hidden h-11 items-center justify-center rounded-[0.8125rem] bg-park px-5 text-[0.9375rem] font-extrabold text-cloud transition-colors duration-(--duration-quick) hover:bg-park-hover md:inline-flex"
           >
             Get Started
           </Link>
@@ -128,7 +128,7 @@ export function MarketingNav() {
             <Link
               href="/park"
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex h-14 items-center justify-center rounded-full bg-park px-6 text-lg font-extrabold text-cloud"
+              className="mt-2 inline-flex h-14 items-center justify-center rounded-[0.875rem] bg-park px-6 text-lg font-extrabold text-cloud"
             >
               Get Started
             </Link>

@@ -124,61 +124,129 @@ export const goalMarkFor = (goal: SessionGoal): GoalMark => GOAL_MARKS[goal];
 /**
  * Marketing pictograms.
  *
- * The same 24-grid, the same stroke, the same open forms as the feature glyphs
- * above — deliberately, because the landing page had drifted to four different
- * stroke weights (1.75, 1.8, 1.9, 2.25) and three optical sizes across four
- * files. Icons drawn to different weights read as borrowed from different
- * places, which is precisely what a brand surface cannot afford.
+ * The same 24-grid and the same stroke as the feature glyphs above — the
+ * landing page had drifted to four stroke weights across four files, and icons
+ * drawn to different weights read as borrowed from different places.
  *
- * Here rather than in a web component for the same reason the feature glyphs
- * are here: path data is platform-neutral, and a mark that exists in only one
- * client is a mark that will diverge. No icon dependency is added, and none is
- * needed — these are ten short paths.
+ * **These are drawn from the approved anchor, not invented to fit a label.**
+ * An earlier set was internally consistent and wrong: a generic check, clock,
+ * list and flag where the anchor shows a pin, a dumbbell, a convergence mark
+ * and a circled check. Consistency is necessary and not sufficient — a coherent
+ * set that resembles nothing in the design is still a miss.
  *
- * Keyed by role rather than by picture. `complete` may stop being a flag; it
- * will not stop being completion.
+ * Where the anchor's picture would assert something MoveHere cannot do, the
+ * metaphor moves and the drawing style stays. The anchor pairs a person with
+ * "Works Anywhere"; our slot says "No Equipment? No Problem.", so it takes the
+ * anchor's own equipment bag instead. Current semantics beat slot identity.
+ *
+ * A few marks carry filled shapes — the pin's dot, the badge leaf, the play
+ * triangle — because the anchor draws them filled and an outlined version reads
+ * as a different mark at 14-28px.
+ *
+ * Keyed by role rather than by picture. `complete` may stop being a circled
+ * check; it will not stop being completion.
  */
 export type MarketingGlyph =
-  | 'confirm'
+  | 'place'
   | 'time'
-  | 'workout'
+  | 'dumbbell'
   | 'complete'
-  | 'park'
+  | 'substitute'
+  | 'tree'
   | 'person'
-  | 'adaptive'
+  | 'brain'
   | 'progress'
   | 'equipment'
   | 'goal'
-  | 'trust';
+  | 'trust'
+  | 'leaf'
+  | 'chevron'
+  | 'play';
 
-export const MARKETING_GLYPH_PATHS: Record<MarketingGlyph, readonly string[]> = {
-  /* Hero — the four steps of the loop. */
-  confirm: ['M20.5 6.5 9.5 17.5 4 12'],
-  time: ['M12 3.5a8.5 8.5 0 1 1 0 17 8.5 8.5 0 0 1 0-17z', 'M12 7.2V12l3.2 2.1'],
-  workout: ['M4 7h11', 'M4 12h16', 'M4 17h8'],
-  complete: ['M6 20.5V4', 'M6 4.5h11.5l-2.6 4 2.6 4H6'],
+export interface GlyphDef {
+  /** Drawn with the shared stroke. */
+  readonly stroke?: readonly string[];
+  /** Drawn filled, for marks the anchor draws solid. */
+  readonly fill?: readonly string[];
+}
 
-  /* Strip — a tree with a trunk, not a lollipop: the crown is three arcs so it
-     survives at 24px, where a single circle reads as a balloon. */
-  park: ['M12 21v-5.5', 'M12 15.5a5.2 5.2 0 0 0 4.2-8.2 4.4 4.4 0 0 0-8.4 0A5.2 5.2 0 0 0 12 15.5z'],
-  person: ['M12 4.2a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8z', 'M4.8 20.2a7.2 7.2 0 0 1 14.4 0'],
-  /* Two lobes and a midline. Drawn to fill the grid: an earlier version sat at
-     roughly half scale and read as a blob beside four icons that did not. */
-  adaptive: [
-    'M12 4.4a3.9 3.9 0 0 0-3.8 3 3.4 3.4 0 0 0-1.7 6.1A3.6 3.6 0 0 0 9.9 20a3.3 3.3 0 0 0 2.1-.8z',
-    'M12 4.4a3.9 3.9 0 0 1 3.8 3 3.4 3.4 0 0 1 1.7 6.1A3.6 3.6 0 0 1 14.1 20a3.3 3.3 0 0 1-2.1-.8z',
-    'M12 4.4v14.8',
-  ],
-  progress: ['M4 20h16', 'M7.5 20v-5', 'M12 20V9.5', 'M16.5 20v-8'],
+const CIRCLE = 'M12 3.5a8.5 8.5 0 1 1 0 17 8.5 8.5 0 0 1 0-17z';
 
-  /* Lower benefit row. */
-  equipment: ['M4.5 8.5h15l-1.1 11.2H5.6z', 'M9 8.5V6.4a3 3 0 0 1 6 0v2.1'],
-  goal: [
-    'M12 3.6a8.4 8.4 0 1 1 0 16.8 8.4 8.4 0 0 1 0-16.8z',
-    'M12 8.2a3.8 3.8 0 1 1 0 7.6 3.8 3.8 0 0 1 0-7.6z',
-  ],
+export const MARKETING_GLYPHS: Record<MarketingGlyph, GlyphDef> = {
+  /* Hero. The anchor's teardrop with a solid centre — an outlined dot reads as
+     a ring and loses the pin. */
+  place: {
+    stroke: ['M12 21.2s6.6-6.3 6.6-10.7a6.6 6.6 0 1 0-13.2 0c0 4.4 6.6 10.7 6.6 10.7z'],
+    fill: ['M12 8a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z'],
+  },
+  time: { stroke: [CIRCLE, 'M12 7.3V12l3.3 2.2'] },
+  /* Two plates a side and a bar. The anchor's is angled; horizontal survives
+     24px with the same read. */
+  dumbbell: {
+    stroke: ['M3.4 9.6v4.8', 'M6.6 7.4v9.2', 'M17.4 7.4v9.2', 'M20.6 9.6v4.8', 'M6.6 12h10.8'],
+  },
+  complete: { stroke: [CIRCLE, 'M8 12.2l2.8 2.8L16.2 9.6'] },
+  /* Four marks converging on a centre: the anchor's substitution glyph. Unused
+     while no step says "substitutions" — kept because the anchor defines it. */
+  substitute: {
+    stroke: [
+      'M12 3.6v4.2', 'M12 16.2v4.2', 'M3.6 12h4.2', 'M16.2 12h4.2',
+      'M6.6 6.6l2.2 2.2', 'M17.4 17.4l-2.2-2.2', 'M17.4 6.6l-2.2 2.2', 'M6.6 17.4l2.2-2.2',
+    ],
+  },
 
-  /* The trust line's shield. Not a marketing claim — it marks the sentence that
-     says what MoveHere does not ask of you. */
-  trust: ['M12 3l7.5 3v5.5c0 4.3-3 8.2-7.5 9.5-4.5-1.3-7.5-5.2-7.5-9.5V6z'],
+  /* Strip. Three overlapping crowns and a trunk — the anchor's tree is bushy,
+     and one circle on a stick reads as a lollipop. */
+  tree: {
+    stroke: [
+      'M12 21.2v-5.4',
+      'M9.1 9.9a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8z',
+      'M14.9 9.9a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8z',
+      'M12 6a3.7 3.7 0 1 1 0 7.4A3.7 3.7 0 0 1 12 6z',
+    ],
+  },
+  person: {
+    stroke: ['M12 4.4a3.7 3.7 0 1 1 0 7.4 3.7 3.7 0 0 1 0-7.4z', 'M4.9 20.4a7.1 7.1 0 0 1 14.2 0'],
+  },
+  brain: {
+    stroke: [
+      'M12 4.4a3.9 3.9 0 0 0-3.8 3 3.4 3.4 0 0 0-1.7 6.1A3.6 3.6 0 0 0 9.9 20a3.3 3.3 0 0 0 2.1-.8z',
+      'M12 4.4a3.9 3.9 0 0 1 3.8 3 3.4 3.4 0 0 1 1.7 6.1A3.6 3.6 0 0 1 14.1 20a3.3 3.3 0 0 1-2.1-.8z',
+      'M12 4.4v14.8',
+    ],
+  },
+  /* Rising bars under a rising arrow. Held for the moment Track Progress is
+     CURRENT; the slot that will carry it says "Fits Your Time" today and takes
+     the clock instead. */
+  progress: {
+    stroke: ['M4.6 20.4v-4.2', 'M9.4 20.4v-7', 'M14.2 20.4v-4', 'M4.2 12.4 9.4 7.2l3.4 3.4L19.6 4', 'M15.4 4h4.2v4.2'],
+  },
+
+  /* Lower row. Bag body, handle, and the small chevron the anchor draws inside. */
+  equipment: {
+    stroke: [
+      'M4.7 8.5h14.6l-1 11.3a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4z',
+      'M9 8.5V6.7a3 3 0 0 1 6 0v1.8',
+      'M10.3 12.4l1.7 1.7 1.7-1.7',
+    ],
+  },
+  /* Concentric rings broken where the arrow enters, so the shaft reads as
+     passing through rather than sitting on top. */
+  goal: {
+    stroke: [
+      'M13.4 3.7a8.4 8.4 0 1 0 6.9 6.9',
+      'M12.4 8.3a3.8 3.8 0 1 0 3.3 3.3',
+      'M12 12l6.6-6.6',
+      'M15.4 5.4h3.6V9',
+    ],
+  },
+  trust: { stroke: ['M12 3l7.5 3v5.5c0 4.3-3 8.2-7.5 9.5-4.5-1.3-7.5-5.2-7.5-9.5V6z'] },
+
+  /* Badge and CTAs. Filled, as the anchor draws them. */
+  leaf: {
+    fill: ['M20.2 3.8c.4 8.4-4 13.6-10.4 13.6-1.2 0-2.3-.2-3.2-.5C8.2 9.6 13 5.4 20.2 3.8z'],
+    stroke: ['M5.4 20.6c1.2-3.4 3.4-6.5 6.4-9'],
+  },
+  chevron: { stroke: ['M9.5 5.5 16 12l-6.5 6.5'] },
+  play: { fill: ['M8.5 5.4v13.2L19 12z'] },
 };

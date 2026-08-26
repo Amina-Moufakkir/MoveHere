@@ -12,7 +12,7 @@ import type { ComponentProps, ReactNode } from 'react';
 type Variant = 'primary' | 'soft' | 'quiet' | 'accent' | 'outline';
 
 const base =
-  'inline-flex h-[66px] items-center justify-center gap-2 rounded-full px-8 text-lg font-extrabold ' +
+  'inline-flex h-[66px] items-center justify-center gap-2 px-8 text-lg font-extrabold ' +
   'tracking-[-0.01em] transition-[transform,background-color,border-color] duration-(--duration-quick) ' +
   'ease-(--ease-spring) active:scale-[0.985] disabled:pointer-events-none disabled:opacity-100 ' +
   'disabled:bg-pale disabled:text-navy-faint';
@@ -43,8 +43,30 @@ const variants: Record<Variant, string> = {
   outline: 'border border-park-edge-strong bg-cloud text-navy hover:border-park hover:text-park-ink',
 };
 
+/**
+ * Corner radius is a property of the surface, not of the control.
+ *
+ * The session flow's controls are capsules — they read as physical things you
+ * press, which is the right register mid-workout. The anchor's marketing CTAs
+ * are not: they are softened rectangles at roughly 15px, and a full capsule at
+ * tablet width reads as a lozenge rather than a button.
+ *
+ * Scoped by variant rather than by a new prop or a changed default, so the
+ * marketing surface cannot drift the flow's geometry and a caller cannot mix
+ * the two by accident.
+ */
+const RADIUS: Record<Variant, string> = {
+  primary: 'rounded-full',
+  soft: 'rounded-full',
+  quiet: 'rounded-full',
+  accent: 'rounded-[0.9375rem]',
+  outline: 'rounded-[0.9375rem]',
+};
+
 const classes = (variant: Variant, full: boolean, className?: string) =>
-  [base, variants[variant], full ? 'w-full' : '', className].filter(Boolean).join(' ');
+  [base, RADIUS[variant], variants[variant], full ? 'w-full' : '', className]
+    .filter(Boolean)
+    .join(' ');
 
 interface Shared {
   readonly variant?: Variant;
