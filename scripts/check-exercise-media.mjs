@@ -14,6 +14,14 @@
  *
  * Static rather than importing the registry: it lives in the native client and
  * `require`s image assets, which is bundler semantics this cannot run.
+ *
+ * **Two clients now hold the same rows**, because Metro resolves `require` and
+ * Next resolves a static import, and no single expression means both. The
+ * identities and the aspect ratios could drift silently, and so could the alt
+ * text — a description of a photograph, edited on one client, reviewed on
+ * neither. So this gate reads both and asserts they agree: same set of
+ * identities, same alt string per composition. The duplication is allowed to
+ * exist because it cannot survive being wrong.
  */
 
 import { existsSync, readFileSync } from 'node:fs';
@@ -189,6 +197,98 @@ for (const { exerciseId, featureId } of entries) {
     continue;
   }
   console.log(`  ok    ${exerciseId} @ ${featureId}`);
+}
+
+
+/* ---------------------------------------------------- cross-client parity */
+
+/**
+ * The web registry declares the same content with different asset syntax.
+ *
+ * Compared on what a reader would notice: which movement-and-feature pairs are
+ * illustrated, and what each composition's alt text says. Asset paths are not
+ * compared — the two clients legitimately reference the same files differently.
+ */
+const WEB_REGISTRY = 'app/workout/exercise-visuals.ts';
+
+const altsIn = (source) => {
+  const declared = /const VISUALS[^=]*=\s*\[/.exec(source);
+  if (declared === null) return null;
+  const body = source.slice(declared.index, source.indexOf('\n];', declared.index));
+  const out = new Map();
+  let depth = 0;
+  let start = -1;
+  for (let i = 0; i < body.length; i++) {
+    if (body[i] === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (body[i] === '}') {
+      depth--;
+      if (depth === 0 && start >= 0) {
+        const row = body.slice(start, i + 1);
+        const ex = /exerciseId:\s*'([^']+)'/.exec(row);
+        const ft = /featureId:\s*(?:'([^']+)'|null)/.exec(row);
+        if (ex !== null && ft !== null) {
+          const id = `${ex[1]}@${ft[1] ?? '-'}`;
+          out.set(id, [...row.matchAll(/alt:\s*'((?:[^'\\]|\\.)*)'/g)].map((m) => m[1]));
+        }
+        start = -1;
+      }
+    }
+  }
+  return out;
+};
+
+const nativeAlts = altsIn(source);
+const webSource = existsSync(new URL(`../${WEB_REGISTRY}`, import.meta.url))
+  ? readFileSync(WEB_REGISTRY, 'utf8')
+  : null;
+
+if (webSource === null) {
+  failed++;
+  console.log(`  FAIL  ${WEB_REGISTRY} — the web registry is missing`);
+} else {
+  const webAlts = altsIn(webSource);
+  if (webAlts === null) {
+    failed++;
+    console.log(`  FAIL  ${WEB_REGISTRY} — could not find the VISUALS array`);
+  } else {
+    for (const id of nativeAlts.keys()) {
+      if (!webAlts.has(id)) {
+        failed++;
+        console.log(`  FAIL  ${id} — illustrated on native, missing from the web registry`);
+      }
+    }
+    for (const id of webAlts.keys()) {
+      if (!nativeAlts.has(id)) {
+        failed++;
+        console.log(`  FAIL  ${id} — illustrated on web, missing from the native registry`);
+      }
+    }
+    for (const [id, native] of nativeAlts) {
+      const web = webAlts.get(id);
+      if (web === undefined) continue;
+      if (native.length !== web.length) {
+        failed++;
+        console.log(
+          `  FAIL  ${id} — ${native.length} composition(s) on native, ${web.length} on web`,
+        );
+        continue;
+      }
+      native.forEach((alt, i) => {
+        if (alt !== web[i]) {
+          failed++;
+          console.log(`  FAIL  ${id} — alt text ${i + 1} differs between the two clients`);
+        }
+      });
+    }
+    /* A count, not a verdict — the FAIL lines above decide the exit code, and a
+       summary that says "agree" while failures print is a line that lies on
+       exactly the run someone needs to read. */
+    console.log(
+      `  ${nativeAlts.size} illustrated identities cross-checked against the web registry`,
+    );
+  }
 }
 
 console.log(
