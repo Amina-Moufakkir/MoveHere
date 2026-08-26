@@ -7,18 +7,21 @@
 
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildInput, generateFor, MATRIX, PROGRAMMING } from '../../src/programming/session-builder.ts';
+import { buildInput, generateFor, MATRIX, PROGRAMMING, generateFromView } from '../../src/programming/session-builder.ts';
 import { assessmentFor } from '../../src/programming/conditions.ts';
 import { readSession, writeSession, clearSession } from '../../lib/session-store.ts';
-import type { SessionRecord } from '../../lib/session-store.ts';
+import type { ActiveSessionRecord } from '../../lib/session-store.ts';
 import {
   candidatesFrom,
   commitConfirmations,
 } from '../../lib/venue-store.ts';
-import { applyCorrection } from '../../src/domain/confirmation.ts';
+import { applyCorrection, projectGenerationView } from '../../src/domain/confirmation.ts';
 import type { ConfirmationDecision, ConfirmedVenueInventory } from '../../src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '../../src/domain/feature.ts';
 import type { SessionGenerationOutput } from '../../src/domain/session.ts';
+import { createActivityStore } from '../../src/storage/activity-store.ts';
+import { createMemoryStorage } from '../../src/storage/port.ts';
+import { buildActivityRecord } from '../../src/domain/activity-snapshot.ts';
 
 const NOW = '2026-08-21T12:00:00Z';
 
@@ -168,47 +171,65 @@ test('marking a feature unusable changes the next session without deleting it', 
   );
 });
 
-test('session state round-trips, and corrupt state fails closed', () => {
+test('active-session state round-trips, and cleared state is no session', () => {
   clearSession();
   assert.equal(readSession(), null);
 
-  const record: SessionRecord = {
+  const record: ActiveSessionRecord = {
+    sessionId: 'w-abc',
     seed: 'abc',
     minutes: 20,
     goal: 'conditioning',
     conditions: 'acceptable',
     done: 2,
-    completedAt: null,
-    summary: null,
+    frozenView: null,
   };
   writeSession(record);
   assert.deepEqual(readSession(), record);
 
-  // Progress and completion survive, and so does what the session actually was.
-  const summary = { movements: 7, featuresUsed: ['stairs'], wasSubstitute: false };
-  writeSession({ ...record, done: 5, completedAt: NOW, summary });
+  // Progress survives. Completion does not live here any more (§24.3): the
+  // active-session store represents unfinished work only, so there is no
+  // completedAt to round-trip and no summary to disagree with history.
+  writeSession({ ...record, done: 5 });
   assert.equal(readSession()?.done, 5);
-  assert.equal(readSession()?.completedAt, NOW);
-  assert.deepEqual(readSession()?.summary, summary);
 
   clearSession();
   assert.equal(readSession(), null, 'cleared state is no session, not stale session');
 });
 
 test('a completed session is a record, not a live derivation', () => {
-  // A correction after completion must not rewrite what was just done. The
-  // summary is snapshotted at completion; only the NEXT session changes.
+  // Unchanged in intent, moved in mechanism. The completed session used to be a
+  // flag on the active record and was therefore reachable, re-finishable and
+  // rewritable. It is now an immutable Activity record, and the active store
+  // cannot represent it at all.
   clearSession();
-  const record: SessionRecord = {
+
+  const active: ActiveSessionRecord = {
+    sessionId: 'w-done',
     seed: 'done-seed',
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 7,
-    completedAt: NOW,
-    summary: { movements: 7, featuresUsed: ['stairs'], wasSubstitute: false },
+    done: 0,
+    frozenView: projectGenerationView(inventoryWith(['stairs'])),
   };
-  writeSession(record);
+
+  const workout = generateFromView({
+    view: active.frozenView,
+    minutes: active.minutes,
+    goal: active.goal,
+    conditions: active.conditions,
+    seed: active.seed,
+  });
+  assert.notEqual(workout, null);
+  if (workout === null) return;
+
+  const store = createActivityStore(createMemoryStorage());
+  const completed = buildActivityRecord(active, workout, { at: NOW, localDate: '2026-08-26' });
+  assert.notEqual(completed, null);
+  if (completed === null) return;
+  store.append(completed);
+  const before = JSON.parse(JSON.stringify(store.findById(completed.recordId))) as unknown;
 
   // The venue changes underneath it.
   const corrected = applyCorrection(inventoryWith(['stairs']), {
@@ -226,8 +247,8 @@ test('a completed session is a record, not a live derivation', () => {
 
   // The next session reflects the correction...
   assert.equal(next?.kind, 'substitute-session');
-  // ...while the completed record still says what it was.
-  assert.deepEqual(readSession()?.summary, record.summary);
+  // ...while the completed record still says exactly what it was.
+  assert.deepEqual(store.findById(completed.recordId), before);
   clearSession();
 });
 

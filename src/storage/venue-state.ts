@@ -112,3 +112,28 @@ export const commitConfirmations = (
 
   return confirmInventory({ venueId: VENUE_ID, candidates, confirmations, at: now });
 };
+
+/**
+ * Restores confirmation decisions from recorded authority.
+ *
+ * Revisiting confirmation used to start blank, so continuing replaced a
+ * populated inventory with an empty one — a confirmed park erased by an
+ * ordinary back-navigation, with the destructive path sitting under the primary
+ * action.
+ *
+ * Only `present` decisions ever produce a confirmed feature, so a feature
+ * recorded in the inventory *is* a recorded Yes and may be shown as one. That
+ * is the whole rule: **reconstruct from recorded authority, never invent it**.
+ * A candidate that has merely been proposed restores nothing, because the
+ * precision-over-recall default (Invariant 4) governs a first pass and this must
+ * not become a way of answering on the user's behalf.
+ */
+export const restoreDecisions = (
+  inventory: ConfirmedVenueInventory | null,
+): ReadonlyMap<SupportedFeatureId, ConfirmationDecision> => {
+  const restored = new Map<SupportedFeatureId, ConfirmationDecision>();
+  for (const feature of inventory?.features ?? []) {
+    restored.set(feature.featureId, 'present');
+  }
+  return restored;
+};

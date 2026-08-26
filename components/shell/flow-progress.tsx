@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { FLOW_STEPS } from '@/components/shell/flow';
+import { FLOW_STEPS, flowIndexFor, stageStateFor } from '@/components/shell/flow';
+import type { FlowFacts } from '@/components/shell/flow';
 
 /**
  * Where you are in this session's flow.
@@ -30,14 +31,25 @@ import { FLOW_STEPS } from '@/components/shell/flow';
  * product depends on — but jumping forward into a session that has not been
  * built yet only lands on an empty state.
  */
-export function FlowProgress({ activeIndex }: { readonly activeIndex: number }) {
+export function FlowProgress({
+  pathname,
+  facts,
+}: {
+  readonly pathname: string;
+  readonly facts: FlowFacts;
+}) {
+  const activeIndex = flowIndexFor(pathname);
   return (
     <nav aria-label="Session progress">
       <ol className="flex items-center gap-1.5 sm:gap-2">
         {FLOW_STEPS.map((step, index) => {
-          const isCurrent = index === activeIndex;
-          const isDone = index < activeIndex;
-          const state = isCurrent ? ' (current step)' : isDone ? ' (completed)' : ' (not started)';
+          /* State comes from what the user has actually done, not from where
+             they are standing (§24.14). Deriving "completed" from route order
+             let a cold deep link claim three finished stages. */
+          const stage = stageStateFor(index, pathname, facts);
+          const isCurrent = stage === 'current-view';
+          const isDone = stage === 'reached';
+          const state = isCurrent ? ' (current step)' : isDone ? ' (reached)' : ' (not started)';
 
           const bar = (
             <span

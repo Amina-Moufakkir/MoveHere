@@ -2,6 +2,7 @@ import { Manrope } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { SiteHeader } from '@/components/shell/site-header';
+import { RouteFocus } from '@/components/shell/route-focus';
 import { VenueProvider } from '@/components/venue/venue-provider';
 import { SiteFooter } from '@/components/shell/site-footer';
 import './globals.css';
@@ -38,6 +39,7 @@ export default function RootLayout({ children }: { readonly children: ReactNode 
     <html lang="en" className={manrope.variable}>
       <body className="flex min-h-dvh flex-col">
         <VenueProvider>
+        <RouteFocus />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-navy focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:uppercase focus:tracking-(--text-marker--letter-spacing) focus:text-cloud"

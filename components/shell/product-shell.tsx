@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PageContainer } from '@/components/shell/page-container';
 import { Wordmark } from '@/components/brand/wordmark';
-import { FLOW_STEPS, flowIndexFor } from '@/components/shell/flow';
+import { FLOW_STEPS, flowIndexFor, normalizePath } from '@/components/shell/flow';
+import type { FlowFacts } from '@/components/shell/flow';
+import { useVenue } from '@/components/venue/venue-provider';
 import { FlowProgress } from '@/components/shell/flow-progress';
 
 /**
@@ -29,6 +31,19 @@ export function ProductShell() {
   const pathname = usePathname();
   const activeIndex = flowIndexFor(pathname);
   const current = activeIndex >= 0 ? FLOW_STEPS[activeIndex] : undefined;
+  const { candidates, inventory, session } = useVenue();
+
+  /* The facts the meter is allowed to read. Assembled here because this is the
+     only place that has both the route and the session state (§24.14). */
+  const facts: FlowFacts = {
+    hasCandidates: candidates.length > 0,
+    hasInventory: (inventory?.features.length ?? 0) > 0,
+    hasActiveSession: session !== null,
+    /* The recap renders from a completed record, and by then the session has
+       already been cleared — so on that route the route itself is the evidence
+       that a completion just happened. */
+    hasCompletedRecord: normalizePath(pathname) === '/complete',
+  };
 
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-cloud/85 backdrop-blur-sm">
@@ -52,7 +67,7 @@ export function ProductShell() {
             >
               {current.label}
             </span>
-            <FlowProgress activeIndex={activeIndex} />
+            <FlowProgress pathname={pathname} facts={facts} />
           </div>
         )}
       </PageContainer>

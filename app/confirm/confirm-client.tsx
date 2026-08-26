@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { Action, ActionLink } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { useVenue } from '@/components/venue/venue-provider';
+import { restoreDecisions } from '@/src/storage/venue-state.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { ConfirmationDecision } from '@/src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
@@ -25,7 +26,7 @@ const DECISIONS: readonly { value: ConfirmationDecision; label: string }[] = [
 
 export function ConfirmClient() {
   const router = useRouter();
-  const { candidates, confirm } = useVenue();
+  const { candidates, confirm, inventory } = useVenue();
   /**
    * Starts empty. Absence is meaningful.
    *
@@ -36,8 +37,22 @@ export function ConfirmClient() {
    * physical risk. An unanswered candidate carries no entry here and reaches
    * the confirmation contract's own `?? 'unsure'` default.
    */
+  /**
+   * Restored from recorded authority, never inferred from candidate presence.
+   *
+   * Starting blank meant that revisiting this screen and continuing replaced a
+   * populated inventory with an empty one — the confirmed park erased by an
+   * ordinary back-navigation, with the destructive path sitting under the
+   * primary action. Only `present` decisions ever produce a confirmed feature,
+   * so a feature recorded in the inventory *is* a recorded Yes and may be shown
+   * as one.
+   *
+   * A candidate that is merely proposed restores nothing. The precision-over-
+   * recall default (Invariant 4) governs a first pass, and this must not become
+   * a way of answering on the user's behalf.
+   */
   const [decisions, setDecisions] = useState<ReadonlyMap<SupportedFeatureId, ConfirmationDecision>>(
-    () => new Map(),
+    () => restoreDecisions(inventory),
   );
 
   // Same order as /park, so the review reads as a continuation rather than a

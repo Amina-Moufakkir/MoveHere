@@ -59,7 +59,7 @@ export const DAYLIGHT_PALETTE = {
 
   navy: { light: '#0B1220', dark: '#F5F7FA' },
   navyMuted: { light: '#5A6478', dark: '#9AA4B8' },
-  navyFaint: { light: '#79839A', dark: '#7A8496' },
+  navyFaint: { light: '#656F86', dark: '#7A8496' },
 
   /* A saturated athletic blue, not a greyed denim. It is the only colour doing
      real work: primary action, current choice, and — as blueVivid — the

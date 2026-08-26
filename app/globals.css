@@ -32,7 +32,12 @@
      · white on green-deep #1a7846 is 5.50:1 — the fill that carries text
      · green #1f8a52 is 4.36:1 with white, so it marks and fills but never
        sits behind small text
-     · navy-faint is 3.9:1 — large text and UI only; body copy uses navy-muted
+     · navy-faint is 5.03:1 on white and 4.53:1 on the darkest light surface —
+       it carries normal text, including the §9 safety statements in the footer.
+       It was #79839A (3.80:1) and the note here said "large text and UI only",
+       which the product did not honour: the safety copy, the completion fact
+       labels and the setup legends were all normal-weight or small bold text in
+       it. The value moved rather than the claim being restated.
 --------------------------------------------------------------------------- */
 
 @theme {
@@ -45,7 +50,7 @@
 
   --color-navy: light-dark(#0B1220, #F5F7FA);
   --color-navy-muted: light-dark(#5A6478, #9AA4B8);
-  --color-navy-faint: light-dark(#79839A, #7A8496);
+  --color-navy-faint: light-dark(#656F86, #7A8496);
 
   /* A greyed dusk-sky denim rather than a saturated signal blue, so the
      primary can carry a label without shouting. */

@@ -35,3 +35,22 @@ export const makeSeed = (at: number): string => {
   sequence = (sequence + 1) % 0x10000;
   return `s-${Math.trunc(at).toString(36)}-${sequence.toString(36)}`;
 };
+
+/**
+ * Mints a stable identity for one attempt at a workout.
+ *
+ * Separate from the seed on purpose. The seed is generation machinery; this is
+ * the identity a completed Activity record derives its identifier from (§24.6),
+ * and the two must not be the same value or the record's identity would be a
+ * claim about how the workout was generated.
+ *
+ * Same shape, same constraints: caller-supplied time, no clock and no
+ * randomness inside shared source, and a wrapping sequence so two identities
+ * minted in the same millisecond still differ.
+ *
+ * @param at Milliseconds since the epoch, from the caller's clock.
+ */
+export const makeSessionId = (at: number): string => {
+  sequence = (sequence + 1) % 0x10000;
+  return `w-${Math.trunc(at).toString(36)}-${sequence.toString(36)}`;
+};

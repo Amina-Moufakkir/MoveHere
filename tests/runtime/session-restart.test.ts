@@ -13,11 +13,13 @@ import { test } from 'node:test';
 import { createVenueState, candidatesFrom, commitConfirmations } from '../../src/storage/venue-state.ts';
 import { createMemoryStorage } from '../../src/storage/port.ts';
 import { createSessionStore } from '../../src/storage/session-record.ts';
-import type { SessionRecord } from '../../src/storage/session-record.ts';
-import { applyCorrection } from '../../src/domain/confirmation.ts';
+import type { ActiveSessionRecord } from '../../src/storage/session-record.ts';
+import { applyCorrection, projectGenerationView } from '../../src/domain/confirmation.ts';
 import type { ConfirmationDecision } from '../../src/domain/confirmation.ts';
 import type { SupportedFeatureId } from '../../src/domain/feature.ts';
-import { generateFor } from '../../src/programming/session-builder.ts';
+import { generateFor, generateFromView } from '../../src/programming/session-builder.ts';
+import { createActivityStore } from '../../src/storage/activity-store.ts';
+import { buildActivityRecord } from '../../src/domain/activity-snapshot.ts';
 
 const AT = '2026-08-21T00:00:00.000Z';
 const LATER = '2026-08-21T12:00:00.000Z';
@@ -50,37 +52,88 @@ test('a session rebuilt from persisted bytes matches the one before the restart'
   );
 });
 
-test('progress and the seed survive a restart together', () => {
+test('progress, seed and frozen view survive a restart together', () => {
   const store = createSessionStore(createMemoryStorage());
-  const record: SessionRecord = {
+  const record: ActiveSessionRecord = {
+    sessionId: 'w-restart',
     seed: 'restart-seed',
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
     done: 3,
-    completedAt: null,
-    summary: null,
+    frozenView: projectGenerationView(inventoryWith(['park-bench', 'pull-up-bar'])),
   };
   store.write(record);
 
   const read = store.read();
-  assert.deepEqual(read, record, 'resuming mid-session must restore both the seed and the position');
   assert.equal(read?.done, 3, 'a restart must not silently restart the workout');
+  assert.equal(read?.seed, 'restart-seed');
+  assert.deepEqual(
+    [...(read?.frozenView?.usableFeatures ?? [])],
+    ['park-bench', 'pull-up-bar'],
+    'and the inputs it was generated from must come back with it, or resume is not faithful',
+  );
 });
 
-test('a correction after a restart still cannot rewrite the completed session', () => {
-  const inventory = inventoryWith(['park-bench', 'pull-up-bar']);
+test('a restart resumes the same workout, not an equivalent one', () => {
   const store = createSessionStore(createMemoryStorage());
-  const summary = { movements: 8, featuresUsed: ['park-bench', 'pull-up-bar'], wasSubstitute: false };
-  store.write({
+  const record: ActiveSessionRecord = {
+    sessionId: 'w-restart-2',
     seed: 'restart-seed',
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 8,
-    completedAt: LATER,
-    summary,
+    done: 3,
+    frozenView: projectGenerationView(inventoryWith(['park-bench', 'pull-up-bar'])),
+  };
+  store.write(record);
+
+  const shape = (r: ActiveSessionRecord | null) => {
+    if (r === null) return null;
+    const out = generateFromView({
+      view: r.frozenView,
+      minutes: r.minutes,
+      goal: r.goal,
+      conditions: r.conditions,
+      seed: r.seed,
+    });
+    return out === null || out.kind === 'not-generated'
+      ? null
+      : out.blocks.flatMap((b) => b.items.map((i) => String(i.exerciseId)));
+  };
+
+  assert.deepEqual(shape(store.read()), shape(record), 'bytes and memory must agree');
+});
+
+test('a correction after a restart still cannot rewrite the completed session', () => {
+  // Same guarantee as before, now carried by the Activity record rather than by
+  // a summary living on the active session — which is what made it rewritable.
+  const inventory = inventoryWith(['park-bench', 'pull-up-bar']);
+  const active: ActiveSessionRecord = {
+    sessionId: 'w-done',
+    seed: 'restart-seed',
+    minutes: 30,
+    goal: 'strength',
+    conditions: 'acceptable',
+    done: 0,
+    frozenView: projectGenerationView(inventory),
+  };
+  const workout = generateFromView({
+    view: active.frozenView,
+    minutes: active.minutes,
+    goal: active.goal,
+    conditions: active.conditions,
+    seed: active.seed,
   });
+  assert.notEqual(workout, null);
+  if (workout === null) return;
+
+  const activity = createActivityStore(createMemoryStorage());
+  const record = buildActivityRecord(active, workout, { at: LATER, localDate: '2026-08-26' });
+  assert.notEqual(record, null);
+  if (record === null) return;
+  activity.append(record);
+  const before = JSON.parse(JSON.stringify(activity.findById(record.recordId))) as unknown;
 
   const corrected = applyCorrection(inventory, {
     kind: 'feature-unusable',
@@ -91,8 +144,8 @@ test('a correction after a restart still cannot rewrite the completed session', 
   venue.save(corrected);
 
   assert.deepEqual(
-    store.read()?.summary,
-    summary,
+    activity.findById(record.recordId),
+    before,
     'the workout that was performed must keep naming the features it used — ' +
       'a later correction is a fact about the venue, not about the past session',
   );
@@ -100,25 +153,41 @@ test('a correction after a restart still cannot rewrite the completed session', 
 });
 
 test('a substitute completion stays labeled a substitute across a restart', () => {
-  const store = createSessionStore(createMemoryStorage());
-  store.write({
+  const active: ActiveSessionRecord = {
+    sessionId: 'w-sub',
     seed: 'restart-seed',
     minutes: 30,
     goal: 'strength',
     conditions: 'adverse',
-    done: 7,
-    completedAt: LATER,
-    summary: { movements: 7, featuresUsed: [], wasSubstitute: true },
+    done: 0,
+    frozenView: projectGenerationView(inventoryWith(['park-bench'])),
+  };
+  const workout = generateFromView({
+    view: active.frozenView,
+    minutes: active.minutes,
+    goal: active.goal,
+    conditions: active.conditions,
+    seed: active.seed,
   });
+  assert.equal(workout?.kind, 'substitute-session');
+  if (workout === null) return;
 
-  const read = store.read();
+  const storage = createMemoryStorage();
+  const activity = createActivityStore(storage);
+  const record = buildActivityRecord(active, workout, { at: LATER, localDate: '2026-08-26' });
+  assert.notEqual(record, null);
+  if (record === null) return;
+  activity.append(record);
+
+  /* A real restart: nothing in memory, only the bytes. */
+  const reread = createActivityStore(storage).findById(record.recordId);
   assert.equal(
-    read?.summary?.wasSubstitute,
-    true,
+    reread?.kind,
+    'substitute-session',
     'a substitute must never be presented as a park session, including after a reload (§11)',
   );
   assert.deepEqual(
-    read?.summary?.featuresUsed,
+    reread?.featuresUsed,
     [],
     'a substitute claims no confirmed features, so its record must claim none either',
   );

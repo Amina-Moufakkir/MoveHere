@@ -9,7 +9,6 @@ import type { ReportedConditions } from '@/src/programming/conditions.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SESSION_DURATIONS } from '@/src/domain/session.ts';
 import type { SessionGoal, SessionDuration } from '@/src/domain/session.ts';
-import { makeSeed } from '@/src/programming/seed.ts';
 import { PageHeading } from '@/components/shell/page-heading';
 import { PageContainer } from '@/components/shell/page-container';
 import { SelectableCard } from '@/components/ui/selectable-card';
@@ -53,7 +52,7 @@ const legendClass = 'text-sm font-extrabold uppercase tracking-(--text-marker--l
 
 export function SetupClient() {
   const router = useRouter();
-  const { inventory, loadOutcome, request, setRequest, startSession } = useVenue();
+  const { inventory, loadOutcome, request, setRequest, beginSession } = useVenue();
 
   const usable = (inventory?.features ?? []).filter((f) => f.usability.kind === 'usable');
   const venueBlind = request.conditions !== 'acceptable' || usable.length === 0;
@@ -212,8 +211,12 @@ export function SetupClient() {
             </p>
             <Action
               onClick={() => {
-                // A seed is minted here, once, and persisted with the session.
-                startSession(makeSeed(Date.now()));
+                /* The invariant lives in the provider, not here (§24.6). A
+                   refusal means unfinished work exists, and F1's non-destructive
+                   interim is to go to it rather than replace it — the approved
+                   resume/discard choice is a later stage's work, and doing
+                   nothing at all would leave the control looking broken. */
+                beginSession();
                 router.push('/workout');
               }}
             >

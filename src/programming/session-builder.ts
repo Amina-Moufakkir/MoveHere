@@ -22,7 +22,7 @@ import { projectGenerationView } from '../domain/confirmation.ts';
 import { seedFrom } from '../domain/prng.ts';
 import type { ValidatedMatrix } from '../domain/matrix-loader.ts';
 import type { FeasibleProgramming } from '../domain/feasibility.ts';
-import type { ConfirmedVenueInventory } from '../domain/confirmation.ts';
+import type { GenerationVenueView, ConfirmedVenueInventory } from '../domain/confirmation.ts';
 import type {
   SessionGenerationInput,
   SessionGenerationOutput,
@@ -77,16 +77,38 @@ export interface BuildArgs {
  * before generation ever sees them. A venue with no usable features becomes
  * environment-independent rather than an empty venue-aware context.
  */
-export const buildInput = (args: BuildArgs): SessionGenerationInput | null => {
+/**
+ * Generation inputs where the venue view is supplied rather than projected.
+ *
+ * An active session carries the view it was generated from (§24.6), so its
+ * regeneration reads a frozen value instead of live inventory. This is the
+ * shape that makes resume faithful: every input is immutable for the session's
+ * lifetime, so the workout stays derived without being liable to change
+ * underneath the user.
+ */
+export interface BuildFromViewArgs {
+  readonly view: GenerationVenueView | null;
+  readonly minutes: SessionDuration;
+  readonly goal: SessionGoal;
+  readonly conditions: ReportedConditions;
+  readonly seed: string;
+}
+
+export const buildInputFromView = (args: BuildFromViewArgs): SessionGenerationInput | null => {
   if (PROGRAMMING === null || MATRIX === null) return null;
   const availableMinutes = makeSessionMinutes(args.minutes);
   if (availableMinutes === null) return null;
 
-  const view = args.inventory === null ? null : projectGenerationView(args.inventory);
-  const hasVenue = view !== null && view.usableFeatures.length > 0;
+  /* Narrowed by control flow rather than asserted: `venue` is a branded trusted
+     value, and an assertion is exactly how one gets manufactured by accident. */
+  const view = args.view;
+  const context: SessionGenerationInput['context'] =
+    view !== null && view.usableFeatures.length > 0
+      ? { kind: 'venue-aware', venue: view }
+      : { kind: 'environment-independent' };
 
   return {
-    context: hasVenue ? { kind: 'venue-aware', venue: view } : { kind: 'environment-independent' },
+    context,
     policy: selectPolicy(PROGRAMMING, args.goal),
     matrix: MATRIX,
     availableMinutes,
@@ -94,6 +116,27 @@ export const buildInput = (args: BuildArgs): SessionGenerationInput | null => {
     seed: seedFrom(args.seed),
   };
 };
+
+/**
+ * Generation from a frozen view. The only path an active session uses.
+ */
+export const generateFromView = (args: BuildFromViewArgs): SessionGenerationOutput | null => {
+  const input = buildInputFromView(args);
+  return input === null ? null : generateSession(input);
+};
+
+/**
+ * Generation from live inventory. Used where a session is being *created* or
+ * previewed, never to re-derive one already in flight.
+ */
+export const buildInput = (args: BuildArgs): SessionGenerationInput | null =>
+  buildInputFromView({
+    view: args.inventory === null ? null : projectGenerationView(args.inventory),
+    minutes: args.minutes,
+    goal: args.goal,
+    conditions: args.conditions,
+    seed: args.seed,
+  });
 
 export const generateFor = (args: BuildArgs): SessionGenerationOutput | null => {
   const input = buildInput(args);

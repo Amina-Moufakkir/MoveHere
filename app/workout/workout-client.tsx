@@ -17,7 +17,6 @@ import {
 } from '@/src/presentation/instruction-copy.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
 import { doseText, prescriptionDisplay } from '@/src/presentation/prescription-copy.ts';
-import { makeSeed } from '@/src/programming/seed.ts';
 import { EmptyState } from '@/components/shell/empty-state';
 import { PageContainer } from '@/components/shell/page-container';
 import { exerciseVisualFor } from './exercise-visuals';
@@ -79,7 +78,7 @@ function useDarkAppearance(): boolean {
 
 export function WorkoutClient() {
   const router = useRouter();
-  const { session, workout, setDone, completeSession, startSession } = useVenue();
+  const { session, workout, setDone, finishSession } = useVenue();
   const dark = useDarkAppearance();
 
   const items = useMemo(
@@ -147,12 +146,15 @@ export function WorkoutClient() {
 
   const advance = () => {
     if (done + 1 >= total) {
-      setDone(total);
-      completeSession(new Date().toISOString(), {
-        movements: total,
-        featuresUsed: workout.kind === 'park-session' ? [...workout.featuresUsed] : [],
-        wasSubstitute: workout.kind === 'substitute-session',
-      });
+      /* One lifecycle operation, not two writes composed here. The provider
+         appends the immutable record and then clears the session (§24.6). */
+      const now = new Date();
+      const localDate = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, '0'),
+        String(now.getDate()).padStart(2, '0'),
+      ].join('-');
+      finishSession(now.toISOString(), localDate);
       router.push('/complete');
       return;
     }
@@ -371,18 +373,12 @@ export function WorkoutClient() {
             <span className="tabular-nums">{Math.max(total - done - 1, 0)} to go</span>
           </div>
 
-          <div className="flex items-center justify-between gap-3">
-            <ProjectContentNote className="flex-1" />
-            {!finished && (
-              <button
-                type="button"
-                onClick={() => startSession(makeSeed(Date.now()))}
-                className="min-h-11 shrink-0 rounded-full border border-line px-3 text-sm font-bold text-navy-muted transition-colors duration-(--duration-quick) hover:border-line-strong hover:text-navy"
-              >
-                Generate another
-              </button>
-            )}
-          </div>
+          {/* No generation control here. It sat inside the session it destroyed,
+              was shown only while that session was unfinished, and carried no
+              warning — a silent replacement path that contradicts the
+              one-active-session invariant. Building a different session is a
+              preparation decision (§24.6). */}
+          <ProjectContentNote />
           </div>
         </PageContainer>
       </section>

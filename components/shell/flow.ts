@@ -51,3 +51,61 @@ export const flowIndexFor = (pathname: string): number => {
 };
 
 export const isFlowRoute = (pathname: string): boolean => flowIndexFor(pathname) >= 0;
+
+/**
+ * What the workflow meter is allowed to claim.
+ *
+ * Progress used to be derived from the pathname alone, which let the meter
+ * assert stages nobody had reached: a cold deep link into training announced
+ * "Look around (completed), Confirm (completed), Set up (completed)" with no
+ * session in existence, and a live session part way through was reported as
+ * "Train (not started)" while the user stood on the preparation screen.
+ *
+ * Two different questions were being answered by one value. **Reached** is a
+ * fact about the user's work; **current view** is a fact about where they are
+ * standing. Moving backward changes the second and must not erase the first —
+ * a stage reported as not-started offers no way back to the session sitting
+ * inside it, which is how an in-progress workout got stranded (§24.14).
+ */
+export type StageState = 'reached' | 'current-view' | 'not-started';
+
+/** The real state the meter may read. Nothing here is derived from a route. */
+export interface FlowFacts {
+  /** Candidate features have been proposed in this visit. */
+  readonly hasCandidates: boolean;
+  /** A confirmed inventory exists. */
+  readonly hasInventory: boolean;
+  /** An unfinished session exists. */
+  readonly hasActiveSession: boolean;
+  /** A completed record exists for the session just finished. */
+  readonly hasCompletedRecord: boolean;
+}
+
+/**
+ * The furthest stage the user's work has actually reached.
+ *
+ * Monotonic on purpose: you cannot hold a completed record without having
+ * confirmed a park and set up a session, so a later fact implies the earlier
+ * stages rather than each stage carrying an independent predicate that can
+ * disagree with its neighbours.
+ *
+ * An **active session reaches Train**, finished or not. That is where the work
+ * is, and it is what keeps Train a link back to a session in flight rather than
+ * a dead label — the shape the stranding defect took.
+ */
+const furthestReached = (facts: FlowFacts): number => {
+  if (facts.hasCompletedRecord) return 4;
+  if (facts.hasActiveSession) return 3;
+  if (facts.hasInventory) return 1;
+  if (facts.hasCandidates) return 0;
+  return -1;
+};
+
+/** Whether the user's work has actually reached a stage. */
+export const stageReached = (index: number, facts: FlowFacts): boolean =>
+  index <= furthestReached(facts);
+
+export const stageStateFor = (index: number, pathname: string, facts: FlowFacts): StageState => {
+  if (index === flowIndexFor(pathname)) return 'current-view';
+  return stageReached(index, facts) ? 'reached' : 'not-started';
+};

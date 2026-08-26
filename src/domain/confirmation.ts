@@ -435,6 +435,42 @@ const digest = (ids: readonly SupportedFeatureId[]): string => {
   return hash.toString(16).padStart(8, '0');
 };
 
+/**
+ * Rebuilds a generation view from persisted usable-feature ids.
+ *
+ * This is the rehydration boundary for an active session's **frozen generation
+ * input** (§24.6). A session freezes the view it was generated from so that
+ * resume returns the same workout rather than an equivalent one — without it,
+ * confirming or correcting a feature mid-session re-derives the remaining
+ * movements underneath a position counter that does not move.
+ *
+ * It validates like every other rehydration boundary: unknown ids, duplicates
+ * and non-arrays are refused rather than repaired, and the result is sorted so
+ * that a persisted view and a freshly projected one with the same members
+ * produce the same snapshot id. Returning null means "no trustworthy frozen
+ * input", which the caller treats as a session it cannot faithfully resume.
+ *
+ * The brand is constructed here because this module owns it. A caller asserting
+ * `as GenerationVenueView` would be manufacturing trusted venue state, which is
+ * exactly what the brand exists to prevent.
+ */
+export const rehydrateGenerationView = (raw: unknown): GenerationVenueView | null => {
+  if (!Array.isArray(raw)) return null;
+
+  const ids: SupportedFeatureId[] = [];
+  for (const entry of raw) {
+    if (!isSupportedFeatureId(entry)) return null;
+    if (ids.includes(entry)) return null;
+    ids.push(entry);
+  }
+  ids.sort();
+
+  return {
+    usableFeatures: asUsableSet(ids),
+    snapshotId: digest(ids) as VenueSnapshotId,
+  } as GenerationVenueView;
+};
+
 /** Projects inventory to the generation view, dropping everything generation may not use. */
 export const projectGenerationView: ProjectGenerationView = (inventory) => {
   const usable = inventory.features

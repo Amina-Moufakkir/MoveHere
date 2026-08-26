@@ -6,6 +6,8 @@ import { Action } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
+import { activityStore } from '@/lib/activity-store';
+import type { ActivityRecord } from '@/lib/activity-store';
 import { byPresentation } from '@/src/presentation/feature-copy.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
@@ -41,7 +43,7 @@ const factLabel =
 
 export function CompleteClient() {
   const router = useRouter();
-  const { session, inventory, correct, endSession } = useVenue();
+  const { inventory, correct, endSession } = useVenue();
   const [corrected, setCorrected] = useState<ReadonlySet<SupportedFeatureId>>(new Set());
   /* Announces a correction that removed the control the user was operating.
      Without it the row simply changes and a screen-reader user is told
@@ -62,19 +64,34 @@ export function CompleteClient() {
     status?.focus();
   }, [lastCorrected]);
 
-  // Read from the snapshot taken at completion, never re-derived. Correcting a
-  // feature afterwards must not rewrite the session that was just done.
-  const summary = session?.summary ?? null;
-  const featuresUsed = (summary?.featuresUsed ?? []) as readonly SupportedFeatureId[];
-  const movements = summary?.movements ?? 0;
+  /* Rendered from the immutable Activity record, never from live state and
+     never from the generator (§24.3). The record is read after mount because it
+     lives on the device and the page is prerendered; `loaded` distinguishes
+     "not read yet" from "nothing to show", so the empty state cannot flash
+     before the record arrives. */
+  const [record, setRecord] = useState<ActivityRecord | null>(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setRecord(activityStore().list()[0] ?? null);
+    setLoaded(true);
+  }, []);
+
+  const featuresUsed = (record?.featuresUsed ?? []) as readonly SupportedFeatureId[];
+  const movements = record?.movements.length ?? 0;
 
   const confirmed = [...(inventory?.features ?? [])].sort((a, b) =>
     byPresentation(a.featureId, b.featureId),
   );
 
-  const isSubstitute = summary?.wasSubstitute ?? false;
+  const isSubstitute = record?.kind === 'substitute-session';
 
-  if (session === null || session.completedAt === null) {
+  /* Nothing renders until the record has been read. Rendering the summary with
+     no record would show "0 min" for a frame; rendering the empty state would
+     claim nothing was finished before we had looked. */
+  if (!loaded) return null;
+
+  if (record === null) {
     return (
       <PageContainer className="flex flex-1 flex-col">
         <EmptyState
@@ -115,13 +132,13 @@ export function CompleteClient() {
               <div>
                 <dt className={factLabel}>Programmed duration</dt>
                 <dd className="mt-1 text-2xl font-extrabold tabular-nums text-navy">
-                  {session.minutes} min
+                  {record.requestedMinutes} min
                 </dd>
               </div>
 
               <div>
                 <dt className={factLabel}>Goal</dt>
-                <dd className="mt-1 text-2xl font-extrabold capitalize text-navy">{session.goal}</dd>
+                <dd className="mt-1 text-2xl font-extrabold capitalize text-navy">{record.goal}</dd>
               </div>
 
               {movements > 0 && (
