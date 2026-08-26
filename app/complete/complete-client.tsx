@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Action, ActionLink } from '@/components/ui/action';
+import { Action } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
@@ -10,6 +10,8 @@ import { byPresentation } from '@/src/presentation/feature-copy.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
 import { SUBSTITUTE_LABEL } from '@/src/presentation/session-copy.ts';
+import { EmptyState } from '@/components/shell/empty-state';
+import { PageContainer } from '@/components/shell/page-container';
 
 export function CompleteClient() {
   const router = useRouter();
@@ -30,15 +32,14 @@ export function CompleteClient() {
 
   if (session === null || session.completedAt === null) {
     return (
-      <section className="open-sky flex flex-1 flex-col justify-center px-5 py-16 sm:px-8">
-        <div className="mx-auto flex w-full max-w-2xl flex-col items-start gap-4">
-          <h1 className="text-page font-extrabold">Nothing finished yet</h1>
-          <p className="max-w-md text-base leading-snug text-navy-muted">
-            Complete a session and this is where it lands.
-          </p>
-          <ActionLink href="/setup" full={false}>Set up a session</ActionLink>
-        </div>
-      </section>
+      <PageContainer className="flex flex-1 flex-col">
+        <EmptyState
+          title="Nothing finished yet"
+          body="Complete a session and this is where it lands."
+          actionHref="/setup"
+          actionLabel="Set up a session"
+        />
+      </PageContainer>
     );
   }
 

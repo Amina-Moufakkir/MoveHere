@@ -10,6 +10,7 @@ import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SESSION_DURATIONS } from '@/src/domain/session.ts';
 import type { SessionGoal, SessionDuration } from '@/src/domain/session.ts';
 import { makeSeed } from '@/src/programming/seed.ts';
+import { PageHeading } from '@/components/shell/page-heading';
 
 const GOALS: readonly { value: SessionGoal; label: string; hint: string }[] = [
   { value: 'strength', label: 'Strength', hint: 'Fewer movements, more work each' },
@@ -33,10 +34,7 @@ export function SetupClient() {
     <div className="flex flex-1 flex-col">
       <section className="open-sky px-5 pb-7 pt-8 sm:px-8 sm:pb-9 sm:pt-12">
         <div className="mx-auto w-full max-w-2xl">
-          <p className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-blue-ink">
-            Step 3 of 3 · Set up
-          </p>
-          <h1 className="mt-2.5 text-page font-extrabold text-balance">How long have you got?</h1>
+          <PageHeading eyebrow="Step 3 of 3" title="How long have you got?" />
 
           {/* What was confirmed, carried forward so the choice has context. */}
           <div className="mt-4 flex flex-wrap items-center gap-2">

@@ -3,9 +3,16 @@ import type { ReactNode } from 'react';
 /**
  * The content measure.
  *
- * `app` is the flow measure: full-bleed padding at small sizes, a readable
- * column that stops growing well before the viewport does. Nothing in the
- * session flow is wide enough to need a dashboard grid.
+ * `app` is the flow's reading and task measure: full-bleed padding at small
+ * sizes, a readable column that stops growing well before the viewport does.
+ * It is right for prose-led screens — questions, a movement, a summary.
+ *
+ * `app-wide` is the selection measure, for screens whose content is a grid of
+ * choices rather than something to read. `/park` currently packs eight feature
+ * cards into the reading measure and they arrive cramped on a desktop with
+ * hundreds of unused pixels either side. The mechanism lands here; the screens
+ * that need it adopt it in their own batches, because widening a grid changes
+ * how its cards are composed and that is not a shell decision.
  *
  * `marketing` is wider, and only the public landing page uses it. A marketing
  * page has a different job — it presents rather than guides, and a 672px column
@@ -28,7 +35,7 @@ export function PageContainer({
 }: {
   readonly children: ReactNode;
   readonly className?: string;
-  readonly measure?: 'app' | 'marketing' | 'marketing-wide';
+  readonly measure?: 'app' | 'app-wide' | 'marketing' | 'marketing-wide';
 }) {
   return (
     <div
@@ -38,7 +45,9 @@ export function PageContainer({
           ? 'max-w-[96rem] px-5 sm:px-8 lg:px-[4.25rem]'
           : measure === 'marketing'
             ? 'max-w-6xl px-5 sm:px-8 lg:px-12'
-            : 'max-w-2xl px-5 sm:px-8',
+            : measure === 'app-wide'
+              ? 'max-w-4xl px-5 sm:px-8'
+              : 'max-w-2xl px-5 sm:px-8',
         className,
       ]
         .filter(Boolean)

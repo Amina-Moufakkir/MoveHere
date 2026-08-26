@@ -8,6 +8,7 @@ import { useVenue } from '@/components/venue/venue-provider';
 import { FEATURE_REGISTRY } from '@/src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
 import { SHORT_HINT, SHORT_LABEL, byPresentation } from '@/src/presentation/feature-copy.ts';
+import { PageHeading } from '@/components/shell/page-heading';
 
 export function ParkClient() {
   const router = useRouter();
@@ -34,14 +35,16 @@ export function ParkClient() {
     <div className="flex flex-1 flex-col">
       <section className="open-sky px-5 pb-7 pt-8 sm:px-8 sm:pb-9 sm:pt-12">
         <div className="mx-auto w-full max-w-2xl">
-          <p className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-blue-ink">
-            Step 1 of 3 · Look around
-          </p>
-          <h1 className="mt-2.5 text-page font-extrabold text-balance">What do you see?</h1>
-          <p className="mt-2.5 max-w-md text-base leading-snug text-navy-muted text-pretty">
-            Tap anything that&rsquo;s here. You&rsquo;ll decide what MoveHere should trust on the
-            next screen.
-          </p>
+          <PageHeading
+            eyebrow="Step 1 of 3"
+            title="What do you see?"
+            lede={
+              <>
+                Tap anything that&rsquo;s here. You&rsquo;ll decide what MoveHere should trust on
+                the next screen.
+              </>
+            }
+          />
         </div>
       </section>
 

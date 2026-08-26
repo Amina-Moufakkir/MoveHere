@@ -13,6 +13,9 @@ import {
   consequenceFor,
   movementCountFor,
 } from '@/src/presentation/feature-consequence.ts';
+import { PageHeading } from '@/components/shell/page-heading';
+import { EmptyState } from '@/components/shell/empty-state';
+import { PageContainer } from '@/components/shell/page-container';
 
 const DECISIONS: readonly { value: ConfirmationDecision; label: string }[] = [
   { value: 'present', label: 'Yes' },
@@ -60,18 +63,14 @@ export function ConfirmClient() {
   if (candidates.length === 0) {
     return (
       <div className="flex flex-1 flex-col">
-        <section className="open-sky flex flex-1 flex-col justify-center px-5 py-16 sm:px-8">
-          <div className="mx-auto flex w-full max-w-2xl flex-col items-start gap-4">
-            <h1 className="text-page font-extrabold">Nothing to confirm yet</h1>
-            <p className="max-w-md text-base leading-snug text-navy-muted">
-              Tell MoveHere what you can see first. Confirmation is the only way a feature enters
-              your park.
-            </p>
-            <ActionLink href="/park" full={false}>
-              Look around
-            </ActionLink>
-          </div>
-        </section>
+        <PageContainer className="flex flex-1 flex-col">
+          <EmptyState
+            title="Nothing to confirm yet"
+            body="Tell MoveHere what you can see first. Confirmation is the only way a feature enters your park."
+            actionHref="/park"
+            actionLabel="Look around"
+          />
+        </PageContainer>
       </div>
     );
   }
@@ -80,16 +79,16 @@ export function ConfirmClient() {
     <div className="flex flex-1 flex-col">
       <section className="open-sky px-5 pb-7 pt-8 sm:px-8 sm:pb-9 sm:pt-12">
         <div className="mx-auto w-full max-w-2xl">
-          <p className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-blue-ink">
-            Step 2 of 3 · Confirm
-          </p>
-          <h1 className="mt-2.5 text-page font-extrabold text-balance">
-            What should MoveHere trust?
-          </h1>
-          <p className="mt-2.5 max-w-md text-base leading-snug text-navy-muted text-pretty">
-            Only what you confirm here is used to build a session. If you&rsquo;re not certain
-            something is usable, say so — it costs you options, not a wasted trip.
-          </p>
+          <PageHeading
+            eyebrow="Step 2 of 3"
+            title="What should MoveHere trust?"
+            lede={
+              <>
+                Only what you confirm here is used to build a session. If you&rsquo;re not certain
+                something is usable, say so — it costs you options, not a wasted trip.
+              </>
+            }
+          />
         </div>
       </section>
 

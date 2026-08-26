@@ -1,81 +1,23 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { PageContainer } from '@/components/shell/page-container';
-import { Wordmark } from '@/components/brand/wordmark';
 import { MarketingNav } from '@/components/marketing/marketing-nav';
+import { ProductShell } from '@/components/shell/product-shell';
+import { normalizePath } from '@/components/shell/flow';
 
 /**
- * Header for a no-auth MVP.
+ * Which header a route gets.
  *
- * There is no account, no settings, and nothing to sign into, so inside the
- * session the header carries identity and the current place in the flow —
- * nothing else. A nav bar of destinations a user cannot meaningfully jump
- * between would be borrowed SaaS furniture mid-workout.
+ * Two surfaces, two jobs. The landing page presents and has destinations; the
+ * flow is chrome around a task. This decides between them and owns nothing
+ * else — the previous version carried the in-flow markup inline, which is how a
+ * broken route comparison stayed invisible inside a component nobody read.
  *
- * The public landing page is the exception, and it is a different surface with
- * a different job: it presents rather than guides, and it does have places to
- * go. It gets the marketing navigation instead (§21).
+ * The path is normalized here too: `trailingSlash: true` means the landing page
+ * arrives as `/` in dev and `/` in the export, but comparing raw strings is the
+ * exact mistake this module exists to stop repeating.
  */
-const STEPS = [
-  { href: '/park', label: 'Park' },
-  { href: '/confirm', label: 'Confirm' },
-  { href: '/setup', label: 'Session' },
-  { href: '/workout', label: 'Workout' },
-] as const;
-
 export function SiteHeader() {
   const pathname = usePathname();
-
-  if (pathname === '/') return <MarketingNav />;
-
-  const activeIndex = STEPS.findIndex((step) => step.href === pathname);
-  const inFlow = activeIndex >= 0;
-
-  return (
-    <header className="sticky top-0 z-10 border-b border-line bg-cloud/85 backdrop-blur-sm">
-      <PageContainer className="flex h-16 max-w-2xl items-center justify-between gap-4">
-        <Link href="/" aria-label="MoveHere home" className="text-navy">
-          <Wordmark />
-        </Link>
-
-        {inFlow && (
-          <nav aria-label="Session progress">
-            <ol className="flex items-center gap-1.5">
-              {STEPS.map((step, index) => {
-                const isCurrent = index === activeIndex;
-                const isDone = index < activeIndex;
-                return (
-                  <li key={step.href}>
-                    <Link
-                      href={step.href}
-                      aria-current={isCurrent ? 'step' : undefined}
-                      className="group flex items-center gap-1.5 rounded-sm px-1 py-1"
-                    >
-                      <span className="sr-only">
-                        {step.label}
-                        {isCurrent ? ' (current step)' : isDone ? ' (completed)' : ''}
-                      </span>
-                      <span
-                        aria-hidden
-                        className={[
-                          'block h-1.5 rounded-full transition-all duration-(--duration-settle) ease-(--ease-spring)',
-                          isCurrent
-                            ? 'w-7 bg-blue-deep'
-                            : isDone
-                              ? 'w-3 bg-blue'
-                              : 'w-3 bg-line-strong group-hover:bg-navy-faint',
-                        ].join(' ')}
-                      />
-                    </Link>
-                  </li>
-                );
-              })}
-            </ol>
-          </nav>
-        )}
-      </PageContainer>
-    </header>
-  );
+  return normalizePath(pathname) === '/' ? <MarketingNav /> : <ProductShell />;
 }

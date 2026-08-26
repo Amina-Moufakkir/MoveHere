@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import { Action, ActionLink } from '@/components/ui/action';
+import { Action } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
@@ -11,6 +11,8 @@ import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
 import { doseText, prescriptionDisplay } from '@/src/presentation/prescription-copy.ts';
 import { makeSeed } from '@/src/programming/seed.ts';
+import { EmptyState } from '@/components/shell/empty-state';
+import { PageContainer } from '@/components/shell/page-container';
 
 export function WorkoutClient() {
   const router = useRouter();
@@ -26,31 +28,31 @@ export function WorkoutClient() {
 
   if (session === null || workout === null) {
     return (
-      <section className="open-sky flex flex-1 flex-col justify-center px-5 py-16 sm:px-8">
-        <div className="mx-auto flex w-full max-w-2xl flex-col items-start gap-4">
-          <h1 className="text-page font-extrabold">No session yet</h1>
-          <p className="max-w-md text-base leading-snug text-navy-muted">
-            Choose how long you have and MoveHere will build one.
-          </p>
-          <ActionLink href="/setup" full={false}>Set up a session</ActionLink>
-        </div>
-      </section>
+      <PageContainer className="flex flex-1 flex-col">
+        <EmptyState
+          title="No session yet"
+          body="Choose how long you have and MoveHere will build one."
+          actionHref="/setup"
+          actionLabel="Set up a session"
+        />
+      </PageContainer>
     );
   }
 
   if (workout.kind === 'not-generated') {
     return (
-      <section className="open-sky flex flex-1 flex-col justify-center px-5 py-16 sm:px-8">
-        <div className="mx-auto flex w-full max-w-2xl flex-col items-start gap-4">
-          <h1 className="text-page font-extrabold">Couldn&rsquo;t build a session</h1>
-          <p className="max-w-md text-base leading-snug text-navy-muted">
-            {workout.reason === 'insufficient-time'
+      <PageContainer className="flex flex-1 flex-col">
+        <EmptyState
+          title="Couldn&rsquo;t build a session"
+          body={
+            workout.reason === 'insufficient-time'
               ? 'There isn’t enough time for a full session at this length.'
-              : 'No movements are available. This is a content problem, not something you did.'}
-          </p>
-          <ActionLink href="/setup" full={false}>Change the session</ActionLink>
-        </div>
-      </section>
+              : 'No movements are available. This is a content problem, not something you did.'
+          }
+          actionHref="/setup"
+          actionLabel="Change the session"
+        />
+      </PageContainer>
     );
   }
 
