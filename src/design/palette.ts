@@ -76,6 +76,29 @@ export const DAYLIGHT_PALETTE = {
   greenDeep: { light: '#0E7C50', dark: '#45D68D' },
   greenInk: { light: '#0B6B44', dark: '#7EE3AF' },
 
+  /* The park green, measured from the approved design anchor (§23.7).
+
+     Separate from `green` on purpose. In the session flow green is a state —
+     confirmed, trusted environment — and its meaning is load-bearing. On the
+     marketing surface there is nothing to confirm, so green is free to be the
+     brand instead. Reusing the state colour for brand would either drag the
+     flow's semantics onto a landing page or drag a landing page's hue into the
+     one place a colour means something.
+
+     Measured, not chosen: hue 100°, saturation 38% — an olive, yellow-leaning
+     park green, not the emerald family `green` belongs to.
+
+     parkEdge is decorative only. At 2.29:1 it cannot define the boundary of a
+     control (WCAG 1.4.11); parkEdgeStrong is the conformant substitute and is
+     what interactive borders use (§23.7). */
+  park: { light: '#4F7E38', dark: '#A6D183' },
+  parkHover: { light: '#41682D', dark: '#B8DC99' },
+  parkInk: { light: '#3D6329', dark: '#C3E3A6' },
+  parkTint: { light: '#F2F4F1', dark: '#1A2118' },
+  parkPanel: { light: '#F7F7F7', dark: '#141A24' },
+  parkEdge: { light: '#9BB293', dark: '#3A4A34' },
+  parkEdgeStrong: { light: '#7E9A75', dark: '#55694D' },
+
   /* Substitute and detour only (§11). */
   yellow: { light: '#FFB020', dark: '#FFC043' },
   yellowInk: { light: '#7A4E00', dark: '#FFD37A' },

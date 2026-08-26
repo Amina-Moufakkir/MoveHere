@@ -120,3 +120,65 @@ export const GOAL_MARKS: Record<SessionGoal, GoalMark> = {
 };
 
 export const goalMarkFor = (goal: SessionGoal): GoalMark => GOAL_MARKS[goal];
+
+/**
+ * Marketing pictograms.
+ *
+ * The same 24-grid, the same stroke, the same open forms as the feature glyphs
+ * above — deliberately, because the landing page had drifted to four different
+ * stroke weights (1.75, 1.8, 1.9, 2.25) and three optical sizes across four
+ * files. Icons drawn to different weights read as borrowed from different
+ * places, which is precisely what a brand surface cannot afford.
+ *
+ * Here rather than in a web component for the same reason the feature glyphs
+ * are here: path data is platform-neutral, and a mark that exists in only one
+ * client is a mark that will diverge. No icon dependency is added, and none is
+ * needed — these are ten short paths.
+ *
+ * Keyed by role rather than by picture. `complete` may stop being a flag; it
+ * will not stop being completion.
+ */
+export type MarketingGlyph =
+  | 'confirm'
+  | 'time'
+  | 'workout'
+  | 'complete'
+  | 'park'
+  | 'person'
+  | 'adaptive'
+  | 'progress'
+  | 'equipment'
+  | 'goal'
+  | 'trust';
+
+export const MARKETING_GLYPH_PATHS: Record<MarketingGlyph, readonly string[]> = {
+  /* Hero — the four steps of the loop. */
+  confirm: ['M20.5 6.5 9.5 17.5 4 12'],
+  time: ['M12 3.5a8.5 8.5 0 1 1 0 17 8.5 8.5 0 0 1 0-17z', 'M12 7.2V12l3.2 2.1'],
+  workout: ['M4 7h11', 'M4 12h16', 'M4 17h8'],
+  complete: ['M6 20.5V4', 'M6 4.5h11.5l-2.6 4 2.6 4H6'],
+
+  /* Strip — a tree with a trunk, not a lollipop: the crown is three arcs so it
+     survives at 24px, where a single circle reads as a balloon. */
+  park: ['M12 21v-5.5', 'M12 15.5a5.2 5.2 0 0 0 4.2-8.2 4.4 4.4 0 0 0-8.4 0A5.2 5.2 0 0 0 12 15.5z'],
+  person: ['M12 4.2a3.4 3.4 0 1 1 0 6.8 3.4 3.4 0 0 1 0-6.8z', 'M4.8 20.2a7.2 7.2 0 0 1 14.4 0'],
+  /* Two lobes and a midline. Drawn to fill the grid: an earlier version sat at
+     roughly half scale and read as a blob beside four icons that did not. */
+  adaptive: [
+    'M12 4.4a3.9 3.9 0 0 0-3.8 3 3.4 3.4 0 0 0-1.7 6.1A3.6 3.6 0 0 0 9.9 20a3.3 3.3 0 0 0 2.1-.8z',
+    'M12 4.4a3.9 3.9 0 0 1 3.8 3 3.4 3.4 0 0 1 1.7 6.1A3.6 3.6 0 0 1 14.1 20a3.3 3.3 0 0 1-2.1-.8z',
+    'M12 4.4v14.8',
+  ],
+  progress: ['M4 20h16', 'M7.5 20v-5', 'M12 20V9.5', 'M16.5 20v-8'],
+
+  /* Lower benefit row. */
+  equipment: ['M4.5 8.5h15l-1.1 11.2H5.6z', 'M9 8.5V6.4a3 3 0 0 1 6 0v2.1'],
+  goal: [
+    'M12 3.6a8.4 8.4 0 1 1 0 16.8 8.4 8.4 0 0 1 0-16.8z',
+    'M12 8.2a3.8 3.8 0 1 1 0 7.6 3.8 3.8 0 0 1 0-7.6z',
+  ],
+
+  /* The trust line's shield. Not a marketing claim — it marks the sentence that
+     says what MoveHere does not ask of you. */
+  trust: ['M12 3l7.5 3v5.5c0 4.3-3 8.2-7.5 9.5-4.5-1.3-7.5-5.2-7.5-9.5V6z'],
+};

@@ -62,6 +62,18 @@
   --color-green-deep: light-dark(#0E7C50, #45D68D);
   --color-green-ink: light-dark(#0B6B44, #7EE3AF);
 
+  /* The park green, measured from the approved design anchor (§23.7). Separate
+     from --color-green, which is a state in the session flow and must keep its
+     meaning. Marketing green is brand, not confirmation.
+     --color-park-edge is decorative only — 2.29:1 cannot bound a control. */
+  --color-park: light-dark(#4F7E38, #A6D183);
+  --color-park-hover: light-dark(#41682D, #B8DC99);
+  --color-park-ink: light-dark(#3D6329, #C3E3A6);
+  --color-park-tint: light-dark(#F2F4F1, #1A2118);
+  --color-park-panel: light-dark(#F7F7F7, #141A24);
+  --color-park-edge: light-dark(#9BB293, #3A4A34);
+  --color-park-edge-strong: light-dark(#7E9A75, #55694D);
+
   --color-yellow: light-dark(#FFB020, #FFC043);
   --color-yellow-ink: light-dark(#7A4E00, #FFD37A);
 
@@ -94,6 +106,14 @@
      faintest separation for a surface that must not merge with the canvas. */
   --shadow-lift: 0 1px 2px rgb(11 18 32 / 0.06);
   --shadow-raise: 0 1px 3px rgb(11 18 32 / 0.09);
+
+  /* One exception to the hairline rule, for one job: the landing page's feature
+     strip has to read as a panel lifted off the photograph it crosses. On the
+     marketing surface there is no canvas behind it to separate from — there is a
+     photograph — and a 1px hairline over a bright park image reads as a seam
+     rather than an edge. The long, soft, downward cast is what makes it float;
+     the tight second layer keeps it from looking detached. */
+  --shadow-float: 0 20px 44px -22px rgb(11 18 32 / 0.34), 0 3px 8px -2px rgb(11 18 32 / 0.08);
 
   --ease-spring: cubic-bezier(0.2, 0.8, 0.25, 1);
   --duration-quick: 130ms;
@@ -151,6 +171,40 @@
    for no visual difference. */
 @utility open-sky {
   background-color: var(--color-cloud);
+}
+
+/* The hero's content field dissolving into the photograph.
+ *
+ * A two-stop ramp — solid, then transparent — puts the whole transition in one
+ * short span, and the eye reads that span as an edge between two panels. What
+ * removes the edge is not a longer fade but an uneven one: hold solid briefly,
+ * fall away quickly, then trail off slowly across a wide tail. The fast middle
+ * clears the text field; the long tail gives the eye nothing to fix on.
+ *
+ * Declared here rather than as gradient utilities at the call site because it
+ * needs five stops with tuned midpoints, and the class-list version of that is
+ * unreadable and unreviewable.
+ */
+@utility hero-veil {
+  background-image: linear-gradient(
+    to right,
+    var(--color-cloud) 0%,
+    var(--color-cloud) 6%,
+    color-mix(in srgb, var(--color-cloud) 80%, transparent) 17%,
+    color-mix(in srgb, var(--color-cloud) 36%, transparent) 28%,
+    color-mix(in srgb, var(--color-cloud) 10%, transparent) 40%,
+    transparent 52%
+  );
+}
+
+/* The same idea vertically, where the photograph meets the feature strip. */
+@utility hero-veil-base {
+  background-image: linear-gradient(
+    to top,
+    var(--color-cloud) 0%,
+    color-mix(in srgb, var(--color-cloud) 55%, transparent) 42%,
+    transparent 100%
+  );
 }
 
 @media (prefers-reduced-motion: reduce) {

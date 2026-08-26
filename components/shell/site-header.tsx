@@ -4,14 +4,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PageContainer } from '@/components/shell/page-container';
 import { Wordmark } from '@/components/brand/wordmark';
+import { MarketingNav } from '@/components/marketing/marketing-nav';
 
 /**
  * Header for a no-auth MVP.
  *
- * There is no account, no settings, and nothing to sign into, so the header
- * carries identity and the current place in the flow — nothing else. Adding a
- * nav bar of destinations a user cannot meaningfully jump between would be
- * borrowed SaaS furniture.
+ * There is no account, no settings, and nothing to sign into, so inside the
+ * session the header carries identity and the current place in the flow —
+ * nothing else. A nav bar of destinations a user cannot meaningfully jump
+ * between would be borrowed SaaS furniture mid-workout.
+ *
+ * The public landing page is the exception, and it is a different surface with
+ * a different job: it presents rather than guides, and it does have places to
+ * go. It gets the marketing navigation instead (§21).
  */
 const STEPS = [
   { href: '/park', label: 'Park' },
@@ -22,6 +27,9 @@ const STEPS = [
 
 export function SiteHeader() {
   const pathname = usePathname();
+
+  if (pathname === '/') return <MarketingNav />;
+
   const activeIndex = STEPS.findIndex((step) => step.href === pathname);
   const inFlow = activeIndex >= 0;
 
