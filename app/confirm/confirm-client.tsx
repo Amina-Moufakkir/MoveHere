@@ -66,7 +66,7 @@ export function ConfirmClient() {
         <PageContainer className="flex flex-1 flex-col">
           <EmptyState
             title="Nothing to confirm yet"
-            body="Tell MoveHere what you can see first. Confirmation is the only way a feature enters your park."
+            body="Tell MoveHere what you can see first. Confirming a feature is the only way it reaches your workout."
             actionHref="/park"
             actionLabel="Look around"
           />
@@ -77,23 +77,24 @@ export function ConfirmClient() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <section className="open-sky px-5 pb-7 pt-8 sm:px-8 sm:pb-9 sm:pt-12">
-        <div className="mx-auto w-full max-w-2xl">
+      <section className="open-sky pb-7 pt-8 sm:pb-9 sm:pt-12">
+        <PageContainer measure="app-wide">
           <PageHeading
             eyebrow="Step 2 of 3"
-            title="What should MoveHere trust?"
+            title="Confirm what&rsquo;s available"
             lede={
               <>
-                Only what you confirm here is used to build a session. If you&rsquo;re not certain
-                something is usable, say so — it costs you options, not a wasted trip.
+                Review what you found. MoveHere will use only the features you confirm here to
+                build your workout. If you&rsquo;re not certain something is usable, choose Not
+                sure.
               </>
             }
           />
-        </div>
+        </PageContainer>
       </section>
 
-      <section className="px-5 pb-6 pt-5 sm:px-8">
-        <div className="mx-auto flex w-full max-w-2xl flex-col gap-3">
+      <section className="pb-6 pt-5">
+        <PageContainer measure="app-wide" className="flex flex-col gap-3">
           {ordered.map((candidate) => {
             const feature = findSupportedFeature(candidate.featureId);
             const answered = decisions.get(candidate.featureId);
@@ -108,6 +109,12 @@ export function ConfirmClient() {
               >
                 <legend className="sr-only">{feature?.label ?? candidate.featureId}</legend>
 
+              {/* Two zones from lg. The question and its consequence keep a
+                  readable measure on the left; the decision sits beside them
+                  rather than below, so the extra width buys a shorter scroll
+                  and a tighter question-to-answer distance instead of longer
+                  lines. Below lg they stack, unchanged. */}
+              <div className="lg:grid lg:grid-cols-[1fr_21rem] lg:items-center lg:gap-8">
                 <div className="flex items-start gap-3.5">
                   <span
                     className="contents"
@@ -139,7 +146,9 @@ export function ConfirmClient() {
                   </div>
                 </div>
 
-                <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-full border border-line-strong">
+
+                <div className="mt-4 lg:mt-0">
+                  <div className="grid grid-cols-3 overflow-hidden rounded-full border border-line-strong">
                   {DECISIONS.map((option) => (
                     <label
                       key={option.value}
@@ -156,21 +165,26 @@ export function ConfirmClient() {
                       {option.label}
                     </label>
                   ))}
-                </div>
+                  </div>
 
-                {answered === undefined && (
-                  <p className="mt-2.5 text-sm leading-snug text-navy-faint">
-                    Unanswered — counts as not sure
-                  </p>
-                )}
+                  {/* Directly beneath the control it describes, in both
+                      layouts. As a third grid item it drifted into its own row
+                      and read as unrelated to the question above it. */}
+                  {answered === undefined && (
+                    <p className="mt-2.5 text-sm leading-snug text-navy-faint">
+                      Unanswered — counts as not sure
+                    </p>
+                  )}
+                </div>
+                </div>
               </fieldset>
             );
           })}
-        </div>
+        </PageContainer>
       </section>
 
-      <section className="mt-auto border-t border-line bg-cloud px-5 py-6 sm:px-8">
-        <div className="mx-auto flex w-full max-w-2xl flex-col gap-3">
+      <section className="mt-auto border-t border-line bg-cloud py-6">
+        <PageContainer measure="app-wide" className="flex flex-col gap-3">
           <p aria-live="polite" className="text-center text-sm font-semibold text-navy-muted">
             {trusted.length === 0
               ? 'Nothing confirmed — sessions will use no-equipment movements'
@@ -187,7 +201,7 @@ export function ConfirmClient() {
           <ActionLink href="/park" variant="quiet" full={false} className="self-center">
             Back to look again
           </ActionLink>
-        </div>
+        </PageContainer>
       </section>
     </div>
   );

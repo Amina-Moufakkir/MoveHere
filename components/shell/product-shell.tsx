@@ -20,8 +20,10 @@ import { FlowProgress } from '@/components/shell/flow-progress';
  * it does, and leaving mid-session is the one navigation a person may actually
  * want.
  *
- * Measure matches the flow's content measure rather than the marketing width.
- * Chrome that overhangs the content it sits above reads as a different page.
+ * Measure is the wider selection measure the flow's widest screens use. Chrome
+ * narrower than the content beneath it reads as a misalignment; chrome wider
+ * than a narrow reading column reads as ordinary page furniture, which is what
+ * it is. It is never the marketing width.
  */
 export function ProductShell() {
   const pathname = usePathname();
@@ -30,7 +32,7 @@ export function ProductShell() {
 
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-cloud/85 backdrop-blur-sm">
-      <PageContainer className="flex h-16 items-center justify-between gap-4">
+      <PageContainer measure="app-wide" className="flex h-16 items-center justify-between gap-4">
         <Link
           href="/"
           aria-label="MoveHere home — leave this session"
