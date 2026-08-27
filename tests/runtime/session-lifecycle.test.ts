@@ -55,7 +55,7 @@ const session = (over: Partial<ActiveSessionRecord> = {}): ActiveSessionRecord =
   minutes: 30,
   goal: 'strength',
   conditions: 'acceptable',
-  done: 0,
+  execution: [],
   frozenView: projectGenerationView(inventoryWith(['park-bench', 'stairs'])),
   ...over,
 });

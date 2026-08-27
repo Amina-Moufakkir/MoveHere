@@ -8,6 +8,7 @@ import { useVenue } from '@/components/venue/venue-provider';
 import type { ReportedConditions } from '@/src/programming/conditions.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { SESSION_DURATIONS } from '@/src/domain/session.ts';
+import { currentIndex } from '@/src/domain/execution.ts';
 import type { SessionGoal, SessionDuration } from '@/src/domain/session.ts';
 import { PageHeading } from '@/components/shell/page-heading';
 import { PageContainer } from '@/components/shell/page-container';
@@ -78,7 +79,9 @@ export function SetupClient() {
       minutes: session.minutes,
       goal: session.goal,
       total,
-      current: Math.min(session.done + 1, total),
+      /* The same derivation the player uses, so the two can never disagree
+         about where the user is (§25.3). */
+      current: Math.min(currentIndex(session.execution) + 1, total),
     };
   })();
 

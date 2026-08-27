@@ -26,6 +26,8 @@ import { SESSION_DURATIONS, SESSION_GOALS } from '../domain/session.ts';
 import type { SessionGoal, SessionDuration } from '../domain/session.ts';
 import { REPORTED_CONDITIONS } from '../programming/conditions.ts';
 import type { ReportedConditions } from '../programming/conditions.ts';
+import { isMovementResolution } from '../domain/execution.ts';
+import type { ExecutionPrefix, MovementResolution } from '../domain/execution.ts';
 import { rehydrateGenerationView } from '../domain/confirmation.ts';
 import type { GenerationVenueView } from '../domain/confirmation.ts';
 import type { SupportedFeatureId } from '../domain/feature.ts';
@@ -35,10 +37,12 @@ import type { StorageLike } from './port.ts';
  * Bump when the persisted shape changes. Reads refuse other versions.
  *
  * v2 removed `completedAt`/`summary` and added `sessionId` and the frozen
- * generation view. v1 records are migrated where that can be done faithfully
- * and refused where it cannot — see `migrateSession`.
+ * generation view. **v3 replaces the scalar `done` with an ordered prefix of
+ * resolved movement results**, because a counter cannot distinguish a movement
+ * that was performed from one that was skipped (§25.1). Older records are
+ * migrated where that can be done faithfully and refused where it cannot.
  */
-export const SESSION_SCHEMA_VERSION = 2;
+export const SESSION_SCHEMA_VERSION = 3;
 
 const KEY = 'movehere:session';
 
@@ -58,8 +62,14 @@ export interface ActiveSessionRecord {
   readonly minutes: SessionDuration;
   readonly goal: SessionGoal;
   readonly conditions: ReportedConditions;
-  /** How many items the user has ticked off. Never equal to the total: that is completion. */
-  readonly done: number;
+  /**
+   * What the user reported, movement by movement, in order.
+   *
+   * The prefix length is the current position; everything beyond it is pending.
+   * Replaces v2's scalar `done`, which could only say *how many* and never
+   * *which* — and so could not represent a skipped movement at all (§25.15).
+   */
+  readonly execution: ExecutionPrefix;
   /**
    * The venue view this session was generated from, frozen at creation.
    *
@@ -89,25 +99,45 @@ interface CommonFields {
   readonly minutes: SessionDuration;
   readonly goal: SessionGoal;
   readonly conditions: ReportedConditions;
-  readonly done: number;
 }
 
-/** The fields v1 and v2 share, validated once. */
+/** The request fields every schema version shares, validated once. */
 const parseCommon = (raw: Record<string, unknown>): CommonFields | null => {
-  const { seed, minutes, goal, conditions, done } = raw;
+  const { seed, minutes, goal, conditions } = raw;
   if (typeof seed !== 'string' || seed.length === 0) return null;
   if (typeof minutes !== 'number' || !DURATIONS.includes(minutes)) return null;
   if (typeof goal !== 'string' || !GOALS.includes(goal)) return null;
   if (typeof conditions !== 'string' || !CONDITIONS.includes(conditions)) return null;
-  if (typeof done !== 'number' || !Number.isInteger(done) || done < 0) return null;
   return {
     seed,
     minutes: minutes as SessionDuration,
     goal: goal as SessionGoal,
     conditions: conditions as ReportedConditions,
-    done,
   };
 };
+
+/** v1 and v2 both carried a scalar `done`. Validated here for migration only. */
+const parseScalarDone = (raw: Record<string, unknown>): number | null => {
+  const done = raw['done'];
+  if (typeof done !== 'number' || !Number.isInteger(done) || done < 0) return null;
+  return done;
+};
+
+/**
+ * Turns a scalar `done` into an execution prefix.
+ *
+ * **Proved, not assumed** (§25.15). Under both v1 and v2 the counter was
+ * incremented from exactly one call site, by one, via the Done action, starting
+ * at zero, with no backward navigation between movements. `done = N` therefore
+ * means the first N movements were explicitly marked Done — never skipped,
+ * because no schema before v3 could record a skip.
+ *
+ * The remainder stays unresolved rather than being filled in: those movements
+ * had not happened, and inventing a result for them would be fabricating
+ * evidence the old contract never collected.
+ */
+const executionFromScalarDone = (done: number): ExecutionPrefix =>
+  Array.from({ length: done }, (): MovementResolution => 'completed');
 
 /**
  * What a v1 record becomes.
@@ -140,10 +170,51 @@ export const migrateSessionV1 = (raw: Record<string, unknown>): SessionMigration
     return { kind: 'dropped', reason: 'completed-v1' };
   }
   const common = parseCommon(raw);
-  if (common === null) return { kind: 'dropped', reason: 'unreadable' };
+  const done = parseScalarDone(raw);
+  if (common === null || done === null) return { kind: 'dropped', reason: 'unreadable' };
   return {
     kind: 'migrated',
-    record: { sessionId: `v1-${common.seed}`, ...common, frozenView: null },
+    record: {
+      sessionId: `v1-${common.seed}`,
+      ...common,
+      execution: executionFromScalarDone(done),
+      frozenView: null,
+    },
+  };
+};
+
+/**
+ * Migrates a v2 record to v3.
+ *
+ * The only change is the execution model: the scalar becomes a prefix of
+ * `completed` results, by the proof in `executionFromScalarDone`. Session
+ * identity, seed, request and the frozen view carry across untouched, so the
+ * resumed workout is the same workout in the same place.
+ *
+ * **A v2 record that was itself migrated from v1 keeps `frozenView: null`.** No
+ * venue projection is fabricated for it here or anywhere else (§25.15) — it
+ * never had one, and inventing one would hand a legacy session a park it was
+ * not built against.
+ */
+export const migrateSessionV2 = (raw: Record<string, unknown>): SessionMigration => {
+  const common = parseCommon(raw);
+  const done = parseScalarDone(raw);
+  const sessionId = raw['sessionId'];
+  if (common === null || done === null) return { kind: 'dropped', reason: 'unreadable' };
+  if (typeof sessionId !== 'string' || sessionId.length === 0) {
+    return { kind: 'dropped', reason: 'unreadable' };
+  }
+
+  const frozen = raw['frozenView'];
+  let view: GenerationVenueView | null = null;
+  if (frozen !== null && frozen !== undefined) {
+    view = rehydrateGenerationView(frozen);
+    if (view === null) return { kind: 'dropped', reason: 'unreadable' };
+  }
+
+  return {
+    kind: 'migrated',
+    record: { sessionId, ...common, execution: executionFromScalarDone(done), frozenView: view },
   };
 };
 
@@ -161,6 +232,10 @@ export const parseSessionRecord = (text: string): ActiveSessionRecord | null => 
     const migration = migrateSessionV1(raw);
     return migration.kind === 'migrated' ? migration.record : null;
   }
+  if (raw['schemaVersion'] === 2) {
+    const migration = migrateSessionV2(raw);
+    return migration.kind === 'migrated' ? migration.record : null;
+  }
   if (raw['schemaVersion'] !== SESSION_SCHEMA_VERSION) return null;
 
   const common = parseCommon(raw);
@@ -168,6 +243,19 @@ export const parseSessionRecord = (text: string): ActiveSessionRecord | null => 
 
   const { sessionId, frozenView } = raw;
   if (typeof sessionId !== 'string' || sessionId.length === 0) return null;
+
+  /* Shape is validated here; length against the generated workout is checked at
+     the boundary above, because this store cannot call the generator and must
+     not pretend to know the movement count. A malformed prefix is refused
+     outright rather than repaired (§25.15) — evidence that does not fit the
+     workout is evidence about a different workout. */
+  const rawExecution = raw['execution'];
+  if (!Array.isArray(rawExecution)) return null;
+  const execution: MovementResolution[] = [];
+  for (const entry of rawExecution) {
+    if (!isMovementResolution(entry)) return null;
+    execution.push(entry);
+  }
 
   /* Absent and unreadable are different. Absent means the session genuinely had
      no usable venue; unreadable means the frozen input cannot be trusted, and a
@@ -178,7 +266,7 @@ export const parseSessionRecord = (text: string): ActiveSessionRecord | null => 
     if (view === null) return null;
   }
 
-  return { sessionId, ...common, frozenView: view };
+  return { sessionId, ...common, execution, frozenView: view };
 };
 
 /** Serializes for storage. The schema version leads, so a read can refuse early. */
@@ -190,7 +278,7 @@ export const toPersistableSession = (record: ActiveSessionRecord): string =>
     minutes: record.minutes,
     goal: record.goal,
     conditions: record.conditions,
-    done: record.done,
+    execution: [...record.execution],
     /* Only the ids cross the boundary. The brand is reconstructed on read by the
        module that owns it, never carried through JSON. */
     frozenView:

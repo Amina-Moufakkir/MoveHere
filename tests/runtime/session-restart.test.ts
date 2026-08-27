@@ -60,13 +60,13 @@ test('progress, seed and frozen view survive a restart together', () => {
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 3,
+    execution: ['completed', 'completed', 'completed'],
     frozenView: projectGenerationView(inventoryWith(['park-bench', 'pull-up-bar'])),
   };
   store.write(record);
 
   const read = store.read();
-  assert.equal(read?.done, 3, 'a restart must not silently restart the workout');
+  assert.equal(read?.execution.length, 3, 'a restart must not silently restart the workout');
   assert.equal(read?.seed, 'restart-seed');
   assert.deepEqual(
     [...(read?.frozenView?.usableFeatures ?? [])],
@@ -83,7 +83,7 @@ test('a restart resumes the same workout, not an equivalent one', () => {
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 3,
+    execution: ['completed', 'completed', 'completed'],
     frozenView: projectGenerationView(inventoryWith(['park-bench', 'pull-up-bar'])),
   };
   store.write(record);
@@ -115,7 +115,7 @@ test('a correction after a restart still cannot rewrite the completed session', 
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 0,
+    execution: [],
     frozenView: projectGenerationView(inventory),
   };
   const workout = generateFromView({
@@ -159,7 +159,7 @@ test('a substitute completion stays labeled a substitute across a restart', () =
     minutes: 30,
     goal: 'strength',
     conditions: 'adverse',
-    done: 0,
+    execution: [],
     frozenView: projectGenerationView(inventoryWith(['park-bench'])),
   };
   const workout = generateFromView({

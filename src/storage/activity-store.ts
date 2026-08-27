@@ -24,7 +24,12 @@
  * every rehydration boundary above it.
  */
 
-import { parseActivityRecord, toPersistableActivityRecord, ACTIVITY_SCHEMA_VERSION } from './activity-record.ts';
+import {
+  parseActivityRecord,
+  toPersistableActivityRecord,
+  migrateActivityV1,
+  ACTIVITY_SCHEMA_VERSION,
+} from './activity-record.ts';
 import type { ActivityRecord } from './activity-record.ts';
 import type { StorageLike } from './port.ts';
 
@@ -41,6 +46,16 @@ export interface ActivityReadResult {
   readonly quarantined: number;
   /** True when the envelope itself was unreadable, as opposed to rows inside it. */
   readonly envelopeUnreadable: boolean;
+  /**
+   * Rows that could not be parsed, exactly as stored.
+   *
+   * Kept so that a write cannot destroy them. Quarantine means "we cannot read
+   * this", not "this may be thrown away": history is not regenerable, and a
+   * later schema may rescue what today's parser cannot (§24.12,
+   * migration-before-discard). Deleting one workout must not silently take an
+   * unrelated unreadable row with it.
+   */
+  readonly unreadable: readonly unknown[];
 }
 
 /** Whether an append added anything. A duplicate is a success, not an error. */
@@ -56,11 +71,16 @@ export interface ActivityStore {
   readonly remove: (recordId: string) => boolean;
 }
 
-const EMPTY: ActivityReadResult = { records: [], quarantined: 0, envelopeUnreadable: false };
+const EMPTY: ActivityReadResult = {
+  records: [],
+  quarantined: 0,
+  envelopeUnreadable: false,
+  unreadable: [],
+};
 
 /** Newest first, with record id as a stable tiebreak so equal instants do not reorder. */
 const byNewest = (a: ActivityRecord, b: ActivityRecord): number => {
-  if (a.completedAt !== b.completedAt) return a.completedAt < b.completedAt ? 1 : -1;
+  if (a.recordedAt !== b.recordedAt) return a.recordedAt < b.recordedAt ? 1 : -1;
   return a.recordId < b.recordId ? 1 : -1;
 };
 
@@ -74,46 +94,57 @@ export const createActivityStore = (storage: StorageLike): ActivityStore => {
     }
     if (text === null) return EMPTY;
 
+    const broken = (): ActivityReadResult => ({
+      records: [],
+      quarantined: 0,
+      envelopeUnreadable: true,
+      unreadable: [],
+    });
+
     let raw: unknown;
     try {
       raw = JSON.parse(text) as unknown;
     } catch {
-      return { records: [], quarantined: 0, envelopeUnreadable: true };
+      return broken();
     }
-    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
-      return { records: [], quarantined: 0, envelopeUnreadable: true };
-    }
+    if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return broken();
     const envelope = raw as Record<string, unknown>;
-    if (envelope['schemaVersion'] !== ACTIVITY_SCHEMA_VERSION) {
-      /* Migration boundary. Nothing to migrate from yet, and history is not
-         regenerable, so an unknown version is reported rather than overwritten. */
-      return { records: [], quarantined: 0, envelopeUnreadable: true };
-    }
+
+    const version = envelope['schemaVersion'];
+    /* Migration before discard (§24.12). v1 rows are upgraded on read rather
+       than refused: history is not regenerable, and a version bump is not a
+       reason to lose it. An unrecognised version still reports rather than
+       overwriting. */
+    if (version !== ACTIVITY_SCHEMA_VERSION && version !== 1) return broken();
     const rows = envelope['records'];
-    if (!Array.isArray(rows)) return { records: [], quarantined: 0, envelopeUnreadable: true };
+    if (!Array.isArray(rows)) return broken();
 
     const records: ActivityRecord[] = [];
-    let quarantined = 0;
+    const unreadable: unknown[] = [];
     const seen = new Set<string>();
     for (const row of rows) {
-      const parsed = parseActivityRecord(row);
+      const candidate = version === 1 ? migrateActivityV1(row) : row;
+      const parsed = candidate === null ? null : parseActivityRecord(candidate);
       if (parsed === null || seen.has(parsed.recordId)) {
-        quarantined += 1;
+        unreadable.push(row);
         continue;
       }
       seen.add(parsed.recordId);
       records.push(parsed);
     }
-    return { records, quarantined, envelopeUnreadable: false };
+    return { records, quarantined: unreadable.length, envelopeUnreadable: false, unreadable };
   };
 
-  const writeAll = (records: readonly ActivityRecord[]): void => {
+  const writeAll = (records: readonly ActivityRecord[], unreadable: readonly unknown[]): void => {
     try {
       storage.setItem(
         KEY,
         JSON.stringify({
           schemaVersion: ACTIVITY_SCHEMA_VERSION,
-          records: records.map(toPersistableActivityRecord),
+          /* Unreadable rows ride along untouched. Rewriting without them would
+             make every append and every deletion a silent purge of data nobody
+             chose to remove. */
+          records: [...records.map(toPersistableActivityRecord), ...unreadable],
         }),
       );
     } catch {
@@ -133,16 +164,14 @@ export const createActivityStore = (storage: StorageLike): ActivityStore => {
          mid-completion, or a retry after an interrupted clear all resolve to the
          same identifier and must not append a second record. */
       if (current.records.some((r) => r.recordId === record.recordId)) return 'duplicate';
-      /* Valid rows are preserved; quarantined ones are not resurrected by a
-         rewrite, which is the only point at which they are actually dropped. */
-      writeAll([...current.records, record]);
+      writeAll([...current.records, record], current.unreadable);
       return 'appended';
     },
     remove: (recordId) => {
       const current = readRaw();
       const next = current.records.filter((r) => r.recordId !== recordId);
       if (next.length === current.records.length) return false;
-      writeAll(next);
+      writeAll(next, current.unreadable);
       return true;
     },
   };

@@ -22,7 +22,7 @@ import {
   lastSevenDays,
   sessionsInWeekOf,
   datesWithActivity,
-  sessionsThisWeekText,
+  workoutsThisWeekText,
   addDays,
 } from '../../src/domain/activity-window.ts';
 import { buildActivityRecord } from '../../src/domain/activity-snapshot.ts';
@@ -30,6 +30,7 @@ import { generateFromView } from '../../src/programming/session-builder.ts';
 import { projectGenerationView, applyCorrection } from '../../src/domain/confirmation.ts';
 import { candidatesFrom, commitConfirmations } from '../../src/storage/venue-state.ts';
 import { createActivityStore } from '../../src/storage/activity-store.ts';
+import { ACTIVITY_SCHEMA_VERSION } from '../../src/storage/activity-record.ts';
 import { createMemoryStorage } from '../../src/storage/port.ts';
 import type { ActivityRecord, RecordedMovement } from '../../src/storage/activity-record.ts';
 import type { ConfirmationDecision } from '../../src/domain/confirmation.ts';
@@ -40,7 +41,7 @@ const AT = '2026-08-26T10:00:00.000Z';
 
 const rec = (over: Partial<ActivityRecord> = {}): ActivityRecord => ({
   recordId: 'r-1',
-  completedAt: AT,
+  recordedAt: AT,
   localDate: '2026-08-26',
   kind: 'park-session',
   goal: 'strength',
@@ -53,6 +54,7 @@ const rec = (over: Partial<ActivityRecord> = {}): ActivityRecord => ({
       prescription: { kind: 'reps', sets: 4, reps: 10, counting: 'total' },
       blockName: 'Strength',
       featureId: 'park-bench',
+      result: 'completed',
     },
   ],
   authorityTier: 'project-content',
@@ -94,10 +96,14 @@ test('a quarantined record is unavailable, not substituted', () => {
   storage.setItem(
     'movehere:activity',
     JSON.stringify({
-      schemaVersion: 1,
+      schemaVersion: ACTIVITY_SCHEMA_VERSION,
       records: [
-        { schemaVersion: 1, ...rec({ recordId: 'r-corrupt' }), movements: 'not an array' },
-        { schemaVersion: 1, ...rec({ recordId: 'r-good' }) },
+        {
+          schemaVersion: ACTIVITY_SCHEMA_VERSION,
+          ...rec({ recordId: 'r-corrupt' }),
+          movements: 'not an array',
+        },
+        { schemaVersion: ACTIVITY_SCHEMA_VERSION, ...rec({ recordId: 'r-good' }) },
       ],
     }),
   );
@@ -129,7 +135,7 @@ const completed = (): ActivityRecord => {
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 0,
+    execution: [],
     frozenView: projectGenerationView(inventoryWith(['park-bench', 'stairs'])),
   };
   const workout = generateFromView({ ...session, view: session.frozenView });
@@ -265,10 +271,15 @@ test('a marked date means at least one session, and carries no count', () => {
   assert.equal(marks.has('2026-08-25'), false);
 });
 
-test('the weekly count reads correctly in singular and plural', () => {
-  assert.equal(sessionsThisWeekText(0), '0 completed sessions this week');
-  assert.equal(sessionsThisWeekText(1), '1 completed session this week');
-  assert.equal(sessionsThisWeekText(3), '3 completed sessions this week');
+test('the weekly count says workouts, not completed sessions', () => {
+  /* Once a workout ended early can hold a record, "completed" is false for part
+     of what the number counts (§25.18). */
+  assert.equal(workoutsThisWeekText(0), '0 workouts this week');
+  assert.equal(workoutsThisWeekText(1), '1 workout this week');
+  assert.equal(workoutsThisWeekText(3), '3 workouts this week');
+  for (const n of [0, 1, 3]) {
+    assert.doesNotMatch(workoutsThisWeekText(n), /completed session/);
+  }
 });
 
 /* ---------- park vs substitute ---------- */

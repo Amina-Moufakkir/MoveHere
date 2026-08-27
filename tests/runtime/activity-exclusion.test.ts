@@ -32,13 +32,14 @@ const inventory = commitConfirmations(
   AT,
 ).inventory;
 
-const active = (done: number): ActiveSessionRecord => ({
+/** `resolved` movements marked Done, the rest still pending. */
+const active = (resolved: number): ActiveSessionRecord => ({
   sessionId: 'w-1',
   seed: 's-1',
   minutes: 30,
   goal: 'strength',
   conditions: 'acceptable',
-  done,
+  execution: Array.from({ length: resolved }, () => 'completed' as const),
   frozenView: projectGenerationView(inventory),
 });
 
@@ -103,7 +104,7 @@ test('only terminal completion produces a record', () => {
   const store = createActivityStore(createMemoryStorage());
   const s = active(0);
   const total = totalOf(s);
-  const finished = { ...s, done: total };
+  const finished = { ...s, execution: Array.from({ length: total }, () => 'completed' as const) };
   assert.equal(isFinished(finished, total), true);
 
   const workout = workoutFor(finished);

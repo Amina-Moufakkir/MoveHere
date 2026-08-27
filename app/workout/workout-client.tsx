@@ -8,6 +8,7 @@ import { FeatureGlyph } from '@/components/brand/feature-glyph';
 import { ProjectContentNote } from '@/components/labels/project-content-note';
 import { useVenue } from '@/components/venue/venue-provider';
 import { exerciseById, exerciseCues, exerciseName } from '@/src/programming/session-builder.ts';
+import { EMPTY_EXECUTION, currentIndex } from '@/src/domain/execution.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import { resolveInstructions } from '@/src/domain/instruction-resolution.ts';
 import {
@@ -78,7 +79,7 @@ function useDarkAppearance(): boolean {
 
 export function WorkoutClient() {
   const router = useRouter();
-  const { session, workout, setDone, finishSession } = useVenue();
+  const { session, workout, markDone, finishSession } = useVenue();
   const dark = useDarkAppearance();
 
   const items = useMemo(
@@ -90,7 +91,10 @@ export function WorkoutClient() {
   );
 
   const total = items.length;
-  const done = session === null ? 0 : Math.min(session.done, total);
+  /* Position is the resolved prefix length, not a count of completions — the
+     two were the same number only while every advance was a Done (§25.3). */
+  const execution = session?.execution ?? EMPTY_EXECUTION;
+  const done = Math.min(currentIndex(execution), total);
   const current = items[Math.min(done, Math.max(total - 1, 0))];
 
   /* Movement changes are announced, and only the movement change. The heading
@@ -146,6 +150,7 @@ export function WorkoutClient() {
 
   const advance = () => {
     if (done + 1 >= total) {
+      markDone();
       /* One lifecycle operation, not two writes composed here. The provider
          appends the immutable record and then clears the session (§24.6). */
       const now = new Date();
@@ -158,7 +163,7 @@ export function WorkoutClient() {
       router.push('/complete');
       return;
     }
-    setDone(done + 1);
+    markDone();
   };
 
   const dose = current === undefined ? null : prescriptionDisplay(current.item.prescription);
@@ -207,14 +212,20 @@ export function WorkoutClient() {
             aria-valuenow={done}
             aria-valuemin={0}
             aria-valuemax={total}
-            aria-label="Movements completed"
+            aria-label="Movements resolved"
             className="flex gap-1.5"
           >
             {items.map((entry, i) => (
               <span
                 key={`${entry.item.exerciseId}-${i}`}
                 className={`h-1.5 flex-1 rounded-full transition-colors duration-(--duration-settle) ${
-                  i < done ? 'bg-green' : i === done ? 'bg-blue' : 'bg-line-strong/60'
+                  /* Resolved segments are neutral, not green. Green asserted
+                     "completed" for every position behind the cursor, which stops
+                     being true once a movement can be skipped — and E1 has no
+                     visual language for that difference yet. Showing a movement is
+                     behind you without claiming which kind is the truthful
+                     simplification; E2 gives skipped its own treatment. */
+                  i < done ? 'bg-line-strong' : i === done ? 'bg-blue' : 'bg-line-strong/40'
                 }`}
               />
             ))}

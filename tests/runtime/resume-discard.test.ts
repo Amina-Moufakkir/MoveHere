@@ -37,7 +37,7 @@ const active = (over: Partial<ActiveSessionRecord> = {}): ActiveSessionRecord =>
   minutes: 30,
   goal: 'strength',
   conditions: 'acceptable',
-  done: 0,
+  execution: [],
   frozenView: projectGenerationView(inventoryWith(['park-bench', 'stairs'])),
   ...over,
 });
@@ -64,7 +64,7 @@ const positionLabel = (done: number, total: number) => Math.min(done + 1, total)
 test('the region appears only when there is unfinished work to resume', () => {
   assert.equal(decideBegin(null).kind, 'begin', 'no session: the ordinary build control stands');
   assert.equal(decideBegin(active()).kind, 'refused', 'a not-started session is still unfinished');
-  assert.equal(decideBegin(active({ done: 3 })).kind, 'refused');
+  assert.equal(decideBegin(active({ execution: ['completed', 'completed', 'completed'] })).kind, 'refused');
 });
 
 test('position semantics match the workout player exactly', () => {
@@ -81,14 +81,14 @@ test('position semantics match the workout player exactly', () => {
 
 test('resume preserves session identity, seed and position', () => {
   const store = createSessionStore(createMemoryStorage());
-  const before = active({ done: 2 });
+  const before = active({ execution: ['completed', 'completed'] });
   store.write(before);
 
   /* Resume is navigation. It touches nothing. */
   const after = store.read();
   assert.equal(after?.sessionId, before.sessionId);
   assert.equal(after?.seed, before.seed);
-  assert.equal(after?.done, 2);
+  assert.equal(after?.execution.length, 2);
   assert.deepEqual(
     [...(after?.frozenView?.usableFeatures ?? [])],
     [...(before.frozenView?.usableFeatures ?? [])],
@@ -97,7 +97,7 @@ test('resume preserves session identity, seed and position', () => {
 });
 
 test('resume does not regenerate: the same movements come back', () => {
-  const s = active({ done: 2 });
+  const s = active({ execution: ['completed', 'completed'] });
   const shape = (r: ActiveSessionRecord) => {
     const w = workoutFor(r);
     return w === null || w.kind === 'not-generated'
@@ -109,16 +109,16 @@ test('resume does not regenerate: the same movements come back', () => {
 
 test('discard-and-build changes session identity and resets position', () => {
   const store = createSessionStore(createMemoryStorage());
-  const before = active({ done: 4 });
+  const before = active({ execution: ['completed', 'completed', 'completed', 'completed'] });
   store.write(before);
 
   /* What discardAndBegin does: mint a new record and replace. */
-  const replacement = active({ sessionId: 'w-2', seed: 's-2', done: 0 });
+  const replacement = active({ sessionId: 'w-2', seed: 's-2', execution: [] });
   store.write(replacement);
 
   const after = store.read();
   assert.notEqual(after?.sessionId, before.sessionId, 'a new attempt is a new identity');
-  assert.equal(after?.done, 0, 'and it starts at the beginning');
+  assert.equal(after?.execution.length, 0, 'and it starts at the beginning');
 });
 
 test('discard preserves the request, the confirmed inventory and corrections', () => {
@@ -132,7 +132,7 @@ test('discard preserves the request, the confirmed inventory and corrections', (
     occurredAt: AT,
   });
   venue.save(corrected);
-  sessions.write(active({ done: 3, minutes: 45, goal: 'conditioning' }));
+  sessions.write(active({ execution: ['completed', 'completed', 'completed'], minutes: 45, goal: 'conditioning' }));
 
   /* Discard is a clear of the session store, and nothing else. */
   sessions.clear();
@@ -148,7 +148,7 @@ test('discard preserves the request, the confirmed inventory and corrections', (
 
   /* The request is provider state carried into the replacement, so the
      replacement is built from the choices still on screen. */
-  const replacement = active({ sessionId: 'w-2', minutes: 45, goal: 'conditioning', done: 0 });
+  const replacement = active({ sessionId: 'w-2', minutes: 45, goal: 'conditioning', execution: [] });
   sessions.write(replacement);
   assert.equal(sessions.read()?.minutes, 45, 'the request the user chose is what gets built');
   assert.equal(sessions.read()?.goal, 'conditioning');
@@ -159,7 +159,7 @@ test('discarding writes nothing to Activity', () => {
   const sessions = createSessionStore(storage);
   const activity = createActivityStore(storage);
 
-  sessions.write(active({ done: 5 }));
+  sessions.write(active({ execution: ['completed', 'completed', 'completed', 'completed', 'completed'] }));
   const before = activity.list().length;
 
   sessions.clear();
@@ -172,11 +172,11 @@ test('an active session keeps its own request when setup choices change', () => 
   /* Editing Time/Goal/Conditions on setup configures the replacement. The
      session in flight holds its own copy and must not drift. */
   const store = createSessionStore(createMemoryStorage());
-  const s = active({ minutes: 30, goal: 'strength', done: 2 });
+  const s = active({ minutes: 30, goal: 'strength', execution: ['completed', 'completed'] });
   store.write(s);
 
   const restored = store.read();
   assert.equal(restored?.minutes, 30, 'the running session keeps what it was built with');
   assert.equal(restored?.goal, 'strength');
-  assert.equal(restored?.done, 2);
+  assert.equal(restored?.execution.length, 2);
 });

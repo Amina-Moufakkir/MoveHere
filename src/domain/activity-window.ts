@@ -95,6 +95,13 @@ export const sessionsInWeekOf = (
 export const datesWithActivity = (dates: readonly LocalDate[]): ReadonlySet<LocalDate> =>
   new Set(dates.filter(isLocalDate));
 
-/** "1 completed session this week" / "3 completed sessions this week". */
-export const sessionsThisWeekText = (count: number): string =>
-  `${count} completed session${count === 1 ? '' : 's'} this week`;
+/**
+ * "1 workout this week" / "3 workouts this week".
+ *
+ * **Not "completed sessions"** (§25.18). Once a workout ended early can hold a
+ * record, that word is false for part of what the number counts. A *workout*
+ * here is an Activity record carrying execution evidence — finished or ended
+ * early — and the neutral noun is the only one true of both.
+ */
+export const workoutsThisWeekText = (count: number): string =>
+  `${count} workout${count === 1 ? '' : 's'} this week`;

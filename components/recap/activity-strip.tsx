@@ -1,7 +1,7 @@
 import {
   lastSevenDays,
   sessionsInWeekOf,
-  sessionsThisWeekText,
+  workoutsThisWeekText,
 } from '@/src/domain/activity-window.ts';
 
 /**
@@ -84,7 +84,7 @@ export function ActivityStrip({
         })}
       </ul>
 
-      <p className="mt-3 text-sm font-semibold text-navy-muted">{sessionsThisWeekText(count)}</p>
+      <p className="mt-3 text-sm font-semibold text-navy-muted">{workoutsThisWeekText(count)}</p>
     </div>
   );
 }

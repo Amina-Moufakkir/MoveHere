@@ -40,7 +40,7 @@ import type { SupportedFeatureId } from '../domain/feature.ts';
 import type { Prescription, RepCounting } from '../domain/exercise.ts';
 import type { SessionId } from './session-record.ts';
 
-export const ACTIVITY_SCHEMA_VERSION = 1;
+export const ACTIVITY_SCHEMA_VERSION = 2;
 
 /** Which tier of content programmed this session (§8). Never upgraded retroactively. */
 export type RecordedAuthorityTier = 'project-content' | 'reviewed';
@@ -54,6 +54,19 @@ export type RecordedSubstituteReason =
   | 'no-confirmed-inventory'
   | 'no-compatible-venue-movements';
 
+/**
+ * What the user reported for one movement (§25.4).
+ *
+ * `completed` means **the user marked it Done** — not that MoveHere observed
+ * the repetitions, the technique or the load (§25.2, Invariant 10). `skipped`
+ * means they explicitly moved past it. `not-reached` means the workout ended
+ * before the movement came up.
+ *
+ * There is no `pending`: pending is a live state, and a finished record has
+ * nothing still to do (Invariant 14).
+ */
+export type MovementResult = 'completed' | 'skipped' | 'not-reached';
+
 export interface RecordedMovement {
   readonly exerciseId: string;
   /** As programmed. Policy may change; what was prescribed may not. */
@@ -62,12 +75,19 @@ export interface RecordedMovement {
   /** The structure this movement relied on, or null when environment-independent. */
   readonly featureId: SupportedFeatureId | null;
   readonly variationLabel?: string;
+  readonly result: MovementResult;
 }
 
 export interface ActivityRecord {
   readonly recordId: string;
-  /** UTC instant of completion. Orders records exactly. */
-  readonly completedAt: string;
+  /**
+   * The instant the workout became an immutable Activity record (§25.13).
+   *
+   * **Not** the workout's start, its elapsed time, or any observed activity
+   * time. Renamed from `completedAt`, which stated something false on a record
+   * for a workout that was ended early. Orders records exactly.
+   */
+  readonly recordedAt: string;
   /**
    * The local calendar date at completion, frozen (§24.9, Invariant 4).
    *
@@ -149,9 +169,12 @@ const parsePrescription = (raw: unknown): Prescription | null => {
   return null;
 };
 
+const RESULTS: readonly string[] = ['completed', 'skipped', 'not-reached'];
+
 const parseMovement = (raw: unknown): RecordedMovement | null => {
   if (!isRecord(raw)) return null;
-  const { exerciseId, blockName, featureId, variationLabel } = raw;
+  const { exerciseId, blockName, featureId, variationLabel, result } = raw;
+  if (typeof result !== 'string' || !RESULTS.includes(result)) return null;
   if (typeof exerciseId !== 'string' || exerciseId.length === 0) return null;
   if (typeof blockName !== 'string' || blockName.length === 0) return null;
   const prescription = parsePrescription(raw['prescription']);
@@ -170,6 +193,7 @@ const parseMovement = (raw: unknown): RecordedMovement | null => {
     blockName,
     featureId: feature,
     ...(typeof variationLabel === 'string' ? { variationLabel } : {}),
+    result: result as MovementResult,
   };
 };
 
@@ -184,9 +208,9 @@ export const parseActivityRecord = (raw: unknown): ActivityRecord | null => {
   if (!isRecord(raw)) return null;
   if (raw['schemaVersion'] !== ACTIVITY_SCHEMA_VERSION) return null;
 
-  const { recordId, completedAt, localDate, kind, goal, requestedMinutes, conditions } = raw;
+  const { recordId, recordedAt, localDate, kind, goal, requestedMinutes, conditions } = raw;
   if (typeof recordId !== 'string' || recordId.length === 0) return null;
-  if (typeof completedAt !== 'string' || Number.isNaN(Date.parse(completedAt))) return null;
+  if (typeof recordedAt !== 'string' || Number.isNaN(Date.parse(recordedAt))) return null;
   if (!isLocalDate(localDate)) return null;
   if (typeof kind !== 'string' || !KINDS.includes(kind)) return null;
   if (typeof goal !== 'string' || !GOALS.includes(goal)) return null;
@@ -226,7 +250,7 @@ export const parseActivityRecord = (raw: unknown): ActivityRecord | null => {
 
   return {
     recordId,
-    completedAt,
+    recordedAt,
     localDate,
     kind: kind as RecordedSessionKind,
     goal: goal as SessionGoal,
@@ -243,3 +267,47 @@ export const toPersistableActivityRecord = (record: ActivityRecord): unknown => 
   schemaVersion: ACTIVITY_SCHEMA_VERSION,
   ...record,
 });
+
+/**
+ * Upgrades a stored v1 record to the v2 shape, or refuses.
+ *
+ * **Every v1 movement becomes `completed`, and this is proved rather than
+ * assumed** (§25.14). Under the v1 contract the Activity store had exactly one
+ * writer — terminal completion — reached from exactly one call site, gated on a
+ * counter that reached the movement total; that counter was incremented from
+ * exactly one call site, by one, via the Done action, starting at zero, with no
+ * backward navigation. The existence of a v1 record therefore proves the user
+ * pressed Done for every movement in it.
+ *
+ * **`skipped` and `not-reached` are never inferred.** Neither state could be
+ * produced under the old contract, so inferring one would be inventing history
+ * the implementation made impossible.
+ *
+ * `completedAt` becomes `recordedAt` with its value unchanged: a v1 record was
+ * created only at terminal completion, so the instant it stored was already the
+ * instant it became a record. The rename corrects what the field was *called*,
+ * not what it held (§25.13).
+ *
+ * Returns the upgraded row for validation, or null when the row is too damaged
+ * to upgrade — in which case it is quarantined like any other unreadable row
+ * rather than discarded.
+ */
+export const migrateActivityV1 = (raw: unknown): unknown => {
+  if (!isRecord(raw)) return null;
+  if (raw['schemaVersion'] !== 1) return null;
+
+  const movements = raw['movements'];
+  if (!Array.isArray(movements)) return null;
+
+  const { completedAt, ...rest } = raw;
+  if (typeof completedAt !== 'string') return null;
+
+  return {
+    ...rest,
+    schemaVersion: ACTIVITY_SCHEMA_VERSION,
+    recordedAt: completedAt,
+    movements: movements.map((m) =>
+      isRecord(m) ? { ...m, result: 'completed' satisfies MovementResult } : m,
+    ),
+  };
+};

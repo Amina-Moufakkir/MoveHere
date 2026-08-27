@@ -23,7 +23,7 @@ const KEY = 'movehere:activity';
 
 const rec = (over: Partial<ActivityRecord> = {}): ActivityRecord => ({
   recordId: 'r-w-1',
-  completedAt: '2026-08-26T10:00:00.000Z',
+  recordedAt: '2026-08-26T10:00:00.000Z',
   localDate: '2026-08-26',
   kind: 'park-session',
   goal: 'strength',
@@ -36,6 +36,7 @@ const rec = (over: Partial<ActivityRecord> = {}): ActivityRecord => ({
       prescription: { kind: 'reps', sets: 4, reps: 10, counting: 'total' },
       blockName: 'Main',
       featureId: 'park-bench',
+      result: 'completed',
     },
   ],
   authorityTier: 'project-content',
@@ -56,9 +57,9 @@ test('a repeated completion resolves to the same identifier', () => {
 
 test('reads are newest first', () => {
   const store = createActivityStore(createMemoryStorage());
-  store.append(rec({ recordId: 'r-1', completedAt: '2026-08-24T10:00:00.000Z' }));
-  store.append(rec({ recordId: 'r-3', completedAt: '2026-08-26T10:00:00.000Z' }));
-  store.append(rec({ recordId: 'r-2', completedAt: '2026-08-25T10:00:00.000Z' }));
+  store.append(rec({ recordId: 'r-1', recordedAt: '2026-08-24T10:00:00.000Z' }));
+  store.append(rec({ recordId: 'r-3', recordedAt: '2026-08-26T10:00:00.000Z' }));
+  store.append(rec({ recordId: 'r-2', recordedAt: '2026-08-25T10:00:00.000Z' }));
   assert.deepEqual(
     store.list().map((r) => r.recordId),
     ['r-3', 'r-2', 'r-1'],

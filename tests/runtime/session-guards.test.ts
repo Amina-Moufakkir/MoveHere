@@ -23,7 +23,7 @@ const active = (over: Partial<ActiveSessionRecord> = {}): ActiveSessionRecord =>
   minutes: 30,
   goal: 'strength',
   conditions: 'acceptable',
-  done: 0,
+  execution: [],
   frozenView: null,
   ...over,
 });
@@ -40,7 +40,7 @@ const confirmed = (ids: string[], decisions?: Map<SupportedFeatureId, Confirmati
 
 test('a new session is refused while unfinished work exists', () => {
   assert.equal(decideBegin(null).kind, 'begin');
-  const decision = decideBegin(active({ done: 3 }));
+  const decision = decideBegin(active({ execution: ['completed', 'completed', 'completed'] }));
   assert.equal(decision.kind, 'refused');
   if (decision.kind !== 'refused') return;
   assert.equal(decision.reason, 'unfinished-session-exists');
@@ -48,7 +48,7 @@ test('a new session is refused while unfinished work exists', () => {
 
 test('a not-yet-started session is still unfinished work', () => {
   assert.equal(
-    decideBegin(active({ done: 0 })).kind,
+    decideBegin(active({ execution: [] })).kind,
     'refused',
     'done === 0 is a session, not the absence of one',
   );
@@ -65,9 +65,9 @@ test('startup reconciles a session whose completion record already exists', () =
 });
 
 test('finished is a function of position and total, not of a stored flag', () => {
-  assert.equal(isFinished(active({ done: 6 }), 7), false);
-  assert.equal(isFinished(active({ done: 7 }), 7), true);
-  assert.equal(isFinished(active({ done: 0 }), 0), false, 'no movements is not finished');
+  assert.equal(isFinished(active({ execution: ['completed', 'completed', 'completed', 'completed', 'completed', 'completed'] }), 7), false);
+  assert.equal(isFinished(active({ execution: ['completed', 'completed', 'completed', 'completed', 'completed', 'completed', 'completed'] }), 7), true);
+  assert.equal(isFinished(active({ execution: [] }), 0), false, 'no movements is not finished');
 });
 
 test('confirmation restores recorded Yes, and invents nothing', () => {

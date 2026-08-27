@@ -8,6 +8,7 @@
  */
 
 import type { ActiveSessionRecord } from '../storage/session-record.ts';
+import { hasExecutionEvidence, isFinished as executionFinished } from './execution.ts';
 
 /**
  * Whether a new session may begin.
@@ -50,4 +51,20 @@ export const decideStartup = (
 
 /** Whether the session has reached its final movement. */
 export const isFinished = (session: ActiveSessionRecord, total: number): boolean =>
-  total > 0 && session.done >= total;
+  executionFinished(session.execution, total);
+
+/**
+ * Whether ending the workout now would record anything.
+ *
+ * `no-evidence` is not an error and not a refusal to act — it reports that the
+ * workout was generated and never begun, which is not a workout (§25.9,
+ * Invariant 13). The domain says so explicitly rather than quietly discarding
+ * the session, because what the user should be offered instead is an interface
+ * decision and this layer must not make it for them.
+ */
+export type EndDecision =
+  | { readonly kind: 'record' }
+  | { readonly kind: 'no-evidence' };
+
+export const decideEnd = (session: ActiveSessionRecord): EndDecision =>
+  hasExecutionEvidence(session.execution) ? { kind: 'record' } : { kind: 'no-evidence' };

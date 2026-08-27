@@ -181,7 +181,7 @@ test('active-session state round-trips, and cleared state is no session', () => 
     minutes: 20,
     goal: 'conditioning',
     conditions: 'acceptable',
-    done: 2,
+    execution: ['completed', 'completed'],
     frozenView: null,
   };
   writeSession(record);
@@ -190,8 +190,8 @@ test('active-session state round-trips, and cleared state is no session', () => 
   // Progress survives. Completion does not live here any more (§24.3): the
   // active-session store represents unfinished work only, so there is no
   // completedAt to round-trip and no summary to disagree with history.
-  writeSession({ ...record, done: 5 });
-  assert.equal(readSession()?.done, 5);
+  writeSession({ ...record, execution: ['completed', 'completed', 'completed', 'completed', 'completed'] });
+  assert.equal(readSession()?.execution.length, 5);
 
   clearSession();
   assert.equal(readSession(), null, 'cleared state is no session, not stale session');
@@ -210,7 +210,7 @@ test('a completed session is a record, not a live derivation', () => {
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 0,
+    execution: [],
     frozenView: projectGenerationView(inventoryWith(['stairs'])),
   };
 

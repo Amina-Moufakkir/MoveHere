@@ -27,7 +27,7 @@ const record = (over: Partial<ActiveSessionRecord> = {}): ActiveSessionRecord =>
   minutes: 30,
   goal: 'strength',
   conditions: 'acceptable',
-  done: 2,
+  execution: ['completed', 'completed'],
   frozenView: view(['park-bench', 'stairs']),
   ...over,
 });
@@ -68,7 +68,7 @@ test('an unreadable frozen view refuses the whole session', () => {
     minutes: 30,
     goal: 'strength',
     conditions: 'acceptable',
-    done: 0,
+    execution: [],
     frozenView: ['park-bench', 'not-a-real-feature'],
   });
   assert.equal(
@@ -104,7 +104,7 @@ test('an unfinished v1 session migrates, carrying no frozen view', () => {
   const migration = migrateSessionV1(v1);
   assert.equal(migration.kind, 'migrated');
   if (migration.kind !== 'migrated') return;
-  assert.equal(migration.record.done, 3, 'position is preserved');
+  assert.deepEqual(migration.record.execution, ['completed','completed','completed'], 'position and evidence are preserved');
   assert.equal(migration.record.seed, 's-old-1');
   assert.equal(migration.record.frozenView, null, 'v1 had no frozen view to carry');
   assert.equal(

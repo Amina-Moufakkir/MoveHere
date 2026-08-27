@@ -85,6 +85,17 @@ export function WorkoutTimeline({ movements }: { readonly movements: readonly Re
                     {doseText(movement.prescription)}
                   </p>
 
+                  {/* Minimal truthful presentation for E1. `completed` shows
+                      nothing, because it is the ordinary case and the record
+                      already implies it; the other two are stated in words so
+                      Recap can never call a skipped or unreached movement
+                      completed (§25.17). E2 designs the real treatment. */}
+                  {movement.result !== 'completed' && (
+                    <p className="mt-1 text-sm font-bold text-navy-faint">
+                      {movement.result === 'skipped' ? 'Skipped' : 'Not reached'}
+                    </p>
+                  )}
+
                   {context !== null && (
                     <p className="mt-1 inline-flex items-center gap-1.5 text-sm font-bold text-green-ink">
                       {movement.featureId !== null && (

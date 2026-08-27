@@ -28,7 +28,14 @@ import { activityStore } from '@/lib/activity-store';
 import type { ActivityRecord } from '@/lib/activity-store';
 import { recordIdFor } from '@/src/storage/activity-record.ts';
 import { buildActivityRecord } from '@/src/domain/activity-snapshot.ts';
-import { decideBegin, decideStartup } from '@/src/domain/session-lifecycle.ts';
+import { decideBegin, decideStartup, decideEnd } from '@/src/domain/session-lifecycle.ts';
+import {
+  EMPTY_EXECUTION,
+  markDone,
+  markSkipped,
+  restartExecution,
+} from '@/src/domain/execution.ts';
+import type { ExecutionPrefix } from '@/src/domain/execution.ts';
 import { projectGenerationView } from '@/src/domain/confirmation.ts';
 import { generateFromView } from '@/src/programming/session-builder.ts';
 import { makeSeed, makeSessionId } from '@/src/programming/seed.ts';
@@ -51,6 +58,11 @@ export interface SessionRequest {
  */
 export type BeginOutcome = { readonly kind: 'begun' } | { readonly kind: 'refused' };
 
+/** What ending a workout early did. `no-evidence` wrote nothing, by rule (§25.9). */
+export type EndOutcome =
+  | { readonly kind: 'recorded'; readonly record: ActivityRecord }
+  | { readonly kind: 'no-evidence' };
+
 interface VenueState {
   readonly session: ActiveSessionRecord | null;
   readonly workout: SessionGenerationOutput | null;
@@ -66,7 +78,20 @@ interface VenueState {
   readonly discardAndBegin: () => void;
   /** Destroys the unfinished workout and nothing outside it (Invariant 8). */
   readonly discardSession: () => void;
-  readonly setDone: (done: number) => void;
+  /** Marks the current movement completed and advances (§25.6). */
+  readonly markDone: () => void;
+  /** Marks the current movement skipped and advances (§25.7). It never counts as completed. */
+  readonly markSkipped: () => void;
+  /** Clears execution evidence; the workout itself is untouched (§25.10). */
+  readonly restartSession: () => void;
+  /**
+   * Ends the workout before its programmed end (§25.9).
+   *
+   * Returns `no-evidence` and writes nothing when nothing was resolved: a
+   * generated plan that was never begun is not a workout, and the caller
+   * decides what to offer instead.
+   */
+  readonly endSessionEarly: (at: string, localDate: string) => EndOutcome;
   /**
    * Terminal completion: append the record, then clear the session.
    *
@@ -163,7 +188,7 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
       minutes: request.minutes,
       goal: request.goal,
       conditions: request.conditions,
-      done: 0,
+      execution: EMPTY_EXECUTION,
       /* Frozen here, once. Everything this session is generated from is now
          immutable for its lifetime. */
       frozenView: inventory === null ? null : projectGenerationView(inventory),
@@ -202,18 +227,50 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
     setSession(record);
   }, [createRecord]);
 
-  const setDone = useCallback((done: number) => {
-    /* The write happens here, not inside the state updater. An updater may be
-       invoked more than once, and persistence is not a pure function. */
-    setSession((prev) => {
-      if (prev === null) return prev;
-      const next = { ...prev, done };
+  /** Total movements in the derived workout, or 0 when there is none. */
+  const total =
+    workout === null || workout.kind === 'not-generated'
+      ? 0
+      : workout.blocks.reduce((n: number, b) => n + b.items.length, 0);
+
+  /* One mutation path for execution, so the semantics live in the domain rather
+     than being re-derived at each call site (§25). The write happens here, not
+     inside the state updater: an updater may be invoked more than once, and
+     persistence is not a pure function. */
+  const resolveCurrent = useCallback(
+    (resolve: (execution: ExecutionPrefix, total: number) => ExecutionPrefix) => {
+      const current = readSession();
+      if (current === null) return;
+      const next = { ...current, execution: resolve(current.execution, total) };
       writeSession(next);
-      return next;
-    });
+      setSession(next);
+    },
+    [total],
+  );
+
+  const markDoneAction = useCallback(() => resolveCurrent(markDone), [resolveCurrent]);
+  const markSkippedAction = useCallback(() => resolveCurrent(markSkipped), [resolveCurrent]);
+
+  const restartSession = useCallback(() => {
+    const current = readSession();
+    if (current === null) return;
+    /* Same workout, evidence cleared. Seed, frozen input, identity and request
+       are all untouched, so regeneration yields the identical session (§25.10). */
+    const next = { ...current, execution: restartExecution() };
+    writeSession(next);
+    setSession(next);
   }, []);
 
-  const finishSession = useCallback(
+  /**
+   * The single terminal operation, shared by both paths (§25.16).
+   *
+   * Finished and ended-early differ only in what the movement results say, so
+   * they differ only in the record built — never in how many records a session
+   * may produce. Append before clear, and the record identity is deterministic
+   * from session identity, so a retry or a reload resolves to the same record
+   * and appends nothing.
+   */
+  const terminate = useCallback(
     (at: string, localDate: string): ActivityRecord | null => {
       const current = readSession();
       if (current === null || workout === null) return null;
@@ -221,15 +278,31 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
       const record = buildActivityRecord(current, workout, { at, localDate });
       if (record === null) return null;
 
-      /* Append first, clear second (§24.6, Invariant 9). Interrupted after the
-         append, a record exists and the lingering session is reconciled on next
-         load. Interrupted the other way round, the workout is simply lost. */
       activityStore().append(record);
       clearSession();
       setSession(null);
       return record;
     },
     [workout],
+  );
+
+  const finishSession = useCallback(
+    (at: string, localDate: string): ActivityRecord | null => terminate(at, localDate),
+    [terminate],
+  );
+
+  const endSessionEarly = useCallback(
+    (at: string, localDate: string): EndOutcome => {
+      const current = readSession();
+      if (current === null) return { kind: 'no-evidence' };
+      /* The zero-evidence rule is a domain decision, checked before anything is
+         written (§25.9). A generated plan that was never begun is not a workout,
+         and recording it would let history grow by pressing Build. */
+      if (decideEnd(current).kind === 'no-evidence') return { kind: 'no-evidence' };
+      const record = terminate(at, localDate);
+      return record === null ? { kind: 'no-evidence' } : { kind: 'recorded', record };
+    },
+    [terminate],
   );
 
   const endSession = discardSession;
@@ -297,12 +370,14 @@ export function VenueProvider({ children }: { readonly children: ReactNode }) {
     () => ({
       candidates, inventory, loadOutcome, request, session, workout,
       proposeCandidates, confirm, setRequest, forget,
-      beginSession, discardAndBegin, discardSession, setDone, finishSession, endSession, correct,
+      beginSession, discardAndBegin, discardSession, finishSession, endSession, correct,
+      markDone: markDoneAction, markSkipped: markSkippedAction, restartSession, endSessionEarly,
     }),
     [
       candidates, inventory, loadOutcome, request, session, workout,
       proposeCandidates, confirm, setRequest, forget,
-      beginSession, discardAndBegin, discardSession, setDone, finishSession, endSession, correct,
+      beginSession, discardAndBegin, discardSession, finishSession, endSession, correct,
+      markDoneAction, markSkippedAction, restartSession, endSessionEarly,
     ],
   );
 
