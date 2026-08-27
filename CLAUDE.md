@@ -2,7 +2,9 @@
 
 ## Source of truth
 
-`docs/product-plan-v4.7.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
+`docs/product-plan-v4.8.md` is canonical. Read the relevant sections before non-trivial work. The plan overrides inference, convention, and anything in this file. If the plan is silent, ambiguous, or appears wrong, say so and ask — do not resolve it silently in code.
+
+`docs/product-plan-v4.7.md` is retained unchanged as the historical product authority for that version. It is not current. v4.8 supersedes it on **how a workout is executed and what may be recorded about it** (§25): the scalar `done` is replaced by ordered per-movement execution state; **Skip**, **Finish later**, **End workout** and **Restart** are authorized; and an intentionally ended workout with evidence may enter Activity, which §24.6 refused. Everything else in v4.7 carries forward.
 
 `docs/product-plan-v4.6.md` is retained unchanged as the historical product authority for that version. It is not current. v4.7 supersedes it on one capability: what v4.6 classified as **progress and session history — PLANNED** (§23.1) is promoted, renamed and contracted in **§24 as Activity — NEXT-STAGE AUTHORIZED**. v4.6's §22 governing rule, its §23 refusals and every current-stage exclusion carry forward untouched.
 
@@ -109,6 +111,26 @@ Promoting a capability changes what MoveHere intends, never what it may claim. *
 - **Never call prescribed duration** *total workout minutes* or *minutes trained*. The honest name is **minutes programmed**. Measured elapsed time, if it ever exists, is a distinct metric.
 - **"Anywhere"** is not truthful as a capability claim while parks are the only environment class. The brand line *Work out. Anywhere. MoveHere.* stays permitted; feature copy names only what is supported.
 - **§15 accessibility overrides literal visual parity** where the generated anchor is non-conformant. `#9BB293` is decorative only (2.29:1); interactive boundaries take `#7E9A75`.
+
+## Session execution (§25) — design authority, NOT implemented
+
+The current code still uses the scalar `done`. §25 is the contract to build against, not a description of what exists.
+
+- **MoveHere records user-reported execution, not observed physical performance** (Invariant 10). `completed` means *the user pressed Done* — never that reps were seen, form was right, or anything improved.
+- **`done` conflated position with evidence.** Replaced by ordered per-movement state: `pending | completed | skipped`. **`current` is derived** (first pending), never persisted.
+- **Historical results are `completed | skipped | not-reached`.** `pending` never appears in history (Invariant 14). Every movement stays, in order, whatever its result (Invariant 12).
+- **`finished` ≠ everything completed.** 5 completed + 2 skipped + 0 not-reached is finished, and must never read as "7 completed" (Invariant 11).
+- **Outcome and lifecycle are derived, never stored** — a record with any `not-reached` ended early.
+- **End workout ≠ Finish later ≠ Discard ≠ Restart.** End records what happened; Finish later keeps it resumable with no record; Discard destroys it with no record; Restart resets execution on the *same* workout. **Build another** generates a *different* workout — never merge it with Restart.
+- **Zero-evidence rule:** ending with nothing completed and nothing skipped writes **no record** (Invariant 13). Generation alone never becomes history.
+- **Weekly count becomes "N workouts this week"** — "completed sessions" is false once ended-early records count (§25.18).
+- **Compact Monday-aligned week strips**, not a month calendar and not a Day 1/2/3 plan. Future dates must stay visually distinct from unmarked past dates (§25.19).
+- **No prominent Delete in the Activity list**; the store capability stays (§25.21).
+- **Substitution is not authorized** and the frozen-input guarantee must not be weakened to get it (§25.22).
+- **Both migrations rest on proofs** in §25.14/§25.15 — re-verify them before implementing; if a proof fails, withdraw the migration rather than weaken it.
+- **`completedAt` is renamed `recordedAt`** in Activity v2 (§25.13) — *the instant the workout became an immutable record*. Not start time, not elapsed time, not observed activity. v1 values migrate unchanged; only the name was wrong.
+- **Two stages (§25.25).** **E1** = execution model + both schemas + both migrations + terminal paths + quarantine preservation, with **no broad UI redesign**. **E2** = player controls, Recap/Activity semantics, weekly-count wording, week strips.
+- **An Activity implementation is held uncommitted.** Its 5×7 calendar, per-row Delete and "completed sessions this week" are superseded. **Do not cherry-pick its quarantine fix** — carry that behaviour into E1 and keep it tested there.
 
 ## Activity rules (§24) — authorized to build, not to speak
 

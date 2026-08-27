@@ -12,7 +12,7 @@ Visual hierarchy, the green and white brand treatment, typographic character, sp
 
 ## What it does not govern
 
-Product scope, capability claims, roadmap, sequencing, or evidence. Those are `docs/product-plan-v4.7.md`.
+Product scope, capability claims, roadmap, sequencing, or evidence. Those are `docs/product-plan-v4.8.md`.
 
 It also does not govern deployment. This design direction applies to the consolidated product; it does not replace or supersede `web-mvp-v1`, which stays live as a frozen historical MVP. See §21.
 
@@ -73,7 +73,7 @@ Five classes:
 | **Scan & Confirm** | Confirm: **CURRENT**. Scan: **FUTURE** | The architecture anticipates vision and the target experience may describe it. **Current copy must not imply scanning exists** — use *Confirm what's available* or *Tell MoveHere what's available* |
 | Generation from environment, resources, time and goal | CURRENT | The implemented mechanism |
 | Substitutions when needed | CURRENT | Substitute sessions, labelled as substitutes |
-| Completion logging | NEAR-TERM | One session, local, overwritten. **§24 replaces this substrate**: a completed session becomes an immutable local record rather than a regenerated derivation |
+| Completion logging | NEAR-TERM | One session, local, overwritten. **§24 replaces this substrate**: a completed session becomes an immutable local record rather than a regenerated derivation. **§25 adds execution truth**: per-movement `completed` / `skipped` / `not-reached`, where `completed` means the user pressed Done and nothing more |
 | **Activity / session history** | **NEXT-STAGE AUTHORIZED** | §24. Recorded behaviour only, local-first. Authorized to build; no affordance, link or copy until it works (§24.15) |
 | **Progress tracking / Track Progress** | **NOT AUTHORIZED as a name or a claim** | §24.2. *Activity* is the capability name. Improvement claims are refused, not deferred. See below |
 | Park-First | CURRENT | |
