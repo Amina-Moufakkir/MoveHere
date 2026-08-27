@@ -1,6 +1,6 @@
 # MoveHere — Target Product Experience
 
-Approved 2026-08-25. Anchor: `movehere-target-landing-page.png`, in this directory.
+Approved 2026-08-25. Anchor: `docs/design-references/movehere-target-landing-page.png`.
 
 > **This artifact governs target product-experience and visual direction. It does not authorize capability. Where it conflicts with the canonical product plan, the product plan governs.**
 
@@ -13,6 +13,15 @@ Visual hierarchy, the green and white brand treatment, typographic character, sp
 ## What it does not govern
 
 Product scope, capability claims, roadmap, sequencing, or evidence. Those are `docs/product-plan-v4.8.md`.
+
+## Where the images live
+
+Visual artifacts sit in `docs/design-references/`, deliberately apart from this file: **this document is written design authority; those are visual references.** Two are registered there, with the interpretation rules in that directory's `README.md`.
+
+- **`movehere-target-landing-page.png`** — the marketing landing page anchor this document classifies below.
+- **`movehere-operational-north-star-v1.png`** — visual direction for the operational product: Train, Recap, Activity, and their mobile adaptation. It is a design board showing several surfaces together, **not a claim that they share one page**, and not a literal implementation specification.
+
+Neither image authorizes capability. **Behavioural semantics come from the canonical plan** — what `completed`, `skipped` and `not-reached` mean, what finished and ended-early mean, and how Done, Skip movement, Finish later, End workout and Restart workout behave, are all settled in `docs/product-plan-v4.8.md` §25. Where an image shows a label or control the plan does not authorize, the implementation adapts the image; the plan is not adjusted to match it.
 
 It also does not govern deployment. This design direction applies to the consolidated product; it does not replace or supersede `web-mvp-v1`, which stays live as a frozen historical MVP. See §21.
 

@@ -16,6 +16,8 @@
 
 `docs/design/target-product-experience.md` records the approved target product experience and classifies every capability the north-star design shows or implies. **It governs visual and product-experience direction and authorizes no capability.** Where it and the plan differ, the plan governs.
 
+**Visual artifacts under `docs/design-references/` provide design direction only. They cannot authorize capabilities.** Resolve conflicts in favour of the canonical product plan and the written design authority above; that directory's `README.md` carries the interpretation rules. Two are registered: `movehere-target-landing-page.png` (marketing) and `movehere-operational-north-star-v1.png` (operational — Train, Recap, Activity, and their mobile adaptation). **E2 consults the plan, the written design authority, that README and the operational image, in that order** — the image overrides none of the first three, it is a design board rather than a one-page layout, and anything in it that v4.8 does not authorize is adapted rather than implemented.
+
 MoveHere has two clients over one shared domain (§15): the **web** client (Next.js, released as `web-mvp-v1`) and the **native mobile** client (Expo + React Native, iOS and Android).
 
 The current stage is **Web Product Consolidation** (§21): evolving the existing Next.js client to express the target product experience, over the same shared domain, against the approved design direction. It evolves the released client rather than creating a parallel application.

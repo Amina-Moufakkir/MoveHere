@@ -70,7 +70,7 @@ Most of that loop is implemented today. Two clauses are deliberately hedged and 
 
 **Expansion should strengthen this loop rather than widen the catalogue.** A capability that makes *what is available here* sharper belongs to this product. A capability that makes MoveHere a larger workout library does not, however well it would sell.
 
-**The approved design anchor** is `docs/design/movehere-target-landing-page.png`, with the full capability classification in `docs/design/target-product-experience.md`.
+**The approved design anchor** is `docs/design-references/movehere-target-landing-page.png`, with the full capability classification in `docs/design/target-product-experience.md`.
 
 > **The anchor governs visual and product-experience direction. It does not authorize capability.**
 
@@ -1526,7 +1526,7 @@ The browser is also the faster surface on which to settle that experience. This 
 - **The existing Next.js client evolves.** No parallel application, no v2 directory. Behaviour, shared-domain authority and the safety boundaries are preserved; presentation is free to change substantially. Git history preserves the released MVP, so the shipped JSX and CSS do not need to remain visually intact merely because they shipped.
 - **The shared domain is unchanged.** No client-local copy of the registry, matrix, policy, feasibility or generator, and no second route into generation (§6, §8).
 - **Safety and authority invariants hold identically.** §9's authority boundary, §10's medical scope, §11's substitute labelling, and the project-content disclosure are shared source and are not re-authored for the web.
-- **The approved design direction is applied** — `docs/design/movehere-target-landing-page.png`, classified in `docs/design/target-product-experience.md`.
+- **The approved design direction is applied** — `docs/design-references/movehere-target-landing-page.png`, classified in `docs/design/target-product-experience.md`.
 - **Native presentation lessons are carried across**: the player hierarchy, basis and media separation, instructions before the visual, and missing media rendering nothing at all.
 - **A coherent end-to-end experience**: marketing, onboarding and setup, generation, the workout, and completion and correction, as one product rather than five screens.
 - **Portfolio quality and responsive.** The web client is the surface most likely to be seen by someone who is not using it.
