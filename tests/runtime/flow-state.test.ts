@@ -78,3 +78,14 @@ test('trailing slashes do not change which stage is current', () => {
   assert.equal(flowIndexFor('/workout'), flowIndexFor('/workout/'));
   assert.equal(stageStateFor(3, '/workout/', nothing), 'current-view');
 });
+
+test('the terminal stage is Recap, and it is reached by a completed record', () => {
+  const last = FLOW_STEPS[FLOW_STEPS.length - 1];
+  assert.equal(last?.label, 'Recap', 'the screen reports a workout, it does not announce an ending');
+  assert.equal(last?.href, '/complete');
+
+  /* Reached by state, not by standing on the route. */
+  assert.equal(stageReached(4, nothing), false, 'no completion, nothing to recap');
+  assert.equal(stageReached(4, { ...nothing, hasActiveSession: true }), false, 'a session in flight is not a recap');
+  assert.equal(stageReached(4, { ...nothing, hasCompletedRecord: true }), true);
+});

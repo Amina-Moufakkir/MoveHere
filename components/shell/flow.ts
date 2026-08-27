@@ -33,7 +33,9 @@ export const FLOW_STEPS = [
   { href: '/confirm', label: 'Confirm' },
   { href: '/setup', label: 'Set up' },
   { href: '/workout', label: 'Train' },
-  { href: '/complete', label: 'Done' },
+  /* RECAP, not DONE: the terminal screen reports the workout that was
+     completed rather than acknowledging that something ended (§24.14). */
+  { href: '/complete', label: 'Recap' },
 ] as const;
 
 export type FlowStep = (typeof FLOW_STEPS)[number];

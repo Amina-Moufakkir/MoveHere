@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Action } from '@/components/ui/action';
 import { FeatureGlyph } from '@/components/brand/feature-glyph';
@@ -11,31 +11,38 @@ import type { ActivityRecord } from '@/lib/activity-store';
 import { byPresentation } from '@/src/presentation/feature-copy.ts';
 import { findSupportedFeature } from '@/src/domain/feature-registry.ts';
 import type { SupportedFeatureId } from '@/src/domain/feature.ts';
-import { SUBSTITUTE_LABEL } from '@/src/presentation/session-copy.ts';
+import { SUBSTITUTE_LABEL, SUBSTITUTE_REASON } from '@/src/presentation/session-copy.ts';
+import { HISTORY_VS_CORRECTION } from '@/src/presentation/recap-copy.ts';
+import { selectRecap } from '@/src/domain/recap-selection.ts';
+import { WorkoutTimeline } from '@/components/recap/workout-timeline';
+import { ActivityStrip } from '@/components/recap/activity-strip';
 import { EmptyState } from '@/components/shell/empty-state';
 import { PageContainer } from '@/components/shell/page-container';
 
 /**
- * The end of one session.
+ * The recap: the workout that was completed, as it was programmed.
+ *
+ * **Rendered entirely from the immutable Activity record.** No generator call,
+ * no read of current inventory, no substitution of today's policy for the
+ * prescriptions that were given (§24.3). Before the record stored movements,
+ * this screen could only show four metadata facts and lost the workout itself —
+ * it was not under-designed, it was under-fed.
  *
  * **What is shown is what was programmed, never what was achieved.** The screen
- * used to lead with "30" at display size above the word "minutes", directly
- * under "Session complete", which reads as thirty minutes of training. MoveHere
- * records no elapsed time — it records that a session with a thirty-minute
- * prescription was marked done. v4.6 §23.1 is explicit that prescribed duration
- * may never be presented as time trained, so the number is now labelled
- * "Programmed duration" and set as one fact among several rather than as the
- * screen's trophy.
+ * once led with "30" at display size above the word "minutes", which reads as
+ * thirty minutes of training. MoveHere records no elapsed time; it records that
+ * a session with a thirty-minute prescription was marked done (§24.11). So the
+ * facts stay small and labelled, and the workout is the main event.
  *
- * The facts are a description list because that is what they are: a label and a
- * value, four times. They are set in neutral ink, not in the completion green —
- * the session ending is the thing worth acknowledging, and tinting the numbers
- * with it would make each one look like an achievement.
+ * Three layers. **A** acknowledges, quietly and without celebration. **B** is
+ * the record — every movement, in order, with what was prescribed. **C** asks
+ * only *have I been training recently*, and answers it with marks on a calendar
+ * and a count of sessions. It is not analytics and it does not become analytics
+ * by growing: no streaks, no trends, no minutes aggregated (§24.10, §24.11).
  *
- * **This is closure, not analytics.** Nothing here counts sessions, compares
- * them, or persists anything beyond the completion the flow already wrote.
- * Progress and history are PLANNED and unbuilt (§23.1), and a completion screen
- * is exactly where they would be invented by accident.
+ * A specific record can be reopened with `?r=<recordId>`. A query parameter
+ * rather than a route segment, because these records exist only on the device
+ * and a static export cannot prerender a page per record (§24.6).
  */
 
 const factLabel =
@@ -64,18 +71,32 @@ export function CompleteClient() {
     status?.focus();
   }, [lastCorrected]);
 
-  /* Rendered from the immutable Activity record, never from live state and
-     never from the generator (§24.3). The record is read after mount because it
-     lives on the device and the page is prerendered; `loaded` distinguishes
-     "not read yet" from "nothing to show", so the empty state cannot flash
-     before the record arrives. */
-  const [record, setRecord] = useState<ActivityRecord | null>(null);
-  const [loaded, setLoaded] = useState(false);
+  /* Read after mount, because records live on the device and the page is
+     prerendered. `loaded` distinguishes "not read yet" from "nothing to show",
+     so no empty state flashes before history arrives. */
+  const requestedId = useSearchParams().get('r');
+  const [selection, setSelection] = useState<ReturnType<typeof selectRecap> | null>(null);
+  const [activityDates, setActivityDates] = useState<readonly string[]>([]);
+  const [today, setToday] = useState<string | null>(null);
 
   useEffect(() => {
-    setRecord(activityStore().list()[0] ?? null);
-    setLoaded(true);
-  }, []);
+    const records = activityStore().list();
+    setSelection(selectRecap(records, requestedId));
+    setActivityDates(records.map((r) => r.localDate));
+    /* Today's local date decides only which week is current. Stored dates are
+       never reinterpreted through it (§24.9). */
+    const now = new Date();
+    setToday(
+      [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, '0'),
+        String(now.getDate()).padStart(2, '0'),
+      ].join('-'),
+    );
+  }, [requestedId]);
+
+  const loaded = selection !== null;
+  const record = selection?.kind === 'record' ? selection.record : null;
 
   const featuresUsed = (record?.featuresUsed ?? []) as readonly SupportedFeatureId[];
   const movements = record?.movements.length ?? 0;
@@ -86,12 +107,29 @@ export function CompleteClient() {
 
   const isSubstitute = record?.kind === 'substitute-session';
 
-  /* Nothing renders until the record has been read. Rendering the summary with
-     no record would show "0 min" for a frame; rendering the empty state would
-     claim nothing was finished before we had looked. */
-  if (!loaded) return null;
+  /* Nothing renders until history has been read. Rendering the summary with no
+     record would show "0 min" for a frame; rendering an empty state would claim
+     nothing was finished before we had looked. */
+  if (!loaded || selection === null || today === null) return null;
 
-  if (record === null) {
+  /* A requested record that cannot be read is its own state, with its own
+     words. Falling back to the newest would answer a question about one
+     workout with a different workout — every fact on screen true, and the
+     screen as a whole a lie about which session it describes. */
+  if (selection.kind === 'requested-unavailable') {
+    return (
+      <PageContainer className="flex flex-1 flex-col">
+        <EmptyState
+          title="That workout isn&rsquo;t available"
+          body="It may have been deleted, or its record could not be read. Nothing else has been changed."
+          actionHref="/complete"
+          actionLabel="See the latest workout"
+        />
+      </PageContainer>
+    );
+  }
+
+  if (selection.kind === 'no-records' || record === null) {
     return (
       <PageContainer className="flex flex-1 flex-col">
         <EmptyState
@@ -155,8 +193,18 @@ export function CompleteClient() {
                 <dd className="mt-2 flex flex-wrap items-center gap-2">
                   {/* A substitute is never described as a park session (§11). */}
                   {isSubstitute ? (
-                    <span className="rounded-full border-l-4 border-yellow bg-pale px-3 py-1.5 text-sm font-bold text-yellow-ink">
-                      {SUBSTITUTE_LABEL}
+                    <span className="flex flex-col gap-1">
+                      <span className="w-fit rounded-full border-l-4 border-yellow bg-pale px-3 py-1.5 text-sm font-bold text-yellow-ink">
+                        {SUBSTITUTE_LABEL}
+                      </span>
+                      {/* The stored reason, in today's words. The kind is
+                          historical; the sentence explaining it is current
+                          presentation copy. */}
+                      {record.substituteReason !== undefined && (
+                        <span className="text-sm text-navy-muted">
+                          {SUBSTITUTE_REASON[record.substituteReason]}
+                        </span>
+                      )}
                     </span>
                   ) : featuresUsed.length > 0 ? (
                     featuresUsed.map((id) => (
@@ -180,6 +228,30 @@ export function CompleteClient() {
         </PageContainer>
       </section>
 
+      {/* Layer B — the workout itself, straight from the record. */}
+      <section className="border-t border-line py-8">
+        <PageContainer measure="app-wide">
+          <div className="max-w-3xl">
+            <h2 className="text-marker font-extrabold uppercase tracking-(--text-marker--letter-spacing) text-navy-faint">
+              What you did
+            </h2>
+            <div className="mt-5">
+              <WorkoutTimeline movements={record.movements} />
+            </div>
+          </div>
+        </PageContainer>
+      </section>
+
+      {/* Layer C — recent activity. Answers "have I been training lately",
+          and deliberately nothing more. */}
+      <section className="border-t border-line py-8">
+        <PageContainer measure="app-wide">
+          <div className="max-w-3xl">
+            <ActivityStrip activityDates={activityDates} today={today} />
+          </div>
+        </PageContainer>
+      </section>
+
       {confirmed.length > 0 && (
         <section className="py-7">
           <PageContainer measure="app-wide">
@@ -190,6 +262,12 @@ export function CompleteClient() {
               <p className="mt-2 max-w-md text-sm leading-snug text-navy-muted text-pretty">
                 Occupied, flooded, fenced off? Say so and MoveHere leaves it out of sessions. It
                 stays on your park&rsquo;s record either way.
+              </p>
+              {/* Both statements on this screen are true and describe different
+                  tenses. Without this line they read as a contradiction — the
+                  audit found exactly that. */}
+              <p className="mt-2 max-w-md text-sm leading-snug text-navy-faint text-pretty">
+                {HISTORY_VS_CORRECTION}
               </p>
 
               <ul ref={listRef} className="mt-4 overflow-hidden rounded-2xl border border-line bg-cloud">
