@@ -101,6 +101,43 @@ test('every substitute reason explains itself and none is empty', () => {
   assert.ok(SUBSTITUTE_LABEL.trim().length > 0, 'a substitute must carry a label (§11)');
 });
 
+test('no substitute reason asserts the current state of the venue', () => {
+  /* A session is generated from inputs frozen when it was built, and the venue
+     can differ from those inputs by the time anyone reads the explanation.
+     Production found the failure: a session built with no venue input told a
+     user "No park is confirmed yet" while their park sat confirmed on the same
+     device. Copy that describes the workout cannot go stale that way; copy that
+     describes the park can. */
+  const claimsAboutVenueState = [
+    /no park is confirmed/i,
+    /you have(n't| not) confirmed/i,
+    /nothing is confirmed/i,
+    /your park is empty/i,
+    /no features are confirmed/i,
+  ];
+  for (const [kind, reason] of Object.entries(SUBSTITUTE_REASON)) {
+    for (const pattern of claimsAboutVenueState) {
+      assert.ok(
+        !pattern.test(reason),
+        `${kind}: "${reason}" states what the venue currently is. ` +
+          'It will be false for any session whose generation inputs no longer match ' +
+          'the venue — describe the workout instead.',
+      );
+    }
+  }
+});
+
+test('the no-venue substitute describes the workout it is attached to', () => {
+  const reason = SUBSTITUTE_REASON['no-confirmed-inventory'];
+  assert.match(
+    reason,
+    /this workout/i,
+    'the one reason reachable from a session with no frozen venue input must speak ' +
+      'about that workout, because it is the only thing guaranteed still true',
+  );
+  assert.match(reason, /no-equipment session/, 'and it must still say what kind of session this is (§11)');
+});
+
 test('confirmation prompts ask about existence, never about safety', () => {
   for (const feature of FEATURE_REGISTRY.supported) {
     assert.match(feature.confirmationPrompt, /\?$/, `${feature.id}: a prompt must be a question`);
